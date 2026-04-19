@@ -112,7 +112,7 @@
                     <li class="px-6 py-4 hover:bg-slate-50 transition">
                         <div class="flex items-center justify-between">
                             <div class="pr-4">
-                                <p class="text-sm font-bold text-gray-900 truncate">{{ $tugas->laporan->judul }}</p>
+                                <p class="text-sm font-bold text-gray-900 truncate">{{ $tugas->laporan?->judul ?? 'Laporan telah dihapus' }}</p>
                                 <div class="flex items-center mt-1 text-xs text-gray-500 gap-2">
                                     <span class="inline-flex items-center gap-1 font-medium text-indigo-700">
                                         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

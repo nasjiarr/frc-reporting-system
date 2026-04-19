@@ -41,6 +41,7 @@ class AdminController extends Controller
 
         // 3. Data Panel Kanan: Penugasan Aktif (Ditugaskan / Dikerjakan)
         $penugasanAktif = \App\Models\Penugasan::with(['laporan', 'teknisi'])
+            ->has('laporan')
             ->whereIn('status_tugas', ['Ditugaskan', 'Dikerjakan'])
             ->latest('assigned_at')
             ->take(5)
@@ -216,14 +217,16 @@ class AdminController extends Controller
     {
         $laporan = \App\Models\Laporan::with('penugasan.hasilPerbaikan')->findOrFail($id);
 
-        // Best Practice: Hapus file foto dari storage agar hardisk server tidak penuh
-        if ($laporan->penugasan && $laporan->penugasan->hasilPerbaikan) {
+        if ($laporan->penugasan) {
             $hasil = $laporan->penugasan->hasilPerbaikan;
-            if ($hasil->foto_sebelum) Storage::disk('public')->delete($hasil->foto_sebelum);
-            if ($hasil->foto_sesudah) Storage::disk('public')->delete($hasil->foto_sesudah);
+            if ($hasil) {
+                if ($hasil->foto_sebelum) Storage::disk('public')->delete($hasil->foto_sebelum);
+                if ($hasil->foto_sesudah) Storage::disk('public')->delete($hasil->foto_sesudah);
+            }
+            // Tambahkan baris ini untuk menghapus penugasan terkait
+            $laporan->penugasan->delete();
         }
 
-        // Hapus data dari database
         $laporan->delete();
 
         return back()->with('success', 'Laporan beserta bukti dokumentasinya berhasil dihapus permanen.');

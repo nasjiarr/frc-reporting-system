@@ -70,6 +70,7 @@ Route::middleware(['auth', 'role:Admin'])->prefix('admin')->name('admin.')->grou
 
 Route::middleware(['auth', 'role:Teknisi'])->prefix('teknisi')->name('teknisi.')->group(function () {
     Route::get('/dashboard', [TeknisiController::class, 'dashboard'])->name('dashboard');
+    Route::get('/tugas-aktif', [TeknisiController::class, 'tugasAktif'])->name('tugas-aktif');
     Route::get('/tugas/{id}', [TeknisiController::class, 'show'])->name('tugas.show');
     Route::post('/tugas/{id}/selesai', [TeknisiController::class, 'updateProgress'])->name('tugas.update');
     Route::get('/riwayat', [TeknisiController::class, 'riwayat'])->name('riwayat');

@@ -13,14 +13,37 @@ class TeknisiController extends Controller
 {
     public function dashboard()
     {
-        // Tugas yang statusnya belum selesai (Ditugaskan atau Dikerjakan)
+        $userId = auth()->id();
+
+        // 1. Data untuk Cards
+        $jumlahTugasAktif = Penugasan::where('teknisi_id', $userId)
+            ->whereIn('status_tugas', ['Ditugaskan', 'Dikerjakan'])
+            ->count();
+
+        $jumlahTugasSelesai = Penugasan::where('teknisi_id', $userId)
+            ->where('status_tugas', 'Selesai')
+            ->count();
+
+        // 2. Data untuk Tabel Tugas Aktif Saat Ini
+        $tugasAktif = Penugasan::with('laporan')
+            ->where('teknisi_id', $userId)
+            ->whereIn('status_tugas', ['Ditugaskan', 'Dikerjakan'])
+            ->latest()
+            ->get();
+
+        return view('teknisi.dashboard', compact('jumlahTugasAktif', 'jumlahTugasSelesai', 'tugasAktif'));
+    }
+
+    // Tambahkan method baru ini
+    public function tugasAktif()
+    {
         $tugasAktif = Penugasan::with('laporan')
             ->where('teknisi_id', auth()->id())
             ->whereIn('status_tugas', ['Ditugaskan', 'Dikerjakan'])
             ->latest()
             ->get();
 
-        return view('teknisi.dashboard', compact('tugasAktif'));
+        return view('teknisi.tugas-aktif', compact('tugasAktif'));
     }
 
     public function show($id)
@@ -56,7 +79,7 @@ class TeknisiController extends Controller
             ]);
 
             // 3. Update Status Tugas & Laporan
-            $tugas->update(['status_tugas' => 'Dikerjakan']); // Atau langsung selesai sesuai alur
+            $tugas->update(['status_tugas' => 'Selesai']);
             $tugas->laporan->update(['status' => 'Selesai']);
 
             // 4. Kirim Notifikasi ke Admin (Notifikasi ke Pelapor sudah dihandle Observer Laporan)
