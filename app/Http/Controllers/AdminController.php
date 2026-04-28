@@ -14,32 +14,30 @@ class AdminController extends Controller
 {
     public function dashboard()
     {
-        // 1. Data Statistik (DIPERBARUI DENGAN METRIK BARU)
+        // 1. Data Statistik (Eksis)
         $stats = [
-            // Laporan Baru
             'laporan_baru' => \App\Models\Laporan::where('status', 'Baru')->count(),
-
-            // Penugasan Aktif (Bisa dari tabel Penugasan atau Laporan, sesuai logika asli Anda)
             'tugas_aktif'  => \App\Models\Penugasan::whereIn('status_tugas', ['Ditugaskan', 'Dikerjakan'])->count(),
-
-            // Laporan Selesai Bulan Ini
             'selesai_bulan_ini' => \App\Models\Laporan::where('status', 'Selesai')
                 ->whereMonth('updated_at', \Carbon\Carbon::now()->month)
                 ->whereYear('updated_at', \Carbon\Carbon::now()->year)
                 ->count(),
-
-            // Pengguna Aktif
             'pengguna_aktif' => \App\Models\User::where('is_active', true)->count(),
         ];
 
-        // 2. Data Panel Kiri: Laporan Perlu Tindak Lanjut (Status 'Baru')
+        // --- TAMBAHAN LOGIKA INSTRUKSI #3 ---
+        // Cek apakah ada data di tabel utilitas dengan periode bulan ini (Format: YYYY-MM)
+        $currentPeriode = now()->format('Y-m');
+        $bln_ini_belum_isi = !\App\Models\Utilitas::where('periode', $currentPeriode)->exists();
+        // ------------------------------------
+
+        // 2. Data Panel Kiri & Kanan (Eksis)
         $laporanPerluTindakLanjut = \App\Models\Laporan::with('pelapor')
             ->where('status', 'Baru')
             ->latest()
             ->take(5)
             ->get();
 
-        // 3. Data Panel Kanan: Penugasan Aktif (Ditugaskan / Dikerjakan)
         $penugasanAktif = \App\Models\Penugasan::with(['laporan', 'teknisi'])
             ->has('laporan')
             ->whereIn('status_tugas', ['Ditugaskan', 'Dikerjakan'])
@@ -47,7 +45,13 @@ class AdminController extends Controller
             ->take(5)
             ->get();
 
-        return view('admin.dashboard', compact('stats', 'laporanPerluTindakLanjut', 'penugasanAktif'));
+        // Kirim variabel bln_ini_belum_isi ke view
+        return view('admin.dashboard', compact(
+            'stats',
+            'laporanPerluTindakLanjut',
+            'penugasanAktif',
+            'bln_ini_belum_isi'
+        ));
     }
 
     public function index(Request $request)
@@ -139,17 +143,30 @@ class AdminController extends Controller
 
     public function laporanStore(Request $request)
     {
+        // Tambahkan validasi foto_sebelum
         $request->validate([
             'judul' => 'required|string|max:255',
             'lokasi' => 'required|string|max:255',
             'deskripsi' => 'required|string',
+            'foto_sebelum' => 'required|image|mimes:jpeg,png,jpg|max:2048', // Aturan unggah file
+        ], [
+            'foto_sebelum.image' => 'File harus berupa gambar.',
+            'foto_sebelum.mimes' => 'Format gambar harus JPG atau PNG.',
+            'foto_sebelum.max' => 'Ukuran gambar maksimal 2MB.',
         ]);
+
+        // Proses penyimpanan file foto
+        $fotoPath = null;
+        if ($request->hasFile('foto_sebelum')) {
+            $fotoPath = $request->file('foto_sebelum')->store('foto_sebelum', 'public');
+        }
 
         Laporan::create([
             'pelapor_id' => auth()->id(),
             'judul' => $request->judul,
             'lokasi' => $request->lokasi,
             'deskripsi' => $request->deskripsi,
+            'foto_sebelum' => $fotoPath, // Simpan path gambar ke DB
             'status' => 'Baru',
         ]);
 
@@ -235,18 +252,18 @@ class AdminController extends Controller
     // Method untuk halaman Rekap Utilitas Admin
     public function utilitasIndex()
     {
-        $rekapUtilitas = \App\Models\Utilitas::with([
-            'petugas',
-            'airBersih',
-            'airHujan',
-            'listrikMdp',
-            'listrikSdp',
-            'listrikLift',
-            'listrikAc',
-            'listrikLampu'
-        ])->latest()->paginate(15);
+        // Daftar 7 jenis utilitas secara statis untuk menu depan
+        $jenisUtilitas = [
+            ['nama' => 'Air Bersih', 'slug' => 'AirBersih', 'icon' => 'droplet', 'warna' => 'blue'],
+            ['nama' => 'Air Hujan', 'slug' => 'AirHujan', 'icon' => 'cloud-rain', 'warna' => 'cyan'],
+            ['nama' => 'Listrik MDP', 'slug' => 'MDP', 'icon' => 'bolt', 'warna' => 'amber'],
+            ['nama' => 'Listrik SDP', 'slug' => 'SDP', 'icon' => 'zap', 'warna' => 'yellow'],
+            ['nama' => 'Listrik Lift', 'slug' => 'Lift', 'icon' => 'arrow-up-down', 'warna' => 'orange'],
+            ['nama' => 'Listrik AC', 'slug' => 'AC', 'icon' => 'wind', 'warna' => 'indigo'],
+            ['nama' => 'Listrik Lampu', 'slug' => 'Lampu', 'icon' => 'lightbulb', 'warna' => 'emerald'],
+        ];
 
-        return view('admin.utilitas.index', compact('rekapUtilitas'));
+        return view('admin.utilitas.index', compact('jenisUtilitas'));
     }
 
     // Method untuk Memperbarui Data Utilitas (Edit)
@@ -289,5 +306,31 @@ class AdminController extends Controller
         ])->findOrFail($id);
 
         return view('admin.utilitas.edit', compact('utilitas'));
+    }
+
+    public function utilitasShow(Request $request, $jenis)
+    {
+        $tahun = $request->query('tahun', date('Y'));
+
+        // Ambil riwayat data khusus jenis yang diklik
+        $riwayat = \App\Models\Utilitas::with(['petugas', 'airBersih', 'airHujan', 'listrikMdp', 'listrikSdp', 'listrikLift', 'listrikAc', 'listrikLampu'])
+            ->where('jenis_utilitas', $jenis)
+            ->where('periode', 'like', "$tahun-%")
+            ->latest('periode')
+            ->get();
+
+        // Data untuk Grafik Chart.js
+        $labels = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+        $consumptions = array_fill(0, 12, 0);
+
+        foreach ($riwayat as $data) {
+            $bulanIndex = (int) substr($data->periode, 5, 2) - 1;
+            if ($bulanIndex >= 0 && $bulanIndex < 12) {
+                // Pastikan model Utilitas Anda memiliki accessor untuk total_konsumsi
+                $consumptions[$bulanIndex] = $data->total_konsumsi;
+            }
+        }
+
+        return view('admin.utilitas.show', compact('jenis', 'tahun', 'riwayat', 'labels', 'consumptions'));
     }
 }

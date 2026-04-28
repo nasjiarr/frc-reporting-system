@@ -6,12 +6,12 @@
 
     <div class="max-w-4xl">
         <div class="bg-white border border-gray-200 shadow-sm rounded-lg overflow-hidden">
-            <form action="{{ route('admin.laporan.store') }}" method="POST">
+            <form action="{{ route('admin.laporan.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
 
                 <div class="p-6 space-y-6">
                     <div>
-                        <label for="judul" class="block text-sm font-medium leading-6 text-gray-900">Judul Kerusakan <span class="text-rose-500">*</span></label>
+                        <label for="judul" class="block text-sm font-medium leading-6 text-gray-900">Kerusakan <span class="text-rose-500">*</span></label>
                         <div class="mt-2">
                             <input type="text" name="judul" id="judul" value="{{ old('judul') }}" placeholder="Contoh: AC Bocor, Lampu Mati, Pipa Pecah"
                                 class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" required>
@@ -43,6 +43,26 @@
                         <p class="mt-1 text-sm text-rose-600">{{ $message }}</p>
                         @enderror
                     </div>
+
+                    <div>
+                        <label for="foto_sebelum" class="block text-sm font-medium leading-6 text-gray-900">Foto Bukti Kerusakan <span class="text-rose-500">*</span></label>
+                        <p class="text-xs text-gray-500 mb-2">Format yang diizinkan: JPG, JPEG, PNG. Ukuran maksimal: 2 MB.</p>
+                        <div class="mt-2 flex items-center justify-center w-full">
+                            <label for="foto_sebelum" class="flex flex-col items-center justify-center w-full h-32 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition-colors">
+                                <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                                    <svg class="w-8 h-8 mb-3 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path>
+                                    </svg>
+                                    <p class="mb-2 text-sm text-gray-500"><span class="font-semibold">Klik untuk unggah</span> atau seret file ke sini</p>
+                                </div>
+                                <input id="foto_sebelum" name="foto_sebelum" type="file" class="hidden" accept=".jpg,.jpeg,.png" required />
+                            </label>
+                        </div>
+                        <p id="file-name" class="mt-2 text-sm text-indigo-600 font-medium"></p>
+                        @error('foto_sebelum')
+                        <p class="mt-1 text-sm text-rose-600">{{ $message }}</p>
+                        @enderror
+                    </div>
                 </div>
 
                 <div class="bg-gray-50 px-6 py-4 border-t border-gray-200 flex items-center justify-end gap-x-4">
@@ -58,4 +78,11 @@
             </form>
         </div>
     </div>
+
+    <script>
+        document.getElementById('foto_sebelum').addEventListener('change', function(e) {
+            var fileName = e.target.files[0] ? e.target.files[0].name : '';
+            document.getElementById('file-name').textContent = fileName ? 'File dipilih: ' + fileName : '';
+        });
+    </script>
 </x-app-layout>

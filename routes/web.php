@@ -66,6 +66,9 @@ Route::middleware(['auth', 'role:Admin'])->prefix('admin')->name('admin.')->grou
     Route::get('/laporan/{id}', [AdminController::class, 'laporanShow'])->name('laporan.show');
     Route::delete('/laporan/{id}', [AdminController::class, 'laporanDestroy'])->name('laporan.destroy');
     Route::patch('/users/{user}/toggle-status', [AdminController::class, 'toggleStatus'])->name('users.toggle-status');
+    Route::get('/utilitas/{jenis}/detail', [UtilitasController::class, 'showDetail'])->name('utilitas.detail');
+    Route::get('/utilitas', [AdminController::class, 'utilitasIndex'])->name('utilitas.index');
+    Route::get('/utilitas/{jenis}', [AdminController::class, 'utilitasShow'])->name('utilitas.show');
 });
 
 Route::middleware(['auth', 'role:Teknisi'])->prefix('teknisi')->name('teknisi.')->group(function () {

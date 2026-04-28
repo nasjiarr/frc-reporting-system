@@ -16,6 +16,7 @@ class Laporan extends Model
         'judul',
         'deskripsi',
         'lokasi',
+        'foto_sebelum',
         'status'
     ];
 

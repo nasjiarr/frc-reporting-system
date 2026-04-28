@@ -6,12 +6,12 @@
 
     <div class="max-w-4xl">
         <div class="bg-white border border-gray-200 shadow-sm rounded-lg overflow-hidden">
-            <form action="{{ route('pelapor.laporan.store') }}" method="POST">
+            <form action="{{ route('pelapor.laporan.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
 
                 <div class="p-6 space-y-6">
                     <div>
-                        <label for="judul" class="block text-sm font-medium leading-6 text-gray-900">Judul Kerusakan <span class="text-rose-500">*</span></label>
+                        <label for="judul" class="block text-sm font-medium leading-6 text-gray-900">Kerusakan <span class="text-rose-500">*</span></label>
                         <div class="mt-2">
                             <input type="text" name="judul" id="judul" value="{{ old('judul') }}" placeholder="Contoh: AC Bocor, Lampu Mati, Pipa Pecah"
                                 class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" required>
@@ -43,7 +43,20 @@
                         <p class="mt-1 text-sm text-rose-600">{{ $message }}</p>
                         @enderror
                     </div>
+                    <div>
+                        <label for="foto_sebelum" class="block text-sm font-medium leading-6 text-gray-900">Foto Bukti Kerusakan <span class="text-rose-500">*</span></label>
+                        <p class="text-xs text-gray-500 mb-2">Format yang diizinkan: JPG, PNG. Ukuran maksimal: 2 MB.</p>
+                        <div class="mt-2">
+                            <input type="file" name="foto_sebelum" id="foto_sebelum" accept=".jpg,.jpeg,.png"
+                                class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 transition-colors" required>
+                        </div>
+                        @error('foto_sebelum')
+                        <p class="mt-1 text-sm text-rose-600">{{ $message }}</p>
+                        @enderror
+                    </div>
                 </div>
+
+
 
                 <div class="bg-gray-50 px-6 py-4 border-t border-gray-200 flex items-center justify-end gap-x-4">
                     <a href="{{ route('pelapor.laporan.index') }}" class="text-sm font-semibold leading-6 text-gray-900 hover:text-gray-700 transition">Batal</a>
@@ -56,6 +69,13 @@
                     </button>
                 </div>
             </form>
+            <script>
+                // Script sederhana untuk menampilkan nama file yang dipilih
+                document.getElementById('foto_sebelum').addEventListener('change', function(e) {
+                    let fileName = e.target.files[0] ? e.target.files[0].name : '';
+                    document.getElementById('file-name-preview').textContent = fileName ? 'File dipilih: ' + fileName : '';
+                });
+            </script>
         </div>
     </div>
 </x-app-layout>

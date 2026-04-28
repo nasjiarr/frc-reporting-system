@@ -41,18 +41,26 @@ class PelaporController extends Controller
 
     public function store(Request $request)
     {
+
         $request->validate([
-            'judul'     => 'required|string|max:255',
-            'lokasi'    => 'required|string|max:255',
-            'deskripsi' => 'required|string',
+            'judul'         => 'required|string|max:255',
+            'lokasi'        => 'required|string|max:255',
+            'deskripsi'     => 'required|string',
+            'foto_sebelum'  => 'required|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
+        $path = null;
+        if ($request->hasFile('foto_sebelum')) {
+            $path = $request->file('foto_sebelum')->store('foto_sebelum', 'public');
+        }
+
         Laporan::create([
-            'pelapor_id' => auth()->id(), // Keamanan: Paksa gunakan ID user login
-            'judul'      => $request->judul,
-            'lokasi'     => $request->lokasi,
-            'deskripsi'  => $request->deskripsi,
-            'status'     => 'Baru',
+            'pelapor_id'    => auth()->id(),
+            'judul'         => $request->judul,
+            'lokasi'        => $request->lokasi,
+            'deskripsi'     => $request->deskripsi,
+            'foto_sebelum'  => $path,
+            'status'        => 'Baru',
         ]);
 
         return redirect()->route('pelapor.laporan.index')->with('success', 'Laporan berhasil dikirim.');
