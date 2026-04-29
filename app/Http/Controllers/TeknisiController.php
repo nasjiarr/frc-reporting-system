@@ -56,33 +56,39 @@ class TeknisiController extends Controller
     {
         $tugas = Penugasan::findOrFail($id);
 
+        // 1. Sesuaikan validasi dengan UI terbaru
         $request->validate([
             'tindakan' => 'required|string',
             'material_digunakan' => 'nullable|string',
-            'foto_sebelum' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
-            'foto_sesudah' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            // foto_sebelum dihapus dari validasi
+            // foto_sesudah diubah menjadi wajib (required)
+            'foto_sesudah' => 'required|image|mimes:jpeg,png,jpg|max:2048',
+        ], [
+            'foto_sesudah.required' => 'Foto bukti hasil perbaikan wajib diunggah.',
+            'foto_sesudah.max' => 'Ukuran foto maksimal adalah 2MB.'
         ]);
 
         DB::transaction(function () use ($request, $tugas) {
-            // 1. Upload Foto
-            $pathSebelum = $request->file('foto_sebelum') ? $request->file('foto_sebelum')->store('perbaikan/sebelum', 'public') : null;
-            $pathSesudah = $request->file('foto_sesudah') ? $request->file('foto_sesudah')->store('perbaikan/sesudah', 'public') : null;
+            // 2. Upload Foto Sesudah Saja
+            $pathSesudah = null;
+            if ($request->hasFile('foto_sesudah')) {
+                $pathSesudah = $request->file('foto_sesudah')->store('perbaikan/sesudah', 'public');
+            }
 
-            // 2. Simpan Hasil Perbaikan
+            // 3. Simpan Hasil Perbaikan
             HasilPerbaikan::create([
                 'penugasan_id' => $tugas->id,
                 'tindakan' => $request->tindakan,
-                'material_digunakan' => $request->material_digunakan,
-                'foto_sebelum' => $pathSebelum,
-                'foto_sesudah' => $pathSesudah,
+                'material' => $request->material_digunakan, // Kolom di DB bernama 'material'
+                'foto_sesudah' => $pathSesudah, // Hanya menyimpan foto_sesudah
                 'selesai_pada' => now(),
             ]);
 
-            // 3. Update Status Tugas & Laporan
+            // 4. Update Status Tugas & Laporan
             $tugas->update(['status_tugas' => 'Selesai']);
             $tugas->laporan->update(['status' => 'Selesai']);
 
-            // 4. Kirim Notifikasi ke Admin (Notifikasi ke Pelapor sudah dihandle Observer Laporan)
+            // 5. Kirim Notifikasi ke Admin
             Notifikasi::create([
                 'user_id' => $tugas->assigned_by,
                 'judul' => 'Pekerjaan Selesai',

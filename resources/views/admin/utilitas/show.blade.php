@@ -15,6 +15,12 @@
                     <input type="number" name="tahun" value="{{ $tahun }}" class="rounded-md border-gray-300 text-sm w-24">
                     <button type="submit" class="bg-gray-100 px-3 py-2 rounded-md text-sm font-bold border hover:bg-gray-200">Filter</button>
                 </form>
+                <a href="{{ route('admin.utilitas.export_pdf', ['jenis' => $jenis, 'tahun' => $tahun]) }}" class="bg-rose-600 text-white px-3 py-2 rounded-md font-bold text-xs uppercase hover:bg-rose-700 transition flex items-center gap-1 shadow-sm">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
+                    PDF
+                </a>
                 <a href="{{ route('admin.utilitas.create', ['jenis' => $jenis]) }}" class="bg-indigo-600 text-white px-4 py-2 rounded-md font-bold text-xs uppercase hover:bg-indigo-700 transition">
                     + Tambah Data
                 </a>
@@ -87,7 +93,7 @@
                 const dataKonsumsi = JSON.parse(canvasElement.getAttribute('data-konsumsi'));
 
                 new Chart(ctx, {
-                    type: 'line',
+                    type: 'bar',
                     data: {
                         labels: labelBulan,
                         datasets: [{

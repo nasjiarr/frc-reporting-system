@@ -40,9 +40,11 @@
                         </div>
 
                         <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                            <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
+                            @if(Auth::user()->role !== 'Teknisi')
+                            <x-nav-link :href="route('dashboard')" :active="request()->routeIs('*dashboard')">
                                 Dashboard
                             </x-nav-link>
+                            @endif
 
                             @if(Auth::user()->role === 'Pelapor')
                             <x-nav-link href="{{ route('pelapor.laporan.index') }}" :active="request()->routeIs('pelapor.laporan.*')">
@@ -73,13 +75,7 @@
                             </x-nav-link>
                             @elseif(Auth::user()->role === 'KepalaFRC')
                             <x-nav-link :href="route('kepala.laporan.index')" :active="request()->routeIs('kepala.laporan.*')">
-                                Rekap Laporan
-                            </x-nav-link>
-                            <x-nav-link :href="route('kepala.utilitas.index')" :active="request()->routeIs('kepala.utilitas.*')">
-                                Rekap Utilitas
-                            </x-nav-link>
-                            <x-nav-link :href="route('kepala.kinerja.index')" :active="request()->routeIs('kepala.kinerja.*')">
-                                Kinerja Teknisi
+                                Daftar Laporan
                             </x-nav-link>
                             @endif
                         </div>
@@ -164,9 +160,11 @@
 
             <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden bg-white border-t border-gray-200">
                 <div class="pt-2 pb-3 space-y-1">
-                    <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
+                    @if(Auth::user()->role !== 'Teknisi')
+                    <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('*dashboard')">
                         Dashboard
                     </x-responsive-nav-link>
+                    @endif
 
                     @if(Auth::user()->role === 'Pelapor')
                     <x-responsive-nav-link :href="route('pelapor.laporan.index')" :active="request()->routeIs('pelapor.laporan.*')">
@@ -197,13 +195,7 @@
                     </x-responsive-nav-link>
                     @elseif(Auth::user()->role === 'KepalaFRC')
                     <x-responsive-nav-link :href="route('kepala.laporan.index')" :active="request()->routeIs('kepala.laporan.*')">
-                        Rekap Laporan
-                    </x-responsive-nav-link>
-                    <x-responsive-nav-link :href="route('kepala.utilitas.index')" :active="request()->routeIs('kepala.utilitas.*')">
-                        Rekap Utilitas
-                    </x-responsive-nav-link>
-                    <x-responsive-nav-link :href="route('kepala.kinerja.index')" :active="request()->routeIs('kepala.kinerja.*')">
-                        Kinerja Teknisi
+                        Daftar Laporan
                     </x-responsive-nav-link>
                     @endif
                 </div>

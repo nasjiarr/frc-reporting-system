@@ -72,13 +72,27 @@ class KepalaFRCController extends Controller
 
     public function rekapLaporan(Request $request)
     {
-        $query = Laporan::with(['pelapor', 'penugasan.teknisi'])->latest();
+        $query = \App\Models\Laporan::with(['pelapor', 'penugasan.teknisi']);
 
-        if ($request->filled('status')) {
+        // 1. Filter Status
+        if ($request->filled('status') && $request->status !== 'Semua') {
             $query->where('status', $request->status);
         }
 
-        $laporans = $query->paginate(15);
-        return view('kepala.laporan-rekap', compact('laporans'));
+        // 2. Filter Periode (Format input month HTML5 adalah 'YYYY-MM')
+        if ($request->filled('periode')) {
+            $query->where('created_at', 'like', $request->periode . '%');
+        }
+
+        $laporans = $query->latest()->paginate(15)->withQueryString();
+
+        return view('kepala.laporan.index', compact('laporans'));
+    }
+
+    public function showLaporan($id)
+    {
+        $laporan = \App\Models\Laporan::with(['pelapor', 'penugasan.teknisi', 'penugasan.hasilPerbaikan'])->findOrFail($id);
+
+        return view('kepala.laporan.show', compact('laporan'));
     }
 }

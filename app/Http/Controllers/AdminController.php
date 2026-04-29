@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Barryvdh\DomPDF\Facade\Pdf;
+
 use App\Models\User;
 use App\Models\Laporan;
 use App\Models\Penugasan;
@@ -332,5 +334,106 @@ class AdminController extends Controller
         }
 
         return view('admin.utilitas.show', compact('jenis', 'tahun', 'riwayat', 'labels', 'consumptions'));
+    }
+
+    public function utilitasExportPdf(Request $request, $jenis)
+    {
+        $tahun = $request->query('tahun', date('Y'));
+
+        // Tarik data persis seperti logika pada utilitasShow, namun tanpa perhitungan grafik
+        $riwayat = \App\Models\Utilitas::with(['petugas'])
+            ->where('jenis_utilitas', $jenis)
+            ->where('periode', 'like', "$tahun-%")
+            ->latest('periode')
+            ->get();
+
+        // Panggil view khusus PDF
+        $pdf = Pdf::loadView('admin.utilitas.pdf', compact('jenis', 'tahun', 'riwayat'));
+
+        // Atur ukuran kertas
+        $pdf->setPaper('A4', 'portrait');
+
+        // Kembalikan sebagai file unduhan langsung
+        return $pdf->download("Laporan_Utilitas_{$jenis}_{$tahun}.pdf");
+    }
+
+    public function laporanExportPdf($id)
+    {
+        $laporan = \App\Models\Laporan::with(['pelapor', 'penugasan.teknisi', 'penugasan.hasilPerbaikan'])->findOrFail($id);
+
+        if ($laporan->status !== 'Selesai') {
+            return back()->with('error', 'Laporan belum selesai.');
+        }
+
+        // 1. Konversi Foto SEBELUM (dari Pelapor)
+        $fotoSebelumBase64 = null;
+        $pathSebelum = public_path('storage/' . $laporan->foto_sebelum);
+        if ($laporan->foto_sebelum && file_exists($pathSebelum)) {
+            $dataSebelum = file_get_contents($pathSebelum);
+            $fotoSebelumBase64 = 'data:image/' . pathinfo($pathSebelum, PATHINFO_EXTENSION) . ';base64,' . base64_encode($dataSebelum);
+        }
+
+        // 2. Konversi Foto SESUDAH (dari Teknisi)
+        $fotoSesudahBase64 = null;
+        $pathSesudah = public_path('storage/' . $laporan->penugasan->hasilPerbaikan->foto_sesudah);
+        if ($laporan->penugasan->hasilPerbaikan->foto_sesudah && file_exists($pathSesudah)) {
+            $dataSesudah = file_get_contents($pathSesudah);
+            $fotoSesudahBase64 = 'data:image/' . pathinfo($pathSesudah, PATHINFO_EXTENSION) . ';base64,' . base64_encode($dataSesudah);
+        }
+
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('admin.laporan.pdf', compact('laporan', 'fotoSebelumBase64', 'fotoSesudahBase64'));
+        $pdf->setPaper('A4', 'portrait');
+
+        return $pdf->download("Laporan_Perbaikan_{$laporan->id}.pdf");
+    }
+
+    public function exportAllLaporan(Request $request)
+    {
+        $query = \App\Models\Laporan::with(['pelapor', 'penugasan.teknisi']);
+
+        // Terapkan filter yang sama dengan halaman index
+        if ($request->filled('status') && $request->status !== 'Semua') {
+            $query->where('status', $request->status);
+        }
+
+        if ($request->filled('tgl_mulai') && $request->filled('tgl_selesai')) {
+            $query->whereBetween('created_at', [$request->tgl_mulai, $request->tgl_selesai]);
+        }
+
+        $laporans = $query->latest()->get();
+        $filters = [
+            'status' => $request->status ?? 'Semua',
+            'periode' => $request->filled('tgl_mulai') ? $request->tgl_mulai . ' s/d ' . $request->tgl_selesai : 'Semua Waktu'
+        ];
+
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('admin.laporan.pdf_rekap', compact('laporans', 'filters'));
+        $pdf->setPaper('A4', 'landscape'); // Landscape agar tabel muat banyak kolom
+
+        return $pdf->download("Rekap_Laporan_Kerusakan_" . date('Ymd') . ".pdf");
+    }
+
+    public function exportSelesaiPdf(Request $request)
+    {
+        // Ambil data hanya yang berstatus Selesai
+        $query = \App\Models\Laporan::with(['pelapor', 'penugasan.teknisi', 'penugasan.hasilPerbaikan'])
+            ->where('status', 'Selesai');
+
+        // Filter berdasarkan rentang tanggal jika diisi
+        if ($request->filled('tgl_mulai') && $request->filled('tgl_selesai')) {
+            $query->whereBetween('created_at', [$request->tgl_mulai, $request->tgl_selesai]);
+        }
+
+        $laporans = $query->latest()->get();
+
+        $periode = $request->filled('tgl_mulai')
+            ? $request->tgl_mulai . ' s/d ' . $request->tgl_selesai
+            : 'Semua Periode';
+
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('admin.laporan.pdf_rekap_selesai', compact('laporans', 'periode'));
+
+        // Gunakan Landscape agar informasi teknisi dan tindakan muat dalam tabel
+        $pdf->setPaper('A4', 'landscape');
+
+        return $pdf->download("Rekap_Laporan_Selesai_" . date('Ymd') . ".pdf");
     }
 }

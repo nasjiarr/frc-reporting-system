@@ -28,7 +28,15 @@
             <button type="submit" class="inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150 h-9">
                 Terapkan Filter
             </button>
+            <a href="{{ route('admin.laporan.export_all', request()->query()) }}"
+                class="inline-flex items-center gap-2 px-4 py-2 bg-rose-600 text-white rounded-md font-bold text-sm hover:bg-rose-700 transition">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path>
+                </svg>
+                Ekspor Rekap (PDF)
+            </a>
         </form>
+
     </div>
 
     <div class="bg-white overflow-hidden border border-gray-200 sm:rounded-lg shadow-sm">

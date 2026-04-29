@@ -1,6 +1,17 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">Detail Laporan: {{ $laporan->judul }}</h2>
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <h2 class="font-semibold text-xl text-gray-800 leading-tight">Detail Laporan: {{ $laporan->judul }}</h2>
+
+            @if($laporan->status === 'Selesai' && $laporan->penugasan && $laporan->penugasan->hasilPerbaikan)
+            <a href="{{ route('admin.laporan.export_pdf', $laporan->id) }}" class="inline-flex items-center gap-2 px-4 py-2 bg-rose-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-rose-700 focus:bg-rose-700 active:bg-rose-900 shadow-sm transition ease-in-out duration-150">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+                Ekspor PDF
+            </a>
+            @endif
+        </div>
     </x-slot>
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -88,8 +99,9 @@
                         <div class="absolute top-2 left-2 z-10">
                             <span class="px-3 py-1 bg-rose-600 text-white text-[10px] font-bold uppercase tracking-widest rounded-full shadow-lg">Kondisi Sebelum</span>
                         </div>
-                        @if($laporan->penugasan->hasilPerbaikan->foto_sebelum)
-                        <img src="{{ asset('storage/' . $laporan->penugasan->hasilPerbaikan->foto_sebelum) }}"
+
+                        @if($laporan->foto_sebelum)
+                        <img src="{{ asset('storage/' . $laporan->foto_sebelum) }}"
                             class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-105 cursor-zoom-in"
                             onclick="window.open(this.src, '_blank')">
                         @else

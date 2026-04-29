@@ -69,6 +69,12 @@ Route::middleware(['auth', 'role:Admin'])->prefix('admin')->name('admin.')->grou
     Route::get('/utilitas/{jenis}/detail', [UtilitasController::class, 'showDetail'])->name('utilitas.detail');
     Route::get('/utilitas', [AdminController::class, 'utilitasIndex'])->name('utilitas.index');
     Route::get('/utilitas/{jenis}', [AdminController::class, 'utilitasShow'])->name('utilitas.show');
+    Route::get('/utilitas/{jenis}/export-pdf', [\App\Http\Controllers\AdminController::class, 'utilitasExportPdf'])->name('utilitas.export_pdf');
+    // Letakkan di dalam Route Group Admin
+    Route::get('/laporan/{id}/export-pdf', [\App\Http\Controllers\AdminController::class, 'laporanExportPdf'])->name('laporan.export_pdf');
+    Route::get('/laporan-rekap/export-pdf', [\App\Http\Controllers\AdminController::class, 'exportAllLaporan'])->name('laporan.export_all');
+    // Di dalam Route::prefix('admin')->name('admin.')->group(...)
+    Route::get('/laporan-selesai/export-pdf', [\App\Http\Controllers\AdminController::class, 'exportSelesaiPdf'])->name('laporan.export_selesai');
 });
 
 Route::middleware(['auth', 'role:Teknisi'])->prefix('teknisi')->name('teknisi.')->group(function () {
@@ -86,6 +92,7 @@ Route::middleware(['auth', 'role:KepalaFRC'])->prefix('kepala')->name('kepala.')
     Route::get('/rekap-utilitas', [KepalaFRCController::class, 'rekapUtilitas'])->name('utilitas.index');
     Route::get('/kinerja-teknisi', [KepalaFRCController::class, 'kinerjaTeknisi'])->name('kinerja.index');
     Route::get('/rekap-laporan', [KepalaFRCController::class, 'rekapLaporan'])->name('laporan.index');
+    Route::get('/rekap-laporan/{id}', [KepalaFRCController::class, 'showLaporan'])->name('laporan.show');
 });
 
 Route::get('/api/notifications/unread', function () {

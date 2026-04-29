@@ -10,73 +10,107 @@
         deleteTitle: '' 
     }">
 
-        <div class="mb-6 flex flex-col md:flex-row justify-between items-center gap-4">
-            <div class="w-full md:w-1/2 lg:w-1/3">
-                <form method="GET" action="{{ route('admin.laporan.selesai') }}" class="relative flex items-center">
-                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                        </svg>
-                    </div>
-                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari judul, lokasi, pelapor..." class="block w-full pl-10 pr-24 py-2 border border-gray-300 rounded-lg leading-5 bg-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm transition duration-150 ease-in-out">
-                    <div class="absolute inset-y-0 right-0 flex items-center">
-                        @if(request('search'))
-                        <a href="{{ route('admin.laporan.selesai') }}" class="p-2 text-gray-400 hover:text-rose-500 transition-colors" title="Hapus Pencarian">
-                            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        <div class="mb-6 bg-white p-5 rounded-xl border border-gray-200 shadow-sm flex flex-col lg:flex-row justify-between items-start lg:items-end gap-5">
+
+            <form method="GET" action="{{ route('admin.laporan.selesai') }}" class="w-full lg:w-auto flex flex-col sm:flex-row items-end gap-3">
+
+                <div class="w-full sm:w-56">
+                    <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">Cari Data</label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <svg class="h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                             </svg>
-                        </a>
-                        @endif
-                        <button type="submit" class="h-full px-4 text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 rounded-r-lg focus:outline-none transition-colors">
-                            Cari
-                        </button>
+                        </div>
+                        <input type="text" name="search" value="{{ request('search') }}" placeholder="Judul, lokasi..." class="block w-full pl-9 pr-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-indigo-500 focus:border-indigo-500 transition">
                     </div>
-                </form>
+                </div>
+
+                <div class="w-full sm:w-36">
+                    <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">Dari Tanggal</label>
+                    <input type="date" name="tgl_mulai" value="{{ request('tgl_mulai') }}" class="block w-full py-2 px-3 border border-gray-300 rounded-lg text-sm focus:ring-indigo-500 focus:border-indigo-500 transition">
+                </div>
+
+                <div class="w-full sm:w-36">
+                    <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">Sampai Tanggal</label>
+                    <input type="date" name="tgl_selesai" value="{{ request('tgl_selesai') }}" class="block w-full py-2 px-3 border border-gray-300 rounded-lg text-sm focus:ring-indigo-500 focus:border-indigo-500 transition">
+                </div>
+
+                <div class="flex gap-2 w-full sm:w-auto">
+                    <button type="submit" class="w-full sm:w-auto bg-indigo-600 text-white px-5 py-2 rounded-lg text-sm font-bold shadow-sm hover:bg-indigo-700 transition">
+                        Filter
+                    </button>
+
+                    @if(request('search') || request('tgl_mulai') || request('tgl_selesai'))
+                    <a href="{{ route('admin.laporan.selesai') }}" class="w-full sm:w-auto flex items-center justify-center bg-gray-100 text-gray-600 px-3 py-2 rounded-lg text-sm font-bold border border-gray-300 hover:bg-gray-200 transition" title="Reset Filter">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </a>
+                    @endif
+                </div>
+            </form>
+
+            <div class="w-full lg:w-auto">
+                <a href="{{ route('admin.laporan.export_selesai', request()->query()) }}"
+                    class="inline-flex w-full sm:w-auto justify-center items-center gap-2 px-5 py-2 bg-rose-600 text-white rounded-lg font-bold text-sm tracking-wide hover:bg-rose-700 transition shadow-sm border border-transparent focus:ring-2 focus:ring-offset-2 focus:ring-rose-500">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path>
+                    </svg>
+                    Ekspor PDF
+                </a>
             </div>
+
         </div>
 
-        <div class="bg-white overflow-hidden border border-gray-200 sm:rounded-lg shadow-sm">
+        <div class="bg-white overflow-hidden border border-gray-200 sm:rounded-xl shadow-sm">
             <div class="overflow-x-auto">
                 <table class="min-w-full divide-y divide-gray-200">
                     <thead class="bg-gray-50">
                         <tr>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tgl. Selesai</th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Judul Laporan & Lokasi</th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Pelapor</th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Teknisi Penanggung Jawab</th>
-                            <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
+                            <th scope="col" class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Tgl. Selesai</th>
+                            <th scope="col" class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Judul Laporan & Lokasi</th>
+                            <th scope="col" class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Pelapor</th>
+                            <th scope="col" class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Teknisi Bertugas</th>
+                            <th scope="col" class="px-6 py-4 text-right text-xs font-bold text-gray-500 uppercase tracking-wider">Aksi</th>
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
                         @forelse($laporans as $lap)
                         <tr class="hover:bg-gray-50 transition-colors duration-150">
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                                {{ $lap->updated_at->format('d M Y') }}
-                                <div class="text-xs text-gray-400">{{ $lap->updated_at->format('H:i') }} WIB</div>
+                                <span class="font-semibold text-gray-800">{{ $lap->updated_at->format('d M Y') }}</span>
+                                <div class="text-xs text-gray-400 mt-0.5">{{ $lap->updated_at->format('H:i') }} WIB</div>
                             </td>
                             <td class="px-6 py-4">
-                                <div class="text-sm font-bold text-gray-900">{{ $lap->judul }}</div>
-                                <div class="text-xs text-gray-500 mt-1">{{ $lap->lokasi }}</div>
+                                <div class="text-sm font-bold text-indigo-700">{{ $lap->judul }}</div>
+                                <div class="text-xs text-gray-500 mt-1 flex items-center gap-1">
+                                    <svg class="w-3 h-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                    </svg>
+                                    {{ $lap->lokasi }}
+                                </div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
                                 {{ $lap->pelapor->nama_lengkap ?? 'Anonim' }}
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm">
                                 @if($lap->penugasan && $lap->penugasan->teknisi)
-                                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-indigo-50 text-indigo-700 border border-indigo-100 font-medium text-xs">
+                                <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-indigo-50 text-indigo-700 border border-indigo-100 font-medium text-xs">
                                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
                                     </svg>
                                     {{ $lap->penugasan->teknisi->nama_lengkap }}
                                 </span>
                                 @else
-                                <span class="text-gray-400 italic">Tidak ada data teknisi</span>
+                                <span class="text-gray-400 italic text-xs">Tidak ada data</span>
                                 @endif
                             </td>
 
                             <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                <div class="flex items-center justify-end gap-3">
-                                    <a href="{{ route('admin.laporan.show', $lap->id) }}" class="inline-flex items-center text-indigo-600 hover:text-indigo-900 bg-white border border-gray-200 hover:bg-gray-50 px-3 py-1.5 rounded-md transition-colors" title="Lihat Detail & Bukti">
+                                <div class="flex items-center justify-end gap-2">
+                                    <a href="{{ route('admin.laporan.show', $lap->id) }}" class="inline-flex items-center text-indigo-600 hover:text-indigo-900 bg-white border border-gray-200 hover:bg-gray-50 px-3 py-1.5 rounded-md transition-colors font-semibold" title="Lihat Detail & Bukti">
                                         Lihat
                                     </a>
 
@@ -84,7 +118,7 @@
                                         @click="deleteModalOpen = true; 
                                                 deleteUrl = '{{ route('admin.laporan.destroy', $lap->id) }}'; 
                                                 deleteTitle = '{{ addslashes($lap->judul) }}';"
-                                        class="inline-flex items-center text-rose-600 hover:text-rose-900 bg-white border border-rose-200 hover:bg-rose-50 px-3 py-1.5 rounded-md transition-colors" title="Hapus Laporan">
+                                        class="inline-flex items-center text-rose-600 hover:text-rose-900 bg-white border border-rose-200 hover:bg-rose-50 px-3 py-1.5 rounded-md transition-colors font-semibold" title="Hapus Laporan">
                                         Hapus
                                     </button>
                                 </div>
@@ -102,7 +136,7 @@
                                     {{ request('search') ? 'Pencarian tidak ditemukan' : 'Belum Ada Laporan Selesai' }}
                                 </h3>
                                 <p class="text-sm text-gray-500 mt-1">
-                                    {{ request('search') ? 'Coba gunakan kata kunci yang berbeda.' : 'Laporan yang telah diselesaikan oleh teknisi akan muncul di sini sebagai arsip.' }}
+                                    {{ request('search') ? 'Coba gunakan kata kunci yang berbeda atau hapus filter tanggal.' : 'Laporan yang telah diselesaikan oleh teknisi akan muncul di sini sebagai arsip.' }}
                                 </p>
                             </td>
                         </tr>
@@ -112,7 +146,7 @@
             </div>
 
             @if($laporans->hasPages())
-            <div class="bg-gray-50 px-6 py-3 border-t border-gray-200">
+            <div class="bg-gray-50 px-6 py-4 border-t border-gray-200">
                 {{ $laporans->links() }}
             </div>
             @endif
@@ -132,14 +166,14 @@
                 </div>
 
                 <div class="px-6 py-4 bg-gray-50 border-t border-gray-200 flex flex-row-reverse gap-3">
-                    <form :action="deleteUrl" method="POST" class="inline-flex">
+                    <form :action="deleteUrl" method="POST" class="inline-flex w-full sm:w-auto">
                         @csrf
                         @method('DELETE')
-                        <button type="submit" class="px-4 py-2 bg-rose-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-rose-700 transition">
+                        <button type="submit" class="w-full sm:w-auto px-4 py-2 bg-rose-600 border border-transparent rounded-lg font-bold text-sm text-white hover:bg-rose-700 transition">
                             Hapus Permanen
                         </button>
                     </form>
-                    <button type="button" @click="deleteModalOpen = false" class="px-4 py-2 bg-white border border-gray-300 rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest hover:bg-gray-50 transition">
+                    <button type="button" @click="deleteModalOpen = false" class="w-full sm:w-auto px-4 py-2 bg-white border border-gray-300 rounded-lg font-bold text-sm text-gray-700 hover:bg-gray-50 transition">
                         Batal
                     </button>
                 </div>
