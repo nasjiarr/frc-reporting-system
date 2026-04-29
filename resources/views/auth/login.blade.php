@@ -24,11 +24,6 @@
         <div>
             <div class="flex items-center justify-between">
                 <label for="password" class="block text-sm font-medium leading-6 text-gray-900">Kata Sandi</label>
-                @if (Route::has('password.request'))
-                <a href="{{ route('password.request') }}" class="text-sm font-medium text-indigo-600 hover:text-indigo-500 transition-colors">
-                    Lupa sandi?
-                </a>
-                @endif
             </div>
             <div class="mt-2">
                 <input id="password" type="password" name="password" required autocomplete="current-password"
@@ -40,17 +35,13 @@
             @enderror
         </div>
 
-        <div class="flex items-center">
-            <input id="remember_me" type="checkbox" name="remember" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600 transition-colors">
-            <label for="remember_me" class="ml-3 block text-sm leading-6 text-gray-600">Ingat sesi saya di perangkat ini</label>
-        </div>
 
         <div class="pt-2">
             <button type="submit" class="flex w-full justify-center items-center rounded-md bg-indigo-600 px-3 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 transition ease-in-out duration-150">
                 <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"></path>
                 </svg>
-                Masuk ke Sistem
+                Masuk
             </button>
         </div>
     </form>

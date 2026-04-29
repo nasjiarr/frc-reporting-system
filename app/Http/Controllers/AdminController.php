@@ -80,9 +80,17 @@ class AdminController extends Controller
 
     public function penugasanIndex()
     {
-        $laporanBaru = Laporan::where('status', 'Baru')->latest()->get();
-        $teknisi = User::where('role', 'Teknisi')->get();
-        return view('admin.penugasan.index', compact('laporanBaru', 'teknisi'));
+        // 1. (Baru) Mengambil data semua penugasan untuk ditampilkan di tabel monitoring beserta relasinya
+        $penugasans = \App\Models\Penugasan::with(['laporan', 'teknisi'])
+            ->latest()
+            ->paginate(10);
+
+        // 2. (Lama) Dipertahankan agar tidak error jika ada form/modal penugasan yang masih memakai data ini
+        $laporanBaru = \App\Models\Laporan::where('status', 'Baru')->latest()->get();
+        $teknisi = \App\Models\User::where('role', 'Teknisi')->get();
+
+        // 3. Kirim ketiga variabel ke View
+        return view('admin.penugasan.index', compact('penugasans', 'laporanBaru', 'teknisi'));
     }
 
     public function assignStore(Request $request, Laporan $laporan)
