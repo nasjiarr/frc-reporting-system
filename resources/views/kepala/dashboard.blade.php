@@ -26,18 +26,18 @@
     <x-card>
         <h3 class="font-bold text-lg mb-4 text-gray-800">Menu Cepat Pimpinan</h3>
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <a href="{{ route('kepala.utilitas.index') }}" class="p-4 border rounded-lg hover:bg-indigo-50 transition flex items-center gap-4">
-                <div class="bg-indigo-100 p-3 rounded text-indigo-600 font-bold">📊</div>
+            <a href="{{ route('kepala.laporan.index') }}" class="p-4 border rounded-lg hover:bg-indigo-50 transition flex items-center gap-4">
+                <div class="bg-indigo-100 p-3 rounded text-indigo-600 font-bold">📋</div>
                 <div>
-                    <div class="font-bold">Rekap Utilitas</div>
-                    <div class="text-xs text-gray-500">Pantau tren air dan listrik gedung.</div>
+                    <div class="font-bold">Rekap Laporan</div>
+                    <div class="text-xs text-gray-500">Buka daftar semua laporan untuk analisis.</div>
                 </div>
             </a>
-            <a href="{{ route('kepala.kinerja.index') }}" class="p-4 border rounded-lg hover:bg-green-50 transition flex items-center gap-4">
-                <div class="bg-green-100 p-3 rounded text-green-600 font-bold">👷</div>
+            <a href="{{ route('kepala.laporan.index') }}" class="p-4 border rounded-lg hover:bg-green-50 transition flex items-center gap-4">
+                <div class="bg-green-100 p-3 rounded text-green-600 font-bold">🕒</div>
                 <div>
-                    <div class="font-bold">Kinerja Teknisi</div>
-                    <div class="text-xs text-gray-500">Monitor produktivitas staf teknis.</div>
+                    <div class="font-bold">Laporan Terbaru</div>
+                    <div class="text-xs text-gray-500">Cek laporan masuk terbaru dan statusnya.</div>
                 </div>
             </a>
         </div>

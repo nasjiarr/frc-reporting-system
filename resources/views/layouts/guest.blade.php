@@ -19,34 +19,71 @@
         body {
             font-family: 'Inter', sans-serif;
         }
+
+        .bg-left-pattern {
+            position: relative;
+        }
+
+        .bg-left-pattern::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('{{ asset("images/gedung-frc.jpg") }}');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            filter: brightness(0.5) contrast(1.2);
+            z-index: -1;
+        }
     </style>
 </head>
 
 <body class="bg-slate-50 antialiased text-slate-800 selection:bg-indigo-100 selection:text-indigo-900">
-    <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0">
+    <div class="min-h-screen flex flex-col sm:flex-row">
 
-        <div class="mb-8 text-center">
-            <a href="/">
-                <img src="{{ asset('images/logo-frc.png') }}" alt="Logo FRC" class="h-32 md:h-40 w-auto mx-auto mb-4">
+        <!-- Sisi Kiri: Brand Area -->
+        <div class="w-full sm:w-3/5 bg-left-pattern flex flex-col justify-center items-center px-8 sm:px-12 py-12 sm:py-16">
+            <div class="text-center">
 
-                <h1 class="text-2xl font-bold text-indigo-700 tracking-tight">
-                    FRC<span class="text-slate-800">Report</span>
+                <!-- BANTALAN LOGO YANG TELAH DIRAPIKAN -->
+                <div class="flex items-center justify-center w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48 bg-white rounded-full shadow-xl mb-6 sm:mb-8 mx-auto">
+                    <!-- object-contain memastikan logo tidak terdistorsi -->
+                    <img src="{{ asset('images/logo-frc.png') }}" alt="Logo FRC" class="w-20 sm:w-24 md:w-32 h-auto object-contain drop-shadow-sm">
+                </div>
+
+                <h1 class="text-4xl sm:text-5xl font-bold text-white tracking-tight mb-3 sm:mb-4">
+                    FRC
                 </h1>
-            </a>
-            <p class="mt-2 text-sm text-gray-500 font-medium">Sistem Informasi Pelaporan Terpadu</p>
+
+                <p class="text-lg sm:text-xl text-indigo-100 font-medium mb-2">
+                    Field Research Center Report
+                </p>
+
+                <p class="text-sm text-indigo-200">
+                    Supporting Research Through Better Facilities
+                </p>
+            </div>
         </div>
 
-        <div class="w-full sm:max-w-md px-8 py-10 bg-white border border-gray-200 shadow-sm sm:rounded-xl overflow-hidden relative">
+        <!-- Sisi Kanan: Form Area -->
+        <div class="w-full sm:w-2/5 bg-white flex flex-col justify-center items-center px-8 py-12 sm:py-16 relative">
 
-            <div class="absolute top-0 left-0 w-full h-1 bg-indigo-600"></div>
+            <div class="w-full max-w-md">
 
-            {{ $slot }}
+                <div class="absolute top-0 left-0 w-full h-1 bg-indigo-600"></div>
 
+                {{ $slot }}
+
+            </div>
+
+            <div class="mt-8 sm:mt-10 text-center text-xs text-gray-400">
+                &copy; {{ date('Y') }} Field Research Center (FRC).<br>Sekolah Vokasi UGM.
+            </div>
         </div>
 
-        <div class="mt-10 text-center text-xs text-gray-400">
-            &copy; {{ date('Y') }} Field Research Center (FRC).<br>Sekolah Vokasi UGM.
-        </div>
     </div>
 </body>
 

@@ -4,7 +4,7 @@
         <p class="text-sm text-gray-600 mt-1">Pusat kendali operasional pelaporan dan penugasan teknisi FRC.</p>
     </x-slot>
 
-    <div class="py-12">
+    <div class="py-0">
         <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
 
             @if($bln_ini_belum_isi)

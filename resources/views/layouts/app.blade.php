@@ -23,72 +23,122 @@
 </head>
 
 <body class="antialiased bg-slate-50 text-slate-800">
-    <div class="min-h-screen">
+    <div class="min-h-screen bg-slate-50 flex" x-data="{ sidebarOpen: false }">
+        <!-- Sidebar -->
+        <div class="fixed inset-y-0 left-0 z-50 w-64 bg-indigo-600 shadow-xl transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0" :class="{ '-translate-x-full': !sidebarOpen, 'translate-x-0': sidebarOpen }">
+            <div class="flex flex-col h-full">
+                <!-- Logo -->
+                <div class="flex items-center justify-center h-16 px-4 border-b border-indigo-500">
+                    <a href="{{ route('dashboard') }}" class="flex items-center gap-3">
+                        <span class="flex items-center justify-center h-12 w-12 rounded-full bg-white p-2 shadow-sm">
+                            <img src="{{ asset('images/logo-frc.png') }}" alt="Logo" class="h-8 w-auto">
+                        </span>
+                        <span class="font-bold text-lg tracking-tight text-white">
+                            FRC<span class="text-blue-100">Report</span>
+                        </span>
+                    </a>
+                </div>
 
-        <nav x-data="{ open: false }" class="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="flex justify-between h-16">
-                    <div class="flex">
-                        <div class="shrink-0 flex items-center">
-                            <a href="{{ route('dashboard') }}" class="flex items-center gap-3">
-                                <img src="{{ asset('images/logo-frc.png') }}" alt="Logo" class="h-12 w-auto">
+                <!-- Navigation Menu -->
+                <nav class="flex-1 px-4 py-6 space-y-2 text-white">
+                    @if(Auth::user()->role !== 'Teknisi')
+                    <a href="{{ route('dashboard') }}" class="flex items-center px-4 py-2 text-sm font-medium rounded-lg {{ request()->routeIs(['dashboard', 'admin.dashboard', 'pelapor.dashboard', 'kepala.dashboard']) ? 'bg-indigo-700 text-white border-r-2 border-white' : 'text-white hover:bg-indigo-500 hover:text-white' }} transition-colors">
+                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5a2 2 0 012-2h4a2 2 0 012 2v2H8V5z"></path>
+                        </svg>
+                        Dashboard
+                    </a>
+                    @endif
 
-                                <span class="font-bold text-xl tracking-tight text-indigo-700 hidden md:block">
-                                    FRC<span class="text-slate-800">Report</span>
-                                </span>
-                            </a>
-                        </div>
+                    @if(Auth::user()->role === 'Pelapor')
+                    <a href="{{ route('pelapor.laporan.index') }}" class="flex items-center px-4 py-2 text-sm font-medium rounded-lg {{ request()->routeIs('pelapor.laporan.*') ? 'bg-indigo-700 text-white border-r-2 border-white' : 'text-white hover:bg-indigo-500 hover:text-white' }} transition-colors">
+                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                        </svg>
+                        Laporan Saya
+                    </a>
+                    @elseif(Auth::user()->role === 'Admin')
+                    <a href="{{ route('admin.laporan.index') }}" class="flex items-center px-4 py-2 text-sm font-medium rounded-lg {{ request()->routeIs(['admin.laporan.index', 'admin.laporan.create']) ? 'bg-indigo-700 text-white border-r-2 border-white' : 'text-white hover:bg-indigo-500 hover:text-white' }} transition-colors">
+                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                        </svg>
+                        Laporan Saya
+                    </a>
+                    <a href="{{ route('admin.users.index') }}" class="flex items-center px-4 py-2 text-sm font-medium rounded-lg {{ request()->routeIs('admin.users.*') ? 'bg-indigo-700 text-white border-r-2 border-white' : 'text-white hover:bg-indigo-500 hover:text-white' }} transition-colors">
+                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"></path>
+                        </svg>
+                        Kelola User
+                    </a>
+                    <a href="{{ route('admin.penugasan.index') }}" class="flex items-center px-4 py-2 text-sm font-medium rounded-lg {{ request()->routeIs('admin.penugasan.*') ? 'bg-indigo-700 text-white border-r-2 border-white' : 'text-white hover:bg-indigo-500 hover:text-white' }} transition-colors">
+                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                        </svg>
+                        Penugasan
+                    </a>
+                    <a href="{{ route('admin.laporan.selesai') }}" class="flex items-center px-4 py-2 text-sm font-medium rounded-lg {{ request()->routeIs('admin.laporan.selesai') ? 'bg-indigo-700 text-white border-r-2 border-white' : 'text-white hover:bg-indigo-500 hover:text-white' }} transition-colors">
+                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        Laporan Selesai
+                    </a>
+                    <a href="{{ route('admin.utilitas.index') }}" class="flex items-center px-4 py-2 text-sm font-medium rounded-lg {{ request()->routeIs('admin.utilitas.*') ? 'bg-indigo-700 text-white border-r-2 border-white' : 'text-white hover:bg-indigo-500 hover:text-white' }} transition-colors">
+                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                        </svg>
+                        Utilitas
+                    </a>
+                    @elseif(Auth::user()->role === 'Teknisi')
+                    <a href="{{ route('teknisi.dashboard') }}" class="flex items-center px-4 py-2 text-sm font-medium rounded-lg {{ request()->routeIs('teknisi.dashboard') || request()->routeIs('teknisi.tugas.*') ? 'bg-indigo-700 text-white border-r-2 border-white' : 'text-white hover:bg-indigo-500 hover:text-white' }} transition-colors">
+                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                        </svg>
+                        Tugas Aktif
+                    </a>
+                    <a href="{{ route('teknisi.riwayat') }}" class="flex items-center px-4 py-2 text-sm font-medium rounded-lg {{ request()->routeIs('teknisi.riwayat') ? 'bg-indigo-700 text-white border-r-2 border-white' : 'text-white hover:bg-indigo-500 hover:text-white' }} transition-colors">
+                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        Riwayat Pekerjaan
+                    </a>
+                    @elseif(Auth::user()->role === 'KepalaFRC')
+                    <a href="{{ route('kepala.laporan.index') }}" class="flex items-center px-4 py-2 text-sm font-medium rounded-lg {{ request()->routeIs('kepala.laporan.*') ? 'bg-indigo-700 text-white border-r-2 border-white' : 'text-white hover:bg-indigo-500 hover:text-white' }} transition-colors">
+                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                        </svg>
+                        Rekap Laporan
+                    </a>
+                    @endif
+                </nav>
+            </div>
+        </div>
 
-                        <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                            @if(Auth::user()->role !== 'Teknisi')
-                            <x-nav-link :href="route('dashboard')" :active="request()->routeIs('*dashboard')">
-                                Dashboard
-                            </x-nav-link>
-                            @endif
+        <!-- Overlay for mobile -->
+        <div x-show="sidebarOpen" @click="sidebarOpen = false" class="fixed inset-0 z-40 bg-black bg-opacity-50 lg:hidden" style="display: none;"></div>
 
-                            @if(Auth::user()->role === 'Pelapor')
-                            <x-nav-link href="{{ route('pelapor.laporan.index') }}" :active="request()->routeIs('pelapor.laporan.*')">
-                                Laporan Saya
-                            </x-nav-link>
-                            @elseif(Auth::user()->role === 'Admin')
-                            <x-nav-link :href="route('admin.laporan.index')" :active="request()->routeIs(['admin.laporan.index', 'admin.laporan.create'])">
-                                Laporan Saya
-                            </x-nav-link>
-                            <x-nav-link :href="route('admin.users.index')" :active="request()->routeIs('admin.users.*')">
-                                Kelola User
-                            </x-nav-link>
-                            <x-nav-link :href="route('admin.penugasan.index')" :active="request()->routeIs('admin.penugasan.*')">
-                                Penugasan
-                            </x-nav-link>
-                            <x-nav-link :href="route('admin.laporan.selesai')" :active="request()->routeIs('admin.laporan.selesai')">
-                                Laporan Selesai
-                            </x-nav-link>
-                            <x-nav-link :href="route('admin.utilitas.index')" :active="request()->routeIs('admin.utilitas.*')">
-                                Utilitas
-                            </x-nav-link>
-                            @elseif(Auth::user()->role === 'Teknisi')
-                            <x-nav-link :href="route('teknisi.dashboard')" :active="request()->routeIs('teknisi.dashboard') || request()->routeIs('teknisi.tugas.*')">
-                                Tugas Aktif
-                            </x-nav-link>
-                            <x-nav-link :href="route('teknisi.riwayat')" :active="request()->routeIs('teknisi.riwayat')">
-                                Riwayat Pekerjaan
-                            </x-nav-link>
-                            @elseif(Auth::user()->role === 'KepalaFRC')
-                            <x-nav-link :href="route('kepala.laporan.index')" :active="request()->routeIs('kepala.laporan.*')">
-                                Daftar Laporan
-                            </x-nav-link>
-                            @endif
-                        </div>
-                    </div>
+        <!-- Main Content -->
+        <div class="flex-1 flex flex-col overflow-hidden">
+            <!-- Top Navbar -->
+            <header class="bg-white shadow-sm border-b border-gray-200">
+                <div class="flex items-center justify-between px-4 py-3">
+                    <!-- Mobile menu button -->
+                    <button @click="sidebarOpen = !sidebarOpen" class="lg:hidden p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500">
+                        <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
+                            <path :class="{'hidden': sidebarOpen, 'inline-flex': !sidebarOpen}" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                            <path :class="{'hidden': !sidebarOpen, 'inline-flex': sidebarOpen}" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
 
-                    <div class="hidden sm:flex sm:items-center sm:ms-6">
-
+                    <!-- Notification Bell and Profile -->
+                    <div class="flex items-center ml-auto space-x-3">
                         <div class="relative" x-data="{ notifOpen: false }">
-                            <button @click="notifOpen = !notifOpen; if(notifOpen) markAsRead()" class="relative p-2 text-gray-400 hover:text-gray-500 mr-3 focus:outline-none transition-colors">
+                            <button @click="notifOpen = !notifOpen; if(notifOpen) markAsRead()" class="relative p-2 text-gray-400 hover:text-gray-500 focus:outline-none transition-colors">
                                 <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" />
                                 </svg>
-                                <span id="notif-badge" class="hidden absolute top-1 right-1 items-center justify-center px-2 py-1 text-[10px] font-bold leading-none text-white transform translate-x-1/2 -translate-y-1/2 bg-rose-600 rounded-full border-2 border-white shadow-sm">0</span>
+                                <span id="notif-badge" class="hidden absolute -top-1 -right-1 items-center justify-center px-2 py-1 text-[10px] font-bold leading-none text-white transform translate-x-1/2 -translate-y-1/2 bg-rose-600 rounded-full border-2 border-white shadow-sm">0</span>
                             </button>
 
                             <div x-show="notifOpen" @click.away="notifOpen = false" style="display: none;"
@@ -113,12 +163,10 @@
                                     </div>
                                 </div>
 
-                                <div class="px-4 py-2 border-t border-gray-100 text-center bg-gray-50">
-                                    <a href="#" class="text-xs font-semibold text-indigo-600 hover:text-indigo-800 transition-colors">Lihat Semua Notifikasi</a>
-                                </div>
                             </div>
                         </div>
 
+                        <!-- Profile Dropdown -->
                         <x-dropdown align="right" width="48">
                             <x-slot name="trigger">
                                 <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm font-medium rounded-md text-gray-600 bg-white hover:text-gray-900 hover:bg-gray-50 focus:outline-none transition ease-in-out duration-150 shadow-sm border-gray-200">
@@ -146,113 +194,38 @@
                             </x-slot>
                         </x-dropdown>
                     </div>
-
-                    <div class="-me-2 flex items-center sm:hidden">
-                        <button @click="open = ! open" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out">
-                            <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
-                                <path :class="{'hidden': open, 'inline-flex': ! open }" class="inline-flex" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-                                <path :class="{'hidden': ! open, 'inline-flex': open }" class="hidden" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                            </svg>
-                        </button>
-                    </div>
                 </div>
-            </div>
+            </header>
 
-            <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden bg-white border-t border-gray-200">
-                <div class="pt-2 pb-3 space-y-1">
-                    @if(Auth::user()->role !== 'Teknisi')
-                    <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('*dashboard')">
-                        Dashboard
-                    </x-responsive-nav-link>
-                    @endif
+            <!-- Page Content -->
+            <main class="flex-1 overflow-y-auto py-2">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    @isset($header)
+                    <header class="bg-slate-50 pt-6 pb-4 mb-8">
+                        <div class="border-b border-gray-200 pb-4">
+                            {{ $header }}
+                        </div>
+                    </header>
+                    @endisset
 
-                    @if(Auth::user()->role === 'Pelapor')
-                    <x-responsive-nav-link :href="route('pelapor.laporan.index')" :active="request()->routeIs('pelapor.laporan.*')">
-                        Laporan Saya
-                    </x-responsive-nav-link>
-                    @elseif(Auth::user()->role === 'Admin')
-                    <x-responsive-nav-link :href="route('admin.laporan.index')" :active="request()->routeIs(['admin.laporan.index', 'admin.laporan.create'])">
-                        Laporan Saya
-                    </x-responsive-nav-link>
-                    <x-responsive-nav-link :href="route('admin.users.index')" :active="request()->routeIs('admin.users.*')">
-                        Kelola User
-                    </x-responsive-nav-link>
-                    <x-responsive-nav-link :href="route('admin.penugasan.index')" :active="request()->routeIs('admin.penugasan.*')">
-                        Penugasan
-                    </x-responsive-nav-link>
-                    <x-responsive-nav-link :href="route('admin.laporan.selesai')" :active="request()->routeIs('admin.laporan.selesai')">
-                        Laporan Selesai
-                    </x-responsive-nav-link>
-                    <x-responsive-nav-link :href="route('admin.utilitas.index')" :active="request()->routeIs('admin.utilitas.*')">
-                        Utilitas
-                    </x-responsive-nav-link>
-                    @elseif(Auth::user()->role === 'Teknisi')
-                    <x-responsive-nav-link :href="route('teknisi.dashboard')" :active="request()->routeIs('teknisi.dashboard') || request()->routeIs('teknisi.tugas.*')">
-                        Tugas Aktif
-                    </x-responsive-nav-link>
-                    <x-responsive-nav-link :href="route('teknisi.riwayat')" :active="request()->routeIs('teknisi.riwayat')">
-                        Riwayat Pekerjaan
-                    </x-responsive-nav-link>
-                    @elseif(Auth::user()->role === 'KepalaFRC')
-                    <x-responsive-nav-link :href="route('kepala.laporan.index')" :active="request()->routeIs('kepala.laporan.*')">
-                        Daftar Laporan
-                    </x-responsive-nav-link>
-                    @endif
+                    <div class="mb-6">
+                        @if (session('success'))
+                        <div class="p-4 border-l-4 border-emerald-500 bg-emerald-50 text-emerald-800 rounded-md shadow-sm text-sm font-medium">
+                            {{ session('success') }}
+                        </div>
+                        @endif
+
+                        @if (session('error'))
+                        <div class="p-4 border-l-4 border-rose-500 bg-rose-50 text-rose-800 rounded-md shadow-sm text-sm font-medium">
+                            {{ session('error') }}
+                        </div>
+                        @endif
+                    </div>
+
+                    {{ $slot }}
                 </div>
-
-                <div class="pt-4 pb-1 border-t border-gray-200 bg-gray-50">
-                    <div class="px-4">
-                        <div class="font-medium text-base text-indigo-900">{{ Auth::user()->nama_lengkap }}</div>
-                        <div class="font-medium text-sm text-gray-500">{{ Auth::user()->email }}</div>
-                    </div>
-
-                    <div class="mt-3 space-y-1">
-                        <x-responsive-nav-link :href="route('profile.edit')">
-                            {{ __('Profile') }}
-                        </x-responsive-nav-link>
-
-                        <form method="POST" action="{{ route('logout') }}">
-                            @csrf
-                            <x-responsive-nav-link :href="route('logout')"
-                                onclick="event.preventDefault(); this.closest('form').submit();" class="text-rose-600 font-semibold">
-                                {{ __('Log Out') }}
-                            </x-responsive-nav-link>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </nav>
-
-        @isset($header)
-        <header class="bg-slate-50 pt-8 pb-4">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 border-b border-gray-200 pb-4">
-                {{ $header }}
-            </div>
-        </header>
-        @endisset
-
-        <main class="py-8">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-
-                <div class="mb-6">
-                    @if (session('success'))
-                    <div class="p-4 border-l-4 border-emerald-500 bg-emerald-50 text-emerald-800 rounded-md shadow-sm text-sm font-medium">
-                        {{ session('success') }}
-                    </div>
-                    @endif
-
-                    @if (session('error'))
-                    <div class="p-4 border-l-4 border-rose-500 bg-rose-50 text-rose-800 rounded-md shadow-sm text-sm font-medium">
-                        {{ session('error') }}
-                    </div>
-                    @endif
-                </div>
-
-                {{ $slot }}
-
-            </div>
-        </main>
-
+            </main>
+        </div>
     </div>
 
     <script>
