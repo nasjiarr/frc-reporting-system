@@ -1,7 +1,15 @@
 <x-app-layout>
     <x-slot name="header">
         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">Detail Laporan: {{ $laporan->judul }}</h2>
+            <div class="flex items-center gap-3">
+                <a href="{{ url()->previous() }}" class="inline-flex items-center px-3 py-1.5 bg-white border border-gray-300 rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                    <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                    </svg>
+                    Kembali
+                </a>
+                <h2 class="font-semibold text-xl text-gray-800 leading-tight">Detail Laporan: {{ $laporan->judul }}</h2>
+            </div>
 
             @if($laporan->status === 'Selesai' && $laporan->penugasan && $laporan->penugasan->hasilPerbaikan)
             <a href="{{ route('admin.laporan.export_pdf', $laporan->id) }}" class="inline-flex items-center gap-2 px-4 py-2 bg-rose-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-rose-700 focus:bg-rose-700 active:bg-rose-900 shadow-sm transition ease-in-out duration-150">

@@ -13,7 +13,7 @@
             <div class="flex gap-2">
                 <form action="{{ route('admin.utilitas.show', $jenis) }}" method="GET" class="flex gap-2">
                     <input type="number" name="tahun" value="{{ $tahun }}" class="rounded-md border-gray-300 text-sm w-24">
-                    <button type="submit" class="bg-gray-100 px-3 py-2 rounded-md text-sm font-bold border hover:bg-gray-200">Filter</button>
+                    <button type="submit" class="bg-gray-100 px-3 py-2 rounded-md text-sm font-bold border hover:bg-gray-200">Cari</button>
                 </form>
                 <a href="{{ route('admin.utilitas.export_pdf', ['jenis' => $jenis, 'tahun' => $tahun]) }}" class="bg-rose-600 text-white px-3 py-2 rounded-md font-bold text-xs uppercase hover:bg-rose-700 transition flex items-center gap-1 shadow-sm">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

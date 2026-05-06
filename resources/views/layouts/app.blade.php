@@ -134,34 +134,39 @@
                     <!-- Notification Bell and Profile -->
                     <div class="flex items-center ml-auto space-x-3">
                         <div class="relative" x-data="{ notifOpen: false }">
-                            <button @click="notifOpen = !notifOpen; if(notifOpen) markAsRead()" class="relative p-2 text-gray-400 hover:text-gray-500 focus:outline-none transition-colors">
+                            <button @click="notifOpen = !notifOpen; if(notifOpen) markAsRead()" class="relative p-2 text-gray-500 hover:text-indigo-600 hover:bg-indigo-50 rounded-full focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition-all duration-200">
                                 <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" />
                                 </svg>
-                                <span id="notif-badge" class="hidden absolute -top-1 -right-1 items-center justify-center px-2 py-1 text-[10px] font-bold leading-none text-white transform translate-x-1/2 -translate-y-1/2 bg-rose-600 rounded-full border-2 border-white shadow-sm">0</span>
+                                <span id="notif-badge" class="hidden absolute top-0 right-0 flex items-center justify-center w-4 h-4 text-[10px] font-bold text-white bg-rose-500 border-2 border-white rounded-full shadow-sm">0</span>
                             </button>
 
                             <div x-show="notifOpen" @click.away="notifOpen = false" style="display: none;"
                                 x-transition:enter="transition ease-out duration-200"
-                                x-transition:enter-start="opacity-0 scale-95"
-                                x-transition:enter-end="opacity-100 scale-100"
-                                x-transition:leave="transition ease-in duration-75"
-                                x-transition:leave-start="opacity-100 scale-100"
-                                x-transition:leave-end="opacity-0 scale-95"
-                                class="absolute right-0 mt-2 w-80 bg-white border border-gray-200 rounded-xl shadow-lg py-1 z-50 overflow-hidden">
+                                x-transition:enter-start="opacity-0 scale-95 translate-y-2"
+                                x-transition:enter-end="opacity-100 scale-100 translate-y-0"
+                                x-transition:leave="transition ease-in duration-150"
+                                x-transition:leave-start="opacity-100 scale-100 translate-y-0"
+                                x-transition:leave-end="opacity-0 scale-95 translate-y-2"
+                                class="absolute right-0 mt-3 w-80 bg-white border border-gray-100 rounded-2xl shadow-xl z-50 overflow-hidden transform origin-top-right">
 
-                                <div class="px-4 py-3 border-b border-gray-100 bg-slate-50 flex justify-between items-center">
-                                    <span class="text-sm font-bold text-slate-800">Notifikasi Baru</span>
+                                <div class="px-4 py-3 border-b border-gray-100 bg-white flex justify-between items-center">
+                                    <h3 class="text-sm font-bold text-gray-900">Notifikasi Baru</h3>
+                                    <span class="px-2 py-0.5 text-[10px] font-semibold bg-indigo-50 text-indigo-600 rounded-full">Pembaruan</span>
                                 </div>
 
-                                <div class="max-h-72 overflow-y-auto" id="notif-list-container">
-                                    <div class="px-4 py-6 text-sm text-gray-500 text-center flex flex-col items-center">
-                                        <svg class="w-8 h-8 text-gray-300 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
-                                        </svg>
-                                        Belum ada notifikasi baru.
+                                <div class="max-h-80 overflow-y-auto divide-y divide-gray-50" id="notif-list-container">
+                                    <div class="px-4 py-8 text-center flex flex-col items-center justify-center">
+                                        <div class="w-12 h-12 bg-gray-50 rounded-full flex items-center justify-center mb-3">
+                                            <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+                                            </svg>
+                                        </div>
+                                        <p class="text-sm font-medium text-gray-900">Belum ada notifikasi</p>
+                                        <p class="text-xs text-gray-500 mt-1">Anda sudah membaca semuanya.</p>
                                     </div>
                                 </div>
+
 
                             </div>
                         </div>
@@ -246,12 +251,27 @@
                         if (data.latest) {
                             const judul = data.latest.judul || data.latest.title || data.latest.type || 'Pemberitahuan Baru';
                             const pesan = data.latest.pesan || data.latest.message || data.latest.data || 'Ada pembaruan pada aktivitas Anda.';
+                            const waktu = data.latest.created_at || 'Baru saja';
 
                             listContainer.innerHTML = `
-                            <a href="#" class="block px-4 py-3 hover:bg-slate-50 border-b border-gray-50 transition-colors">
-                                <p class="text-sm font-semibold text-gray-800">${judul}</p>
-                                <p class="text-xs text-gray-600 mt-1 line-clamp-2">${pesan}</p>
-                                <p class="text-[10px] text-gray-400 mt-2 font-medium uppercase tracking-wider">Belum dibaca</p>
+                            <a href="#" class="block px-4 py-4 hover:bg-slate-50 transition-colors group relative">
+                                <div class="flex gap-3">
+                                    <div class="flex-shrink-0 mt-0.5">
+                                        <div class="w-8 h-8 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                            </svg>
+                                        </div>
+                                    </div>
+                                    <div class="flex-1 min-w-0">
+                                        <p class="text-sm font-semibold text-gray-900 truncate">${judul}</p>
+                                        <p class="text-xs text-gray-600 mt-1 line-clamp-2 leading-relaxed">${pesan}</p>
+                                        <p class="text-[10px] font-medium text-gray-400 mt-2 flex items-center gap-1.5">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-indigo-500"></span>
+                                            ${waktu}
+                                        </p>
+                                    </div>
+                                </div>
                             </a>
                         `;
                         }

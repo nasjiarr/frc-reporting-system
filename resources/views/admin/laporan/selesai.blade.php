@@ -38,7 +38,7 @@
 
                 <div class="flex gap-2 w-full sm:w-auto">
                     <button type="submit" class="w-full sm:w-auto bg-indigo-600 text-white px-5 py-2 rounded-lg text-sm font-bold shadow-sm hover:bg-indigo-700 transition">
-                        Filter
+                        Cari
                     </button>
 
                     @if(request('search') || request('tgl_mulai') || request('tgl_selesai'))
