@@ -5,10 +5,13 @@ namespace App\Models;
 use App\Observers\LaporanObserver; // Import class Observer-nya
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 #[ObservedBy([LaporanObserver::class])]
 class Laporan extends Model
 {
+
+    use HasFactory;
     protected $table = 'laporan'; // Mengatasi asumsi pluralisasi otomatis Laravel
 
     protected $fillable = [
