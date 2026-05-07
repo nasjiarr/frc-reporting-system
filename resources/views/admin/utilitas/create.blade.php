@@ -1,6 +1,6 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">Catat Stand Meter Utilitas</h2>
+        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-100 leading-tight">Catat Stand Meter Utilitas</h2>
     </x-slot>
 
     <div x-data="{ jenis: 'AirBersih' }" class="max-w-4xl mx-auto">
@@ -8,10 +8,10 @@
             <form action="{{ route('admin.utilitas.store') }}" method="POST">
                 @csrf
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6 pb-6 border-b">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6 pb-6 border-b dark:border-gray-700">
                     <div>
                         <x-input-label value="Jenis Utilitas" />
-                        <select x-model="jenis" name="jenis_utilitas" class="w-full border-gray-300 rounded-md shadow-sm font-bold text-indigo-700">
+                        <select x-model="jenis" name="jenis_utilitas" class="w-full border-gray-300 dark:border-gray-600 dark:bg-gray-700 rounded-md shadow-sm font-bold text-indigo-700 dark:text-indigo-400">
                             <option value="AirBersih">Air Bersih</option>
                             <option value="AirHujan">Air Hujan</option>
                             <option value="MDP">Listrik MDP (Panel Utama)</option>
@@ -36,7 +36,7 @@
                 </div>
 
                 <div x-show="['AirBersih', 'AirHujan', 'MDP'].includes(jenis)" class="space-y-4">
-                    <div class="bg-blue-50 p-4 rounded-lg border border-blue-100 grid grid-cols-2 gap-4">
+                    <div class="bg-blue-50 dark:bg-blue-900/30 p-4 rounded-lg border border-blue-100 dark:border-blue-800 grid grid-cols-2 gap-4">
                         <div>
                             <x-input-label value="Stand Meter AWAL" />
                             <x-text-input type="number" step="0.01" name="stand_awal" />
@@ -49,8 +49,8 @@
                 </div>
 
                 <div x-show="['SDP', 'Lift'].includes(jenis)" style="display: none;" class="space-y-4">
-                    <div class="bg-yellow-50 p-4 rounded-lg border border-yellow-100 mb-4 grid grid-cols-2 gap-4">
-                        <div class="col-span-2 font-bold text-yellow-800" x-text="jenis === 'Lift' ? 'Data Lift G (Kiri)' : 'Data SDP 1'"></div>
+                    <div class="bg-yellow-50 dark:bg-yellow-900/30 p-4 rounded-lg border border-yellow-100 dark:border-yellow-800 mb-4 grid grid-cols-2 gap-4">
+                        <div class="col-span-2 font-bold text-yellow-800 dark:text-yellow-300" x-text="jenis === 'Lift' ? 'Data Lift G (Kiri)' : 'Data SDP 1'"></div>
                         <div>
                             <x-input-label value="Stand AWAL" />
                             <x-text-input type="number" step="0.01" name="stand_awal_1" />
@@ -60,8 +60,8 @@
                             <x-text-input type="number" step="0.01" name="stand_akhir_1" />
                         </div>
                     </div>
-                    <div class="bg-yellow-50 p-4 rounded-lg border border-yellow-100 grid grid-cols-2 gap-4">
-                        <div class="col-span-2 font-bold text-yellow-800" x-text="jenis === 'Lift' ? 'Data Lift G2 (Kanan)' : 'Data SDP 2'"></div>
+                    <div class="bg-yellow-50 dark:bg-yellow-900/30 p-4 rounded-lg border border-yellow-100 dark:border-yellow-800 grid grid-cols-2 gap-4">
+                        <div class="col-span-2 font-bold text-yellow-800 dark:text-yellow-300" x-text="jenis === 'Lift' ? 'Data Lift G2 (Kanan)' : 'Data SDP 2'"></div>
                         <div>
                             <x-input-label value="Stand AWAL" />
                             <x-text-input type="number" step="0.01" name="stand_awal_2" />
@@ -75,8 +75,8 @@
 
                 <div x-show="['AC', 'Lampu'].includes(jenis)" style="display: none;" class="space-y-4">
                     @for($i = 1; $i <= 3; $i++)
-                        <div class="bg-purple-50 p-4 rounded-lg border border-purple-100 mb-4 grid grid-cols-2 gap-4">
-                        <div class="col-span-2 font-bold text-purple-800">Lantai {{ $i }}</div>
+                        <div class="bg-purple-50 dark:bg-purple-900/30 p-4 rounded-lg border border-purple-100 dark:border-purple-800 mb-4 grid grid-cols-2 gap-4">
+                        <div class="col-span-2 font-bold text-purple-800 dark:text-purple-300">Lantai {{ $i }}</div>
                         <div>
                             <x-input-label value="Stand AWAL (L{{ $i }})" />
                             <x-text-input type="number" step="0.01" name="stand_awal_l{{ $i }}" />

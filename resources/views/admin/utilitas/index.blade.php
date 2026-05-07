@@ -1,14 +1,14 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="text-2xl font-semibold text-gray-800">Manajemen Utilitas Gedung</h2>
-        <p class="text-sm text-gray-600 mt-1">Pilih kategori utilitas untuk mengelola data dan melihat statistik.</p>
+        <h2 class="text-2xl font-semibold text-gray-800 dark:text-gray-100">Manajemen Utilitas Gedung</h2>
+        <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Pilih kategori utilitas untuk mengelola data dan melihat statistik.</p>
     </x-slot>
 
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         @foreach($jenisUtilitas as $item)
-        <a href="{{ route('admin.utilitas.show', $item['slug']) }}" class="group bg-white p-6 rounded-2xl border border-gray-200 shadow-sm hover:shadow-md hover:border-{{ $item['warna'] }}-400 transition-all">
+        <a href="{{ route('admin.utilitas.show', $item['slug']) }}" class="group bg-white dark:bg-gray-800 p-6 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-md hover:border-{{ $item['warna'] }}-400 dark:hover:border-{{ $item['warna'] }}-500 transition-all">
             <div class="flex items-center gap-4">
-                <div class="p-3 rounded-xl bg-{{ $item['warna'] }}-100 text-{{ $item['warna'] }}-600 transform transition-all duration-300 ease-out group-hover:scale-110 group-hover:-translate-y-1 group-hover:rotate-12">
+                <div class="p-3 rounded-xl bg-{{ $item['warna'] }}-100 dark:bg-{{ $item['warna'] }}-900/30 text-{{ $item['warna'] }}-600 dark:text-{{ $item['warna'] }}-400 transform transition-all duration-300 ease-out group-hover:scale-110 group-hover:-translate-y-1 group-hover:rotate-12">
                     <svg class="w-8 h-8 drop-shadow-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         @switch($item['icon'])
                         @case('droplet')
@@ -41,8 +41,8 @@
                     </svg>
                 </div>
                 <div>
-                    <h3 class="font-bold text-gray-900">{{ $item['nama'] }}</h3>
-                    <p class="text-xs text-gray-500">Klik untuk detail & kelola</p>
+                    <h3 class="font-bold text-gray-900 dark:text-gray-100">{{ $item['nama'] }}</h3>
+                    <p class="text-xs text-gray-500 dark:text-gray-400">Klik untuk detail & kelola</p>
                 </div>
             </div>
         </a>

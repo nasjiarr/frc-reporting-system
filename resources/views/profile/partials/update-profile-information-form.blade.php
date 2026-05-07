@@ -1,10 +1,10 @@
 <section>
     <header>
-        <h2 class="text-lg font-medium text-gray-900">
+        <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">
             {{ __('Informasi Profil') }}
         </h2>
 
-        <p class="mt-1 text-sm text-gray-600">
+        <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
             {{ __("Perbarui informasi profil akun dan alamat email Anda.") }}
         </p>
     </header>
@@ -18,34 +18,34 @@
         @method('patch')
 
         <div>
-            <x-input-label for="nama_lengkap" :value="__('Nama Lengkap')" />
-            <x-text-input id="nama_lengkap" name="nama_lengkap" type="text" class="mt-1 block w-full" :value="old('nama_lengkap', $user->nama_lengkap)" required autofocus autocomplete="name" />
+            <x-input-label for="nama_lengkap" :value="__('Nama Lengkap')" class="dark:text-gray-300" />
+            <x-text-input id="nama_lengkap" name="nama_lengkap" type="text" class="mt-1 block w-full dark:bg-gray-900 dark:border-gray-700 dark:text-gray-300 dark:focus:border-indigo-600 dark:focus:ring-indigo-600" :value="old('nama_lengkap', $user->nama_lengkap)" required autofocus autocomplete="name" />
             <x-input-error class="mt-2" :messages="$errors->get('nama_lengkap')" />
         </div>
 
         <div>
-            <x-input-label for="no_telepon" :value="__('No. Telepon / WA')" />
-            <x-text-input id="no_telepon" name="no_telepon" type="text" class="mt-1 block w-full" :value="old('no_telepon', $user->no_telepon)" required />
+            <x-input-label for="no_telepon" :value="__('No. Telepon / WA')" class="dark:text-gray-300" />
+            <x-text-input id="no_telepon" name="no_telepon" type="text" class="mt-1 block w-full dark:bg-gray-900 dark:border-gray-700 dark:text-gray-300 dark:focus:border-indigo-600 dark:focus:ring-indigo-600" :value="old('no_telepon', $user->no_telepon)" required />
             <x-input-error class="mt-2" :messages="$errors->get('no_telepon')" />
         </div>
 
         <div>
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" name="email" type="email" class="mt-1 block w-full" :value="old('email', $user->email)" required autocomplete="username" />
+            <x-input-label for="email" :value="__('Email')" class="dark:text-gray-300" />
+            <x-text-input id="email" name="email" type="email" class="mt-1 block w-full dark:bg-gray-900 dark:border-gray-700 dark:text-gray-300 dark:focus:border-indigo-600 dark:focus:ring-indigo-600" :value="old('email', $user->email)" required autocomplete="username" />
             <x-input-error class="mt-2" :messages="$errors->get('email')" />
 
             @if ($user instanceof \Illuminate\Contracts\Auth\MustVerifyEmail && ! $user->hasVerifiedEmail())
             <div>
-                <p class="text-sm mt-2 text-gray-800">
+                <p class="text-sm mt-2 text-gray-800 dark:text-gray-200">
                     {{ __('Your email address is unverified.') }}
 
-                    <button form="send-verification" class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    <button form="send-verification" class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800">
                         {{ __('Click here to re-send the verification email.') }}
                     </button>
                 </p>
 
                 @if (session('status') === 'verification-link-sent')
-                <p class="mt-2 font-medium text-sm text-green-600">
+                <p class="mt-2 font-medium text-sm text-green-600 dark:text-green-400">
                     {{ __('A new verification link has been sent to your email address.') }}
                 </p>
                 @endif
@@ -62,7 +62,7 @@
                 x-show="show"
                 x-transition
                 x-init="setTimeout(() => show = false, 2000)"
-                class="text-sm text-gray-600">{{ __('Saved.') }}</p>
+                class="text-sm text-gray-600 dark:text-gray-400">{{ __('Saved.') }}</p>
             @endif
         </div>
     </form>

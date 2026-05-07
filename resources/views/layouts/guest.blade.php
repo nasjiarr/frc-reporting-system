@@ -41,7 +41,7 @@
     </style>
 </head>
 
-<body class="bg-slate-50 antialiased text-slate-800 selection:bg-indigo-100 selection:text-indigo-900">
+<body class="bg-slate-50 dark:bg-gray-900 antialiased text-slate-800 dark:text-gray-100 selection:bg-indigo-100 dark:selection:bg-indigo-900 selection:text-indigo-900 dark:selection:text-indigo-100 transition-colors duration-200">
     <div class="min-h-screen flex flex-col sm:flex-row">
 
         <!-- Sisi Kiri: Brand Area -->
@@ -69,7 +69,7 @@
         </div>
 
         <!-- Sisi Kanan: Form Area -->
-        <div class="w-full sm:w-2/5 bg-white flex flex-col justify-center items-center px-8 py-12 sm:py-16 relative">
+        <div class="w-full sm:w-2/5 bg-white dark:bg-gray-800 flex flex-col justify-center items-center px-8 py-12 sm:py-16 relative transition-colors duration-200">
 
             <div class="w-full max-w-md">
 
@@ -79,7 +79,7 @@
 
             </div>
 
-            <div class="mt-8 sm:mt-10 text-center text-xs text-gray-400">
+            <div class="mt-8 sm:mt-10 text-center text-xs text-gray-400 dark:text-gray-500">
                 &copy; {{ date('Y') }} Field Research Center (FRC).<br>Sekolah Vokasi UGM.
             </div>
         </div>
