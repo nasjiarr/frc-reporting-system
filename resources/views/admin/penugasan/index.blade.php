@@ -89,6 +89,17 @@
                                                 </svg>
                                                 Tugaskan
                                             </button>
+
+                                            <form action="{{ route('admin.penugasan.tolak', $lap->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menolak laporan ini?')" class="inline-block">
+                                                @csrf
+                                                @method('PATCH')
+                                                <button type="submit" class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-rose-600 text-white rounded-lg text-xs font-bold hover:bg-rose-700 transition shadow-sm">
+                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                                    </svg>
+                                                    Tolak
+                                                </button>
+                                            </form>
                                         </div>
                                     </td>
                                 </tr>

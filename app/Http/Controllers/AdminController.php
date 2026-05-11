@@ -7,6 +7,7 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\User;
 use App\Models\Laporan;
 use App\Models\Penugasan;
+use App\Models\Notifikasi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
@@ -112,6 +113,19 @@ class AdminController extends Controller
         });
 
         return back()->with('success', 'Teknisi berhasil ditugaskan.');
+    }
+
+    public function tolakLaporan(Laporan $laporan)
+    {
+        $laporan->update(['status' => 'Ditolak']);
+
+        Notifikasi::create([
+            'user_id' => $laporan->pelapor_id,
+            'judul' => 'Laporan Ditolak',
+            'pesan' => "Laporan Anda yang berjudul '{$laporan->judul}' tidak dapat diproses/ditolak oleh Admin.",
+        ]);
+
+        return back()->with('success', 'Laporan berhasil ditolak.');
     }
 
     public function update(Request $request, User $user)

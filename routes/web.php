@@ -50,6 +50,7 @@ Route::middleware(['auth', 'role:Admin'])->prefix('admin')->name('admin.')->grou
     // Penugasan
     Route::get('/penugasan', [AdminController::class, 'penugasanIndex'])->name('penugasan.index');
     Route::post('/penugasan/{laporan}', [AdminController::class, 'assignStore'])->name('penugasan.store');
+    Route::patch('/penugasan/{laporan}/tolak', [AdminController::class, 'tolakLaporan'])->name('penugasan.tolak');
 
     // Utilitas
     Route::get('/utilitas', [AdminController::class, 'utilitasIndex'])->name('utilitas.index');
