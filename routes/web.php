@@ -55,7 +55,7 @@ Route::middleware(['auth', 'role:Admin'])->prefix('admin')->name('admin.')->grou
     Route::get('/utilitas', [AdminController::class, 'utilitasIndex'])->name('utilitas.index');
     Route::get('/utilitas/create', [UtilitasController::class, 'create'])->name('utilitas.create');
     Route::post('/utilitas', [UtilitasController::class, 'store'])->name('utilitas.store');
-    Route::put('/utilitas/{utilitas}', [AdminController::class, 'utilitasUpdate'])->name('utilitas.update');
+    Route::put('/utilitas/{id}', [UtilitasController::class, 'update'])->name('utilitas.update');
     Route::delete('/utilitas/{utilitas}', [AdminController::class, 'utilitasDestroy'])->name('utilitas.destroy');
     Route::get('/utilitas/{id}/edit', [AdminController::class, 'utilitasEdit'])->name('utilitas.edit');
 

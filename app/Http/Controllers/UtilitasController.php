@@ -144,16 +144,22 @@ class UtilitasController extends Controller
 
         return DB::transaction(function () use ($request, $utilitas) {
             // 1. Update Tabel Induk
-            $utilitas->update([
-                'periode' => $request->periode,
-            ]);
+            if ($request->has('periode')) {
+                $utilitas->update([
+                    'periode' => $request->periode,
+                ]);
+            }
 
             // 2. Update Tabel Turunan berdasarkan jenis
             switch ($utilitas->jenis_utilitas) {
                 case 'AirBersih':
                 case 'AirHujan':
                 case 'MDP':
-                    $relation = strtolower($utilitas->jenis_utilitas == 'MDP' ? 'listrikMdp' : $utilitas->jenis_utilitas);
+                    $relation = match ($utilitas->jenis_utilitas) {
+                        'AirBersih' => 'airBersih',
+                        'AirHujan'  => 'airHujan',
+                        'MDP'       => 'listrikMdp',
+                    };
                     $utilitas->$relation()->update($request->only(['tgl_awal', 'tgl_akhir', 'stand_awal', 'stand_akhir']));
                     break;
                 case 'SDP':
