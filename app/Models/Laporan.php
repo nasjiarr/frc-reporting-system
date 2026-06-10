@@ -12,7 +12,7 @@ class Laporan extends Model
 {
 
     use HasFactory;
-    protected $table = 'laporan'; // Mengatasi asumsi pluralisasi otomatis Laravel
+    protected $table = 'laporan';
 
     protected $fillable = [
         'pelapor_id',

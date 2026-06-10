@@ -30,7 +30,7 @@
 
     <div class="space-y-6">
         <div class="bg-white dark:bg-gray-800 p-6 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm">
-            <h3 class="text-lg font-bold text-gray-800 dark:text-gray-100 mb-4 text-center">Grafik Konsumsi Bulanan</h3>
+            <h3 class="text-lg font-bold text-gray-800 dark:text-gray-100 mb-4 text-center">Grafik Konsumsi Bulanan ({{ str_contains($jenis, 'Air') ? 'm³' : 'kWh' }})</h3>
             <div class="relative w-full" style="height: 350px;">
                 <canvas id="chartUtilitas"
                     data-labels="{{ json_encode($labels) }}"
@@ -48,7 +48,7 @@
                     <tr>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Periode</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Petugas</th>
-                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Konsumsi</th>
+                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Konsumsi ({{ str_contains($jenis, 'Air') ? 'm³' : 'kWh' }})</th>
                         <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Aksi</th>
                     </tr>
                 </thead>
@@ -58,7 +58,7 @@
                         <td class="px-6 py-4 text-sm font-mono font-bold text-gray-900 dark:text-gray-100">{{ $data->periode }}</td>
                         <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">{{ $data->petugas->nama_lengkap ?? '-' }}</td>
                         <td class="px-6 py-4 text-right text-sm font-bold text-indigo-700 dark:text-indigo-400">
-                            {{ number_format($data->total_konsumsi, 2, ',', '.') }}
+                            {{ number_format($data->total_konsumsi, 2, ',', '.') }} {{ str_contains($jenis, 'Air') ? 'm³' : 'kWh' }}
                         </td>
                         <td class="px-6 py-4 text-right text-sm font-medium">
                             <div class="flex justify-end gap-2">
@@ -97,15 +97,13 @@
                     data: {
                         labels: labelBulan,
                         datasets: [{
-                            label: 'Total Konsumsi',
+                            type: 'bar',
+                            label: "Total Konsumsi ({{ str_contains($jenis, 'Air') ? 'm³' : 'kWh' }})",
                             data: dataKonsumsi,
-                            borderColor: '#4f46e5',
-                            backgroundColor: 'rgba(79, 70, 229, 0.1)',
-                            borderWidth: 2,
-                            fill: true,
-                            tension: 0.3,
-                            pointBackgroundColor: '#4f46e5',
-                            pointRadius: 4
+                            backgroundColor: 'rgba(79, 70, 229, 0.6)',
+                            borderColor: 'rgb(79, 70, 229)',
+                            borderWidth: 1,
+                            borderRadius: 5
                         }]
                     },
                     options: {

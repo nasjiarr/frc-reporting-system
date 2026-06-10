@@ -93,6 +93,9 @@ Route::middleware(['auth', 'role:KepalaFRC'])->prefix('kepala')->name('kepala.')
     Route::get('/rekap-utilitas', [KepalaFRCController::class, 'rekapUtilitas'])->name('utilitas.index');
     Route::get('/kinerja-teknisi', [KepalaFRCController::class, 'kinerjaTeknisi'])->name('kinerja.index');
     Route::get('/rekap-laporan', [KepalaFRCController::class, 'rekapLaporan'])->name('laporan.index');
+    Route::get('/laporan-saya', [KepalaFRCController::class, 'laporanSaya'])->name('laporan_saya.index');
+    Route::get('/rekap-laporan/create', [KepalaFRCController::class, 'createLaporan'])->name('laporan.create');
+    Route::post('/rekap-laporan', [KepalaFRCController::class, 'storeLaporan'])->name('laporan.store');
     Route::get('/rekap-laporan/{id}', [KepalaFRCController::class, 'showLaporan'])->name('laporan.show');
 });
 

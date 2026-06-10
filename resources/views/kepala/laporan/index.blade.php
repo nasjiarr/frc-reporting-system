@@ -1,7 +1,17 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="text-2xl font-semibold text-gray-800 dark:text-gray-200 tracking-tight">Pengawasan Laporan Kerusakan</h2>
-        <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Pantau seluruh laporan kerja dan progres penanganannya.</p>
+        <div class="flex justify-between items-end">
+            <div>
+                <h2 class="text-2xl font-semibold text-gray-800 dark:text-gray-200 tracking-tight">Pengawasan Laporan Kerusakan</h2>
+                <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Pantau seluruh laporan kerja dan progres penanganannya.</p>
+            </div>
+            <a href="{{ route('kepala.laporan.create') }}" class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 focus:bg-indigo-700 active:bg-indigo-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                </svg>
+                Buat Laporan Baru
+            </a>
+        </div>
     </x-slot>
 
     <div class="space-y-6">

@@ -16,13 +16,8 @@ class KepalaFRCController extends Controller
     {
         $kpi = [
             'total_masuk' => Laporan::count(),
+            'sedang_dikerjakan' => Laporan::where('status', 'Diproses')->count(),
             'total_selesai' => Laporan::where('status', 'Selesai')->count(),
-            // Menghitung rata-rata waktu penanganan dalam jam
-            'rata_waktu' => DB::table('laporan')
-                ->join('penugasan', 'laporan.id', '=', 'penugasan.laporan_id')
-                ->join('hasil_perbaikan', 'penugasan.id', '=', 'hasil_perbaikan.penugasan_id')
-                ->selectRaw('ROUND(AVG(TIMESTAMPDIFF(HOUR, laporan.created_at, hasil_perbaikan.selesai_pada)), 1) as avg_hours')
-                ->first()->avg_hours ?? 0
         ];
 
         return view('kepala.dashboard', compact('kpi'));
@@ -94,5 +89,84 @@ class KepalaFRCController extends Controller
         $laporan = \App\Models\Laporan::with(['pelapor', 'penugasan.teknisi', 'penugasan.hasilPerbaikan'])->findOrFail($id);
 
         return view('kepala.laporan.show', compact('laporan'));
+    }
+
+    public function createLaporan()
+    {
+        // Daftar ruangan di FRC UGM (duplikat sudah dibersihkan)
+        $daftarRuangan = [
+            'Wood pellet production laboratory',
+            'Patient simulators & phantoms for medical nursing production',
+            'Product analysis & quality control laboratory',
+            'Cocoa production laboratory',
+            'Cocoa production laboratory - Packaging',
+            'Dairy production laboratory',
+            'Dairy production laboratory - Packaging',
+            'Incubation & Design Room 1',
+            'Incubation & Design Room 2',
+            'Incubation & Design Room 3',
+            'Incubation & Design Room 4',
+            'IT Design Room',
+            'Hall',
+            'UGM Information (Showroom)',
+            'Locker room',
+            'Machine room',
+            'Storage Room',
+            'Product analysis & quality control laboratory - Head Room',
+            'Meeting room - Lantai 2',
+            'Meeting room - Lantai 3',
+            'Conference room',
+            'Office',
+            'Head Room',
+            'Personal computer room',
+            'Seminar Room 1',
+            'Seminar Room 2',
+            'Seminar Room 3',
+            'Open Terrace',
+            'Mushola',
+            'Panel Room',
+            'Coom Room',
+            'Wood Pellet Industry'
+        ];
+
+        return view('kepala.laporan.create', compact('daftarRuangan'));
+    }
+
+    public function storeLaporan(Request $request)
+    {
+        $request->validate([
+            'judul'         => 'required|string|max:255',
+            'lokasi'        => 'required|string|max:255',
+            'deskripsi'     => 'required|string',
+            'foto_sebelum'  => 'required|image|mimes:jpeg,png,jpg|max:2048',
+        ]);
+
+        $path = null;
+        if ($request->hasFile('foto_sebelum')) {
+            $path = $request->file('foto_sebelum')->store('foto_sebelum', 'public');
+        }
+
+        Laporan::create([
+            'pelapor_id'    => auth()->id(),
+            'judul'         => $request->judul,
+            'lokasi'        => $request->lokasi,
+            'deskripsi'     => $request->deskripsi,
+            'foto_sebelum'  => $path,
+            'status'        => 'Baru',
+        ]);
+
+        return redirect()->route('kepala.laporan.index')->with('success', 'Laporan berhasil dikirim.');
+    }
+
+    public function laporanSaya(Request $request)
+    {
+        $query = \App\Models\Laporan::where('pelapor_id', auth()->id())->latest();
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        $laporans = $query->paginate(10)->withQueryString();
+        return view('kepala.laporan.saya', compact('laporans'));
     }
 }

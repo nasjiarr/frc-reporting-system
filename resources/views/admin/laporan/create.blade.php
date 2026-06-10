@@ -23,9 +23,17 @@
 
                     <div>
                         <label for="lokasi" class="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-200">Lokasi / Ruangan <span class="text-rose-500 dark:text-rose-400">*</span></label>
-                        <div class="mt-2">
-                            <input type="text" name="lokasi" id="lokasi" value="{{ old('lokasi') }}" placeholder="Contoh: Gedung A, Lantai 2, Ruang Dosen"
-                                class="block w-full rounded-md border-0 py-1.5 text-gray-900 dark:text-gray-100 dark:bg-gray-700 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-600 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" required>
+                        <div class="mt-2 relative">
+                            <input list="daftar_lokasi" name="lokasi" id="lokasi" value="{{ old('lokasi') }}" placeholder="Pilih atau ketik nama ruangan (Contoh: Hall)"
+                                class="block w-full rounded-md border-0 py-1.5 text-gray-900 dark:text-gray-100 dark:bg-gray-700 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-600 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" autocomplete="off" required>
+
+                            <datalist id="daftar_lokasi">
+                                @if(isset($daftarRuangan))
+                                @foreach($daftarRuangan as $ruangan)
+                                <option value="{{ $ruangan }}">
+                                    @endforeach
+                                    @endif
+                            </datalist>
                         </div>
                         @error('lokasi')
                         <p class="mt-1 text-sm text-rose-600">{{ $message }}</p>

@@ -29,7 +29,7 @@
                     <tr>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Periode</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Petugas</th>
-                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Total Konsumsi</th>
+                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Total Konsumsi ({{ str_contains($jenis, 'Air') ? 'm³' : 'kWh' }})</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
@@ -54,6 +54,10 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         const ctx = document.getElementById('consumptionChart').getContext('2d');
+        const consumptionsData = {
+            !!json_encode($consumptions) !!
+        };
+
         new Chart(ctx, {
             type: 'bar',
             data: {
@@ -61,10 +65,9 @@
                     !!json_encode($labels) !!
                 },
                 datasets: [{
-                    label: 'Konsumsi',
-                    data: {
-                        !!json_encode($consumptions) !!
-                    },
+                    type: 'bar',
+                    label: "Konsumsi ({{ str_contains($jenis, 'Air') ? 'm³' : 'kWh' }})",
+                    data: consumptionsData,
                     backgroundColor: 'rgba(79, 70, 229, 0.6)',
                     borderColor: 'rgb(79, 70, 229)',
                     borderWidth: 1,
@@ -77,6 +80,19 @@
                 scales: {
                     y: {
                         beginAtZero: true
+                    }
+                },
+                // Menambahkan event onClick pada grafik
+                onClick: (event, elements, chart) => {
+                    // Pastikan ada elemen (batang) yang diklik, bukan area kosong
+                    if (elements.length > 0) {
+                        const datasetIndex = elements[0].datasetIndex; // Index dataset (0 untuk garis, 1 untuk batang)
+                        const dataIndex = elements[0].index; // Index data (bulan apa yang diklik)
+
+                        const labelBulan = chart.data.labels[dataIndex];
+                        const nilaiKonsumsi = chart.data.datasets[datasetIndex].data[dataIndex];
+
+                        alert(`Konsumsi pada bulan ${labelBulan} adalah ${nilaiKonsumsi}`);
                     }
                 }
             }

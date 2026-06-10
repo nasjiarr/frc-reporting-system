@@ -6,7 +6,7 @@
 
     <div class="max-w-4xl">
         <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-sm rounded-lg overflow-hidden">
-            <form action="{{ route('pelapor.laporan.store') }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('kepala.laporan.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
 
                 <div class="p-6 space-y-6">
@@ -30,9 +30,9 @@
                             <datalist id="daftar_lokasi">
                                 @if(isset($daftarRuangan))
                                 @foreach($daftarRuangan as $ruangan)
-                                <option value="{{ $ruangan }}">
-                                    @endforeach
-                                    @endif
+                                <option value="{{ $ruangan }}"></option>
+                                @endforeach
+                                @endif
                             </datalist>
                         </div>
                         @error('lokasi')
@@ -64,10 +64,8 @@
                     </div>
                 </div>
 
-
-
                 <div class="bg-gray-50 dark:bg-gray-900/50 px-6 py-4 border-t border-gray-200 dark:border-gray-700 flex items-center justify-end gap-x-4">
-                    <a href="{{ route('pelapor.laporan.index') }}" class="text-sm font-semibold leading-6 text-gray-900 dark:text-gray-200 hover:text-gray-700 dark:hover:text-gray-400 transition">Batal</a>
+                    <a href="{{ route('kepala.laporan.index') }}" class="text-sm font-semibold leading-6 text-gray-900 dark:text-gray-200 hover:text-gray-700 dark:hover:text-gray-400 transition">Batal</a>
 
                     <button type="submit" class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 focus:bg-indigo-700 active:bg-indigo-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
                         <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -81,7 +79,10 @@
                 // Script sederhana untuk menampilkan nama file yang dipilih
                 document.getElementById('foto_sebelum').addEventListener('change', function(e) {
                     let fileName = e.target.files[0] ? e.target.files[0].name : '';
-                    document.getElementById('file-name-preview').textContent = fileName ? 'File dipilih: ' + fileName : '';
+                    let preview = document.getElementById('file-name-preview');
+                    if (preview) {
+                        preview.textContent = fileName ? 'File dipilih: ' + fileName : '';
+                    }
                 });
             </script>
         </div>
