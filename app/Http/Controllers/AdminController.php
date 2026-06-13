@@ -110,6 +110,19 @@ class AdminController extends Controller
             ]);
 
             $laporan->update(['status' => 'Diproses']);
+
+            Notifikasi::create([
+                'user_id' => $request->teknisi_id,
+                'judul'   => 'Tugas Baru Diberikan',
+                'pesan'   => "Anda telah ditugaskan untuk memperbaiki: '{$laporan->judul}' di {$laporan->lokasi}. Silakan cek detail penugasan Anda.",
+            ]);
+
+            // Notifikasi kepada Pelapor
+            Notifikasi::create([
+                'user_id' => $laporan->pelapor_id,
+                'judul'   => 'Laporan Diproses',
+                'pesan'   => "Laporan Anda yang berjudul '{$laporan->judul}' telah ditugaskan kepada teknisi dan sedang dalam proses perbaikan.",
+            ]);
         });
 
         return back()->with('success', 'Teknisi berhasil ditugaskan.');
@@ -221,7 +234,7 @@ class AdminController extends Controller
             $fotoPath = $request->file('foto_sebelum')->store('foto_sebelum', 'public');
         }
 
-        Laporan::create([
+        $laporan = Laporan::create([
             'pelapor_id' => auth()->id(),
             'judul' => $request->judul,
             'lokasi' => $request->lokasi,
@@ -229,6 +242,16 @@ class AdminController extends Controller
             'foto_sebelum' => $fotoPath, // Simpan path gambar ke DB
             'status' => 'Baru',
         ]);
+
+        // Notifikasi untuk Admin yang lain (mengecualikan admin yang membuat laporan)
+        $admins = User::where('role', 'Admin')->where('id', '!=', auth()->id())->get();
+        foreach ($admins as $admin) {
+            Notifikasi::create([
+                'user_id' => $admin->id,
+                'judul'   => 'Laporan Kerusakan Baru',
+                'pesan'   => "Terdapat laporan baru dari sesama Admin mengenai '{$laporan->judul}' di {$laporan->lokasi}.",
+            ]);
+        }
 
         return redirect()->route('admin.laporan.index')->with('success', 'Laporan Anda berhasil dibuat.');
     }

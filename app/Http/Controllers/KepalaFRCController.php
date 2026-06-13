@@ -6,6 +6,7 @@ use App\Models\Laporan;
 use App\Models\User;
 use App\Models\Utilitas;
 use App\Models\Penugasan;
+use App\Models\Notifikasi;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -146,7 +147,7 @@ class KepalaFRCController extends Controller
             $path = $request->file('foto_sebelum')->store('foto_sebelum', 'public');
         }
 
-        Laporan::create([
+        $laporan = Laporan::create([
             'pelapor_id'    => auth()->id(),
             'judul'         => $request->judul,
             'lokasi'        => $request->lokasi,
@@ -154,6 +155,16 @@ class KepalaFRCController extends Controller
             'foto_sebelum'  => $path,
             'status'        => 'Baru',
         ]);
+
+        // Mengirim notifikasi ke semua Admin
+        $admins = User::where('role', 'Admin')->get();
+        foreach ($admins as $admin) {
+            Notifikasi::create([
+                'user_id' => $admin->id,
+                'judul'   => 'Laporan Kerusakan Baru',
+                'pesan'   => "Terdapat laporan baru dari Kepala FRC mengenai '{$laporan->judul}' di {$laporan->lokasi}.",
+            ]);
+        }
 
         return redirect()->route('kepala.laporan.index')->with('success', 'Laporan berhasil dikirim.');
     }
