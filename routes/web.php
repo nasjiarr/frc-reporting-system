@@ -100,11 +100,11 @@ Route::middleware(['auth', 'role:KepalaFRC'])->prefix('kepala')->name('kepala.')
 });
 
 Route::get('/api/notifications/unread', function () {
-    $userId = auth()->id(); // Ambil ID user yang sedang login
+    $userId = auth()->id();
 
     return response()->json([
         'count'  => Notifikasi::where('user_id', $userId)->where('is_read', false)->count(),
-        'latest' => Notifikasi::where('user_id', $userId)->where('is_read', false)->latest()->first()
+        'items'  => Notifikasi::where('user_id', $userId)->where('is_read', false)->latest()->take(20)->get()
     ]);
 })->middleware('auth');
 

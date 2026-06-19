@@ -9,16 +9,16 @@ class PenugasanObserver
 {
     /**
      * Handle the Penugasan "created" event.
+     *
+     * Catatan: Notifikasi penugasan baru ke Teknisi sudah ditangani
+     * langsung di AdminController@assignStore dengan pesan yang lebih
+     * detail (menyertakan judul laporan, lokasi, dan instruksi).
+     * Observer ini TIDAK lagi membuat notifikasi untuk menghindari duplikasi.
      */
     public function created(Penugasan $penugasan): void
     {
-        // Load relasi laporan untuk mengambil judul laporannya
-        $penugasan->load('laporan');
-
-        Notifikasi::create([
-            'user_id' => $penugasan->teknisi_id,
-            'judul'   => 'Tugas Baru Diberikan',
-            'pesan'   => "Anda mendapat tugas perbaikan baru untuk laporan: '{$penugasan->laporan->judul}'. Segera cek detail penugasan Anda.",
-        ]);
+        // Sengaja dikosongkan karena AdminController@assignStore
+        // sudah mengirim notifikasi yang lebih lengkap dan informatif
+        // ke Teknisi maupun Pelapor.
     }
 }

@@ -88,11 +88,18 @@ class TeknisiController extends Controller
             $tugas->update(['status_tugas' => 'Selesai']);
             $tugas->laporan->update(['status' => 'Selesai']);
 
-            // 5. Kirim Notifikasi ke Admin
+            // 5. Kirim Notifikasi ke Admin yang menugaskan
             Notifikasi::create([
                 'user_id' => $tugas->assigned_by,
                 'judul' => 'Pekerjaan Selesai',
                 'pesan' => "Teknisi {$tugas->teknisi->nama_lengkap} telah menyelesaikan perbaikan: {$tugas->laporan->judul}.",
+            ]);
+
+            // 6. Kirim Notifikasi ke Pelapor
+            Notifikasi::create([
+                'user_id' => $tugas->laporan->pelapor_id,
+                'judul' => 'Perbaikan Selesai',
+                'pesan' => "Laporan Anda yang berjudul '{$tugas->laporan->judul}' telah selesai diperbaiki oleh teknisi. Silakan cek hasilnya.",
             ]);
         });
 

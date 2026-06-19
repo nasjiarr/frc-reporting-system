@@ -9,16 +9,15 @@ class LaporanObserver
 {
     /**
      * Handle the Laporan "updated" event.
+     *
+     * Catatan: Notifikasi spesifik untuk perubahan status (Ditolak, Diproses, Selesai)
+     * sudah ditangani langsung di masing-masing Controller (AdminController, TeknisiController).
+     * Observer ini TIDAK lagi membuat notifikasi untuk menghindari duplikasi.
      */
     public function updated(Laporan $laporan): void
     {
-        // Cek apakah kolom 'status' mengalami perubahan
-        if ($laporan->wasChanged('status')) {
-            Notifikasi::create([
-                'user_id' => $laporan->pelapor_id,
-                'judul'   => 'Update Status Laporan',
-                'pesan'   => "Laporan Anda mengenai '{$laporan->judul}' sekarang berstatus: {$laporan->status}.",
-            ]);
-        }
+        // Sengaja dikosongkan karena setiap aksi perubahan status
+        // sudah mengirim notifikasi yang lebih spesifik dan informatif
+        // dari dalam Controller masing-masing.
     }
 }
