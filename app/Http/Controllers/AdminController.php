@@ -128,14 +128,24 @@ class AdminController extends Controller
         return back()->with('success', 'Teknisi berhasil ditugaskan.');
     }
 
-    public function tolakLaporan(Laporan $laporan)
+    public function tolakLaporan(Request $request, Laporan $laporan)
     {
-        $laporan->update(['status' => 'Ditolak']);
+        $request->validate([
+            'alasan_penolakan' => 'required|string|max:1000',
+        ], [
+            'alasan_penolakan.required' => 'Alasan penolakan wajib diisi.',
+            'alasan_penolakan.max' => 'Alasan penolakan maksimal 1000 karakter.',
+        ]);
+
+        $laporan->update([
+            'status' => 'Ditolak',
+            'alasan_penolakan' => $request->alasan_penolakan,
+        ]);
 
         Notifikasi::create([
             'user_id' => $laporan->pelapor_id,
             'judul' => 'Laporan Ditolak',
-            'pesan' => "Laporan Anda yang berjudul '{$laporan->judul}' tidak dapat diproses/ditolak oleh Admin.",
+            'pesan' => "Laporan Anda yang berjudul '{$laporan->judul}' ditolak oleh Admin. Alasan: {$request->alasan_penolakan}",
         ]);
 
         return back()->with('success', 'Laporan berhasil ditolak.');

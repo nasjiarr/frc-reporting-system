@@ -20,7 +20,8 @@ class Laporan extends Model
         'deskripsi',
         'lokasi',
         'foto_sebelum',
-        'status'
+        'status',
+        'alasan_penolakan'
     ];
 
     public function pelapor()

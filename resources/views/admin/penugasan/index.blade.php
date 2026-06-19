@@ -2,7 +2,10 @@
     <div x-data="{ 
         previewOpen: false, 
         assignModalOpen: false, 
+        tolakModalOpen: false,
         selectedLaporanId: '', 
+        tolakLaporanId: '',
+        tolakJudul: '',
         p_judul: '', 
         p_lokasi: '', 
         p_deskripsi: '', 
@@ -21,6 +24,12 @@
         openAssignModal(id = '') {
             this.selectedLaporanId = id;
             this.assignModalOpen = true;
+        },
+
+        openTolakModal(id, judul) {
+            this.tolakLaporanId = id;
+            this.tolakJudul = judul;
+            this.tolakModalOpen = true;
         }
     }">
 
@@ -90,16 +99,14 @@
                                                 Tugaskan
                                             </button>
 
-                                            <form action="{{ route('admin.penugasan.tolak', $lap->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menolak laporan ini?')" class="inline-block">
-                                                @csrf
-                                                @method('PATCH')
-                                                <button type="submit" class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-rose-600 text-white rounded-lg text-xs font-bold hover:bg-rose-700 transition shadow-sm">
-                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                                                    </svg>
-                                                    Tolak
-                                                </button>
-                                            </form>
+                                            <button type="button"
+                                                @click="openTolakModal('{{ $lap->id }}', {{ json_encode($lap->judul) }})"
+                                                class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-rose-600 text-white rounded-lg text-xs font-bold hover:bg-rose-700 transition shadow-sm">
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                                </svg>
+                                                Tolak
+                                            </button>
                                         </div>
                                     </td>
                                 </tr>
@@ -235,6 +242,57 @@
                         Tutup
                     </button>
                 </div>
+            </div>
+        </div>
+
+        {{-- Modal Tolak Laporan --}}
+        <div x-show="tolakModalOpen" style="display: none;" class="fixed inset-0 z-50 overflow-y-auto bg-gray-900 bg-opacity-60 flex items-center justify-center backdrop-blur-sm p-4">
+            <div @click.away="tolakModalOpen = false" class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-lg w-full overflow-hidden transform transition-all" x-transition>
+
+                <form :action="'{{ route('admin.penugasan.tolak', 999) }}'.replace('999', tolakLaporanId)" method="POST">
+                    @csrf
+                    @method('PATCH')
+                    <div class="px-6 py-4 border-b border-gray-100 dark:border-gray-700 flex justify-between items-center bg-rose-50 dark:bg-rose-900/20">
+                        <h3 class="text-lg font-bold text-rose-800 dark:text-rose-200 flex items-center gap-2">
+                            <svg class="w-5 h-5 text-rose-600 dark:text-rose-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+                            </svg>
+                            Tolak Laporan
+                        </h3>
+                        <button type="button" @click="tolakModalOpen = false" class="text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 p-1.5 rounded-lg transition-colors">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                            </svg>
+                        </button>
+                    </div>
+
+                    <div class="px-6 py-5 space-y-4">
+                        <div class="p-3 bg-rose-50 dark:bg-rose-900/20 border border-rose-200 dark:border-rose-800 rounded-lg">
+                            <p class="text-sm text-rose-800 dark:text-rose-200">
+                                Anda akan menolak laporan: <strong x-text="tolakJudul"></strong>
+                            </p>
+                        </div>
+
+                        <div>
+                            <label for="alasan_penolakan" class="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-1">Alasan Penolakan <span class="text-rose-500">*</span></label>
+                            <textarea name="alasan_penolakan" id="alasan_penolakan" rows="4" required
+                                class="w-full rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 focus:border-rose-500 focus:ring-rose-500 text-sm placeholder-gray-400 dark:placeholder-gray-500"
+                                placeholder="Jelaskan alasan mengapa laporan ini ditolak..."></textarea>
+                            @error('alasan_penolakan')
+                                <p class="text-xs text-rose-600 dark:text-rose-400 mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <div class="px-6 py-4 bg-gray-50 dark:bg-gray-900/50 border-t border-gray-100 dark:border-gray-700 flex justify-end gap-2">
+                        <button type="button" @click="tolakModalOpen = false" class="px-4 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-sm font-bold text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600 transition">
+                            Batal
+                        </button>
+                        <button type="submit" onclick="this.disabled=true; this.form.submit(); this.innerHTML='Memproses...';" class="px-4 py-2 bg-rose-600 text-white rounded-lg text-sm font-bold shadow-sm hover:bg-rose-700 transition">
+                            Konfirmasi Tolak
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
 

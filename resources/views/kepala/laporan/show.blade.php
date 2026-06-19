@@ -67,9 +67,26 @@
                     <p class="text-sm text-gray-500 dark:text-gray-400">Tindakan: {{ $laporan->penugasan->hasilPerbaikan->tindakan }}</p>
                 </div>
                 @endif
+                @if($laporan->status === 'Ditolak')
+                <div class="ml-6">
+                    <span class="absolute flex items-center justify-center w-6 h-6 bg-rose-100 dark:bg-rose-900 rounded-full -left-3 ring-8 ring-white dark:ring-gray-800">
+                        <svg class="w-3 h-3 text-rose-800 dark:text-rose-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </span>
+                    <h3 class="mb-1 text-sm font-semibold text-rose-700 dark:text-rose-300">Laporan Ditolak</h3>
+                    <time class="block mb-2 text-xs font-normal leading-none text-gray-400 dark:text-gray-500">{{ $laporan->updated_at->format('d M Y, H:i') }}</time>
+                    @if($laporan->alasan_penolakan)
+                    <div class="mt-2 p-3 bg-rose-50 dark:bg-rose-900/20 border border-rose-200 dark:border-rose-800 rounded-lg">
+                        <p class="text-xs font-bold text-rose-800 dark:text-rose-300 uppercase tracking-wider mb-1">Alasan Penolakan</p>
+                        <p class="text-sm text-rose-700 dark:text-rose-200 leading-relaxed whitespace-pre-line">{{ $laporan->alasan_penolakan }}</p>
+                    </div>
+                    @endif
+                </div>
+                @endif
             </div>
 
-            @if(!$laporan->penugasan)
+            @if(!$laporan->penugasan && $laporan->status !== 'Ditolak')
             <p class="text-sm text-gray-500 dark:text-gray-400 italic mt-4">Belum ada penugasan teknisi untuk laporan ini.</p>
             @endif
 
