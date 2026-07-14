@@ -480,7 +480,7 @@ class AdminController extends Controller
 
     public function exportAllLaporan(Request $request)
     {
-        $query = \App\Models\Laporan::with(['pelapor', 'penugasan.teknisi']);
+        $query = \App\Models\Laporan::with(['pelapor', 'penugasan.teknisi', 'penugasan.hasilPerbaikan']);
 
         // Terapkan filter yang sama dengan halaman index
         if ($request->filled('status') && $request->status !== 'Semua') {
@@ -492,6 +492,15 @@ class AdminController extends Controller
         }
 
         $laporans = $query->latest()->get();
+
+        // Konversi foto sebelum & sesudah ke base64 untuk setiap laporan
+        foreach ($laporans as $laporan) {
+            $laporan->foto_sebelum_base64 = $this->convertFotoToBase64($laporan->foto_sebelum);
+            $laporan->foto_sesudah_base64 = $this->convertFotoToBase64(
+                $laporan->penugasan?->hasilPerbaikan?->foto_sesudah
+            );
+        }
+
         $filters = [
             'status' => $request->status ?? 'Semua',
             'periode' => $request->filled('tgl_mulai') ? $request->tgl_mulai . ' s/d ' . $request->tgl_selesai : 'Semua Waktu'
@@ -516,6 +525,14 @@ class AdminController extends Controller
 
         $laporans = $query->latest()->get();
 
+        // Konversi foto sebelum & sesudah ke base64 untuk setiap laporan
+        foreach ($laporans as $laporan) {
+            $laporan->foto_sebelum_base64 = $this->convertFotoToBase64($laporan->foto_sebelum);
+            $laporan->foto_sesudah_base64 = $this->convertFotoToBase64(
+                $laporan->penugasan?->hasilPerbaikan?->foto_sesudah
+            );
+        }
+
         $periode = $request->filled('tgl_mulai')
             ? $request->tgl_mulai . ' s/d ' . $request->tgl_selesai
             : 'Semua Periode';
@@ -526,5 +543,27 @@ class AdminController extends Controller
         $pdf->setPaper('A4', 'landscape');
 
         return $pdf->download("Rekap_Laporan_Selesai_" . date('Ymd') . ".pdf");
+    }
+
+    /**
+     * Helper: Konversi path foto dari storage ke string base64.
+     * DomPDF tidak bisa membaca file dari URL, jadi perlu dikonversi.
+     */
+    private function convertFotoToBase64(?string $fotoPath): ?string
+    {
+        if (!$fotoPath) {
+            return null;
+        }
+
+        $fullPath = public_path('storage/' . $fotoPath);
+
+        if (!file_exists($fullPath)) {
+            return null;
+        }
+
+        $data = file_get_contents($fullPath);
+        $extension = pathinfo($fullPath, PATHINFO_EXTENSION);
+
+        return 'data:image/' . $extension . ';base64,' . base64_encode($data);
     }
 }

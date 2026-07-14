@@ -6,7 +6,7 @@
     <style>
         body {
             font-family: sans-serif;
-            font-size: 10px;
+            font-size: 9px;
             color: #333;
         }
 
@@ -25,7 +25,7 @@
         th,
         td {
             border: 1px solid #999;
-            padding: 6px;
+            padding: 5px;
             text-align: left;
             vertical-align: top;
         }
@@ -34,10 +34,30 @@
             background-color: #f8fafc;
             font-weight: bold;
             text-transform: uppercase;
+            font-size: 8px;
         }
 
         .text-center {
             text-align: center;
+        }
+
+        .foto-cell {
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        .foto-cell img {
+            max-width: 100px;
+            max-height: 75px;
+            object-fit: contain;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+        }
+
+        .no-foto {
+            color: #999;
+            font-size: 7px;
+            font-style: italic;
         }
     </style>
 </head>
@@ -52,12 +72,14 @@
         <thead>
             <tr>
                 <th width="3%">No</th>
-                <th width="10%">Tanggal</th>
-                <th width="12%">Pelapor</th>
-                <th width="20%">Kerusakan & Lokasi</th>
-                <th width="15%">Teknisi</th>
-                <th width="25%">Tindakan Perbaikan</th>
-                <th width="15%">Material</th>
+                <th width="7%">Tanggal</th>
+                <th width="9%">Pelapor</th>
+                <th width="14%">Kerusakan & Lokasi</th>
+                <th width="9%">Teknisi</th>
+                <th width="14%">Tindakan Perbaikan</th>
+                <th width="9%">Material</th>
+                <th width="17.5%">Foto Sebelum</th>
+                <th width="17.5%">Foto Sesudah</th>
             </tr>
         </thead>
         <tbody>
@@ -73,6 +95,20 @@
                 <td>{{ $laporan->penugasan->teknisi->nama_lengkap ?? '-' }}</td>
                 <td>{{ $laporan->penugasan->hasilPerbaikan->tindakan ?? '-' }}</td>
                 <td>{{ $laporan->penugasan->hasilPerbaikan->material ?? '-' }}</td>
+                <td class="foto-cell">
+                    @if($laporan->foto_sebelum_base64)
+                        <img src="{{ $laporan->foto_sebelum_base64 }}" alt="Foto Sebelum">
+                    @else
+                        <span class="no-foto">Tidak ada foto</span>
+                    @endif
+                </td>
+                <td class="foto-cell">
+                    @if($laporan->foto_sesudah_base64)
+                        <img src="{{ $laporan->foto_sesudah_base64 }}" alt="Foto Sesudah">
+                    @else
+                        <span class="no-foto">Tidak ada foto</span>
+                    @endif
+                </td>
             </tr>
             @endforeach
         </tbody>

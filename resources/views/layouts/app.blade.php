@@ -396,58 +396,17 @@
                     const listContainer = document.getElementById('notif-list-container');
                     const headerCount = document.getElementById('notif-header-count');
 
+                    // 1. Update Badge & Header (Berdasarkan jumlah yang BELUM DIBACA)
                     if (data.count > 0) {
-                        // Update badge
                         const displayCount = data.count > 9 ? '9+' : data.count;
                         badge.innerText = displayCount;
                         badge.classList.remove('hidden');
                         ping.classList.remove('hidden');
 
-                        // Update header count
                         if (headerCount) {
                             headerCount.innerText = `${data.count} Baru`;
                         }
-
-                        // Render semua notifikasi
-                        if (data.items && data.items.length > 0) {
-                            let html = '';
-                            data.items.forEach((notif, index) => {
-                                const judul = escapeHtml(notif.judul || 'Pemberitahuan');
-                                const pesan = escapeHtml(notif.pesan || 'Ada pembaruan pada aktivitas Anda.');
-                                const waktu = timeAgo(notif.created_at);
-                                const style = getNotifStyle(notif.judul);
-                                const isLast = index === data.items.length - 1;
-
-                                html += `
-                                <div class="px-4 py-3.5 hover:bg-slate-50 dark:hover:bg-gray-700/50 transition-colors duration-150 cursor-default ${!isLast ? 'border-b border-gray-100 dark:border-gray-700/50' : ''}">
-                                    <div class="flex gap-3">
-                                        <div class="flex-shrink-0 mt-0.5">
-                                            <div class="w-9 h-9 ${style.bg} rounded-xl flex items-center justify-center">
-                                                <svg class="w-4 h-4 ${style.text}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    ${style.icon}
-                                                </svg>
-                                            </div>
-                                        </div>
-                                        <div class="flex-1 min-w-0">
-                                            <div class="flex items-start justify-between gap-2">
-                                                <p class="text-[13px] font-semibold text-gray-900 dark:text-gray-100 leading-tight">${judul}</p>
-                                                <span class="flex-shrink-0 w-2 h-2 mt-1.5 rounded-full ${style.dot} notif-unread-dot"></span>
-                                            </div>
-                                            <p class="text-xs text-gray-600 dark:text-gray-400 mt-1 leading-relaxed line-clamp-2">${pesan}</p>
-                                            <p class="text-[10px] font-medium text-gray-400 dark:text-gray-500 mt-1.5 flex items-center gap-1">
-                                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                                </svg>
-                                                ${waktu}
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>`;
-                            });
-                            listContainer.innerHTML = html;
-                        }
                     } else {
-                        // Tidak ada notifikasi - sembunyikan badge & tampilkan empty state
                         badge.classList.add('hidden');
                         badge.innerText = '0';
                         ping.classList.add('hidden');
@@ -455,7 +414,50 @@
                         if (headerCount) {
                             headerCount.innerText = '0 Baru';
                         }
+                    }
 
+                    // 2. Render List Notifikasi (Menampilkan yang belum DAN sudah dibaca)
+                    if (data.items && data.items.length > 0) {
+                        let html = '';
+                        data.items.forEach((notif, index) => {
+                            const judul = escapeHtml(notif.judul || 'Pemberitahuan');
+                            const pesan = escapeHtml(notif.pesan || 'Ada pembaruan pada aktivitas Anda.');
+                            const waktu = timeAgo(notif.created_at);
+                            const style = getNotifStyle(notif.judul);
+                            const isLast = index === data.items.length - 1;
+                            
+                            // Hanya tampilkan titik penanda jika belum dibaca
+                            const dotDisplay = notif.is_read ? 'style="display: none;"' : '';
+
+                            html += `
+                            <div class="px-4 py-3.5 hover:bg-slate-50 dark:hover:bg-gray-700/50 transition-colors duration-150 cursor-default ${!isLast ? 'border-b border-gray-100 dark:border-gray-700/50' : ''}">
+                                <div class="flex gap-3">
+                                    <div class="flex-shrink-0 mt-0.5">
+                                        <div class="w-9 h-9 ${style.bg} rounded-xl flex items-center justify-center">
+                                            <svg class="w-4 h-4 ${style.text}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                ${style.icon}
+                                            </svg>
+                                        </div>
+                                    </div>
+                                    <div class="flex-1 min-w-0">
+                                        <div class="flex items-start justify-between gap-2">
+                                            <p class="text-[13px] font-semibold text-gray-900 dark:text-gray-100 leading-tight">${judul}</p>
+                                            <span class="flex-shrink-0 w-2 h-2 mt-1.5 rounded-full ${style.dot} notif-unread-dot" ${dotDisplay}></span>
+                                        </div>
+                                        <p class="text-xs text-gray-600 dark:text-gray-400 mt-1 leading-relaxed line-clamp-2">${pesan}</p>
+                                        <p class="text-[10px] font-medium text-gray-400 dark:text-gray-500 mt-1.5 flex items-center gap-1">
+                                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                            </svg>
+                                            ${waktu}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>`;
+                        });
+                        listContainer.innerHTML = html;
+                    } else {
+                        // Tampilkan state kosong jika benar-benar tidak ada riwayat notifikasi
                         listContainer.innerHTML = `
                         <div class="px-5 py-10 text-center flex flex-col items-center justify-center">
                             <div class="w-14 h-14 bg-gray-50 dark:bg-gray-700/50 rounded-2xl flex items-center justify-center mb-4">
@@ -463,8 +465,8 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path>
                                 </svg>
                             </div>
-                            <p class="text-sm font-semibold text-gray-700 dark:text-gray-200">Tidak ada notifikasi baru</p>
-                            <p class="text-xs text-gray-400 dark:text-gray-500 mt-1 max-w-[200px] leading-relaxed">Semua pemberitahuan Anda sudah terbaca.</p>
+                            <p class="text-sm font-semibold text-gray-700 dark:text-gray-200">Belum ada notifikasi</p>
+                            <p class="text-xs text-gray-400 dark:text-gray-500 mt-1 max-w-[200px] leading-relaxed">Pemberitahuan aktivitas Anda akan muncul di sini.</p>
                         </div>`;
                     }
                 })

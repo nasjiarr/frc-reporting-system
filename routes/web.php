@@ -104,7 +104,7 @@ Route::get('/api/notifications/unread', function () {
 
     return response()->json([
         'count'  => Notifikasi::where('user_id', $userId)->where('is_read', false)->count(),
-        'items'  => Notifikasi::where('user_id', $userId)->where('is_read', false)->latest()->take(20)->get()
+        'items'  => Notifikasi::where('user_id', $userId)->latest()->take(20)->get()
     ]);
 })->middleware('auth');
 
