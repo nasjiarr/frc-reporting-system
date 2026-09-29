@@ -48,9 +48,17 @@
             @foreach($details as $item)
             <tr>
                 <td>{{ $item->jenis_utilitas }}</td>
-                <td>{{ $item->petugas->nama_lengkap }}</td>
-                <td>{{ $item->detail->konsumsi ?? '-' }}</td>
-                <td>{{ $item->created_at->format('d/m/Y') }}</td>
+                <td>{{ $item->petugas->nama_lengkap ?? '-' }}</td>
+                <td style="text-align: right; font-weight: bold;">
+                    {{ number_format($item->total_konsumsi, 2, ',', '.') }} {{ str_contains($item->jenis_utilitas, 'Air') ? 'm³' : 'kWh' }}
+                </td>
+                <td>
+                    @if($item->detail && $item->detail->tgl_awal)
+                        {{ \Carbon\Carbon::parse($item->detail->tgl_awal)->format('d/m/Y') }} - {{ \Carbon\Carbon::parse($item->detail->tgl_akhir)->format('d/m/Y') }}
+                    @else
+                        {{ $item->periode }}
+                    @endif
+                </td>
             </tr>
             @endforeach
         </tbody>

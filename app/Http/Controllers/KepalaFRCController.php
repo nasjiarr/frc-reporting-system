@@ -37,7 +37,9 @@ class KepalaFRCController extends Controller
             ->groupBy('periode');
 
         // Detail tabel
-        $details = Utilitas::with('petugas')->where('periode', $periode)->get();
+        $details = Utilitas::with(['petugas', 'airBersih', 'airHujan', 'listrikMdp', 'listrikSdp', 'listrikLift', 'listrikAc', 'listrikLampu'])
+            ->where('periode', $periode)
+            ->get();
 
         return view('kepala.utilitas-rekap', compact('details', 'chartData', 'periode'));
     }
@@ -59,7 +61,9 @@ class KepalaFRCController extends Controller
     public function exportPdf(Request $request)
     {
         $periode = $request->get('bulan', date('Y-m'));
-        $details = Utilitas::with('petugas')->where('periode', $periode)->get();
+        $details = Utilitas::with(['petugas', 'airBersih', 'airHujan', 'listrikMdp', 'listrikSdp', 'listrikLift', 'listrikAc', 'listrikLampu'])
+            ->where('periode', $periode)
+            ->get();
 
         $pdf = Pdf::loadView('kepala.utilitas-pdf', compact('details', 'periode'));
 

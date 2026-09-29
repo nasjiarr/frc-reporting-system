@@ -86,6 +86,7 @@ Route::middleware(['auth', 'role:Teknisi'])->prefix('teknisi')->name('teknisi.')
 Route::middleware(['auth', 'role:KepalaFRC'])->prefix('kepala')->name('kepala.')->group(function () {
     Route::get('/dashboard', [KepalaFRCController::class, 'dashboard'])->name('dashboard');
     Route::get('/rekap-utilitas', [KepalaFRCController::class, 'rekapUtilitas'])->name('utilitas.index');
+    Route::get('/rekap-utilitas/export', [KepalaFRCController::class, 'exportPdf'])->name('utilitas.export');
     Route::get('/kinerja-teknisi', [KepalaFRCController::class, 'kinerjaTeknisi'])->name('kinerja.index');
     Route::get('/rekap-laporan', [KepalaFRCController::class, 'rekapLaporan'])->name('laporan.index');
     Route::get('/laporan-saya', [KepalaFRCController::class, 'laporanSaya'])->name('laporan_saya.index');

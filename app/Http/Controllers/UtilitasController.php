@@ -143,7 +143,11 @@ class UtilitasController extends Controller
             $utilitas->load($relation);
         }
 
-        return response()->json($utilitas);
+        if (request()->wantsJson()) {
+            return response()->json($utilitas);
+        }
+
+        return view('admin.utilitas.edit', compact('utilitas'));
     }
 
     public function update(Request $request, $id)
@@ -183,7 +187,7 @@ class UtilitasController extends Controller
                     break;
             }
 
-            return redirect()->route('admin.utilitas.index')->with('success', 'Data utilitas berhasil diperbarui.');
+            return redirect()->route('admin.utilitas.show', $utilitas->jenis_utilitas)->with('success', 'Data utilitas berhasil diperbarui.');
         });
     }
 

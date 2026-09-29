@@ -46,6 +46,23 @@ class Utilitas extends Model
     }
 
     /**
+     * Accessor untuk mendapatkan model detail turunan sesuai jenis_utilitas
+     */
+    public function getDetailAttribute()
+    {
+        return match ($this->jenis_utilitas) {
+            'AirBersih' => $this->airBersih,
+            'AirHujan'  => $this->airHujan,
+            'MDP'       => $this->listrikMdp,
+            'SDP'       => $this->listrikSdp,
+            'Lift'      => $this->listrikLift,
+            'AC'        => $this->listrikAc,
+            'Lampu'     => $this->listrikLampu,
+            default     => null
+        };
+    }
+
+    /**
      * Accessor untuk mendapatkan total konsumsi secara dinamis
      */
     public function getTotalKonsumsiAttribute()

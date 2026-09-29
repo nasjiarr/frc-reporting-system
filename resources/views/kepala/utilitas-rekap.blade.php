@@ -13,7 +13,7 @@
                     </div>
                 </form>
 
-                <a href="{{ route('kepala.utilitas.index') }}/export?bulan={{ $periode }}" class="px-4 py-2 bg-red-600 text-white rounded font-bold hover:bg-red-700 transition flex items-center gap-2">
+                <a href="{{ route('kepala.utilitas.export', ['bulan' => $periode]) }}" class="px-4 py-2 bg-red-600 text-white rounded font-bold hover:bg-red-700 transition flex items-center gap-2">
                     <span>📄</span> Ekspor PDF
                 </a>
             </div>
@@ -35,13 +35,17 @@
                         @forelse($details as $item)
                         <tr class="border-b hover:bg-gray-50">
                             <td class="p-3 font-bold">{{ $item->jenis_utilitas }}</td>
-                            <td class="p-3 text-sm">{{ $item->petugas->nama_lengkap }}</td>
+                            <td class="p-3 text-sm">{{ $item->petugas->nama_lengkap ?? '-' }}</td>
                             <td class="p-3 text-xs text-gray-500">
-                                {{ \Carbon\Carbon::parse($item->detail->tgl_awal)->format('d/m') }} -
-                                {{ \Carbon\Carbon::parse($item->detail->tgl_akhir)->format('d/m/Y') }}
+                                @if($item->detail && $item->detail->tgl_awal)
+                                    {{ \Carbon\Carbon::parse($item->detail->tgl_awal)->format('d/m') }} -
+                                    {{ \Carbon\Carbon::parse($item->detail->tgl_akhir)->format('d/m/Y') }}
+                                @else
+                                    {{ $item->periode }}
+                                @endif
                             </td>
                             <td class="p-3 text-right font-mono font-bold text-indigo-600">
-                                {{ $item->detail->konsumsi ?? $item->detail->konsumsi_total ?? 'N/A' }}
+                                {{ number_format($item->total_konsumsi, 2, ',', '.') }} {{ str_contains($item->jenis_utilitas, 'Air') ? 'm³' : 'kWh' }}
                             </td>
                         </tr>
                         @empty
