@@ -1,7 +1,7 @@
 # FRC Reporting & Utility Monitoring System
 
-[![Laravel](https://img.shields.io/badge/Laravel-10.x-FF2D20?style=for-the-badge&logo=laravel&logoColor=white)](https://laravel.com)
-[![PHP](https://img.shields.io/badge/PHP-8.1%2B-777BB4?style=for-the-badge&logo=php&logoColor=white)](https://php.net)
+[![Laravel](https://img.shields.io/badge/Laravel-12.x-FF2D20?style=for-the-badge&logo=laravel&logoColor=white)](https://laravel.com)
+[![PHP](https://img.shields.io/badge/PHP-8.2%2B-777BB4?style=for-the-badge&logo=php&logoColor=white)](https://php.net)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com)
 [![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white)](https://mysql.com)
 [![Tests](https://img.shields.io/badge/Tests-Passing%20(30%2F30)-success?style=for-the-badge&logo=githubactions&logoColor=white)](#-menjalankan-automated-tests)
@@ -37,7 +37,7 @@ Sistem ini dirancang untuk menggantikan pencatatan manual dan pesan instan yang 
 
 | Layer | Teknologi |
 | :--- | :--- |
-| **Backend Framework** | [Laravel 10](https://laravel.com) (PHP 8.1+) |
+| **Backend Framework** | [Laravel 12](https://laravel.com) (PHP 8.2+) |
 | **Basis Data** | [MySQL](https://www.mysql.com) / [MariaDB](https://mariadb.org) (Testing: SQLite in-memory) |
 | **Frontend Styling** | [Tailwind CSS](https://tailwindcss.com) & [Blade UI Kit Heroicons](https://blade-ui-kit.com) |
 | **Interaktivitas Frontend** | [Alpine.js](https://alpinejs.dev) & Vanilla JavaScript |
