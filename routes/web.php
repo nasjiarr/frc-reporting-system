@@ -30,7 +30,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-    Route::post('/utilitas/air-bersih', [UtilitasController::class, 'storeAirBersih'])->name('utilitas.air_bersih.store');
 });
 
 Route::middleware(['auth', 'role:Pelapor'])->prefix('pelapor')->name('pelapor.')->group(function () {
@@ -45,7 +44,7 @@ Route::middleware(['auth', 'role:Admin'])->prefix('admin')->name('admin.')->grou
     // Dashboard & Users
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
     Route::resource('users', AdminController::class)->except(['show']);
-    Route::patch('/users/{user}/toggle', [AdminController::class, 'toggleStatus'])->name('users.toggle');
+    Route::patch('/users/{user}/toggle-status', [AdminController::class, 'toggleStatus'])->name('users.toggle-status');
 
     // Penugasan
     Route::get('/penugasan', [AdminController::class, 'penugasanIndex'])->name('penugasan.index');
@@ -53,29 +52,27 @@ Route::middleware(['auth', 'role:Admin'])->prefix('admin')->name('admin.')->grou
     Route::patch('/penugasan/{laporan}/tolak', [AdminController::class, 'tolakLaporan'])->name('penugasan.tolak');
 
     // Utilitas
-    Route::get('/utilitas', [AdminController::class, 'utilitasIndex'])->name('utilitas.index');
+    Route::get('/utilitas', [UtilitasController::class, 'index'])->name('utilitas.index');
     Route::get('/utilitas/create', [UtilitasController::class, 'create'])->name('utilitas.create');
     Route::post('/utilitas', [UtilitasController::class, 'store'])->name('utilitas.store');
+    Route::post('/utilitas/air-bersih', [UtilitasController::class, 'storeAirBersih'])->name('utilitas.air_bersih.store');
+    Route::get('/utilitas/{jenis}/detail', [UtilitasController::class, 'showDetail'])->name('utilitas.detail');
+    Route::get('/utilitas/{jenis}/export-pdf', [UtilitasController::class, 'exportPdf'])->name('utilitas.export_pdf');
+    Route::get('/utilitas/{id}/edit', [UtilitasController::class, 'edit'])->name('utilitas.edit');
     Route::put('/utilitas/{id}', [UtilitasController::class, 'update'])->name('utilitas.update');
-    Route::delete('/utilitas/{utilitas}', [AdminController::class, 'utilitasDestroy'])->name('utilitas.destroy');
-    Route::get('/utilitas/{id}/edit', [AdminController::class, 'utilitasEdit'])->name('utilitas.edit');
+    Route::delete('/utilitas/{id}', [UtilitasController::class, 'destroy'])->name('utilitas.destroy');
+    Route::get('/utilitas/{jenis}', [UtilitasController::class, 'show'])->name('utilitas.show');
 
+    // Laporan
     Route::get('/laporan-saya', [AdminController::class, 'laporanIndex'])->name('laporan.index');
     Route::get('/laporan/create', [AdminController::class, 'laporanCreate'])->name('laporan.create');
     Route::post('/laporan', [AdminController::class, 'laporanStore'])->name('laporan.store');
     Route::get('/laporan-selesai', [AdminController::class, 'laporanSelesai'])->name('laporan.selesai');
     Route::get('/laporan/{id}', [AdminController::class, 'laporanShow'])->name('laporan.show');
     Route::delete('/laporan/{id}', [AdminController::class, 'laporanDestroy'])->name('laporan.destroy');
-    Route::patch('/users/{user}/toggle-status', [AdminController::class, 'toggleStatus'])->name('users.toggle-status');
-    Route::get('/utilitas/{jenis}/detail', [UtilitasController::class, 'showDetail'])->name('utilitas.detail');
-    Route::get('/utilitas', [AdminController::class, 'utilitasIndex'])->name('utilitas.index');
-    Route::get('/utilitas/{jenis}', [AdminController::class, 'utilitasShow'])->name('utilitas.show');
-    Route::get('/utilitas/{jenis}/export-pdf', [\App\Http\Controllers\AdminController::class, 'utilitasExportPdf'])->name('utilitas.export_pdf');
-    // Letakkan di dalam Route Group Admin
-    Route::get('/laporan/{id}/export-pdf', [\App\Http\Controllers\AdminController::class, 'laporanExportPdf'])->name('laporan.export_pdf');
-    Route::get('/laporan-rekap/export-pdf', [\App\Http\Controllers\AdminController::class, 'exportAllLaporan'])->name('laporan.export_all');
-    // Di dalam Route::prefix('admin')->name('admin.')->group(...)
-    Route::get('/laporan-selesai/export-pdf', [\App\Http\Controllers\AdminController::class, 'exportSelesaiPdf'])->name('laporan.export_selesai');
+    Route::get('/laporan/{id}/export-pdf', [AdminController::class, 'laporanExportPdf'])->name('laporan.export_pdf');
+    Route::get('/laporan-rekap/export-pdf', [AdminController::class, 'exportAllLaporan'])->name('laporan.export_all');
+    Route::get('/laporan-selesai/export-pdf', [AdminController::class, 'exportSelesaiPdf'])->name('laporan.export_selesai');
 });
 
 Route::middleware(['auth', 'role:Teknisi'])->prefix('teknisi')->name('teknisi.')->group(function () {
@@ -84,8 +81,6 @@ Route::middleware(['auth', 'role:Teknisi'])->prefix('teknisi')->name('teknisi.')
     Route::get('/tugas/{id}', [TeknisiController::class, 'show'])->name('tugas.show');
     Route::post('/tugas/{id}/selesai', [TeknisiController::class, 'updateProgress'])->name('tugas.update');
     Route::get('/riwayat', [TeknisiController::class, 'riwayat'])->name('riwayat');
-    Route::get('/penugasan/{id}', [TeknisiController::class, 'penugasanShow'])->name('penugasan.show');
-    Route::patch('/penugasan/{id}/mulai', [TeknisiController::class, 'mulaiTugas'])->name('penugasan.mulai');
 });
 
 Route::middleware(['auth', 'role:KepalaFRC'])->prefix('kepala')->name('kepala.')->group(function () {

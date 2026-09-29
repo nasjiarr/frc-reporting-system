@@ -12,6 +12,7 @@ use App\Models\ListrikSdp;
 use App\Models\ListrikLift;
 use App\Models\ListrikAc;
 use App\Models\ListrikLampu;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class UtilitasController extends Controller
 {
@@ -19,6 +20,13 @@ class UtilitasController extends Controller
     public function create()
     {
         return view('admin.utilitas.create');
+    }
+
+    // Method untuk menangani input spesifik air bersih jika dipanggil
+    public function storeAirBersih(Request $request)
+    {
+        $request->merge(['jenis_utilitas' => 'AirBersih']);
+        return $this->store($request);
     }
 
     // Method untuk memproses data dari form dinamis
@@ -252,5 +260,27 @@ class UtilitasController extends Controller
         }
 
         return view('admin.utilitas.show', compact('jenis', 'tahun', 'riwayat', 'labels', 'consumptions'));
+    }
+
+    public function exportPdf(Request $request, $jenis)
+    {
+        $tahun = $request->query('tahun', date('Y'));
+
+        // Tarik data riwayat utilitas untuk diekspor ke PDF
+        $riwayat = Utilitas::with(['petugas'])
+            ->where('jenis_utilitas', $jenis)
+            ->where('periode', 'like', "$tahun-%")
+            ->latest('periode')
+            ->get();
+
+        $pdf = Pdf::loadView('admin.utilitas.pdf', compact('jenis', 'tahun', 'riwayat'));
+        $pdf->setPaper('A4', 'portrait');
+
+        return $pdf->download("Laporan_Utilitas_{$jenis}_{$tahun}.pdf");
+    }
+
+    public function utilitasExportPdf(Request $request, $jenis)
+    {
+        return $this->exportPdf($request, $jenis);
     }
 }

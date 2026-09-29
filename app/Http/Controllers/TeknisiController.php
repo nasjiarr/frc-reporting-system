@@ -56,6 +56,10 @@ class TeknisiController extends Controller
     {
         $tugas = Penugasan::findOrFail($id);
 
+        if ($tugas->teknisi_id !== auth()->id()) {
+            abort(403);
+        }
+
         // 1. Sesuaikan validasi dengan UI terbaru
         $request->validate([
             'tindakan' => 'required|string',
