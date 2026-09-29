@@ -159,4 +159,26 @@ class UtilitasTest extends TestCase
             'stand_akhir' => 1250.00,
         ]);
     }
+
+    public function test_admin_can_view_utilitas_show_page_with_kpi_metrics(): void
+    {
+        $response = $this->actingAs($this->admin)->get(route('admin.utilitas.show', 'AirBersih'));
+
+        $response->assertStatus(200);
+        $response->assertSee('Detail Utilitas: AirBersih');
+        $response->assertSee('Total Konsumsi');
+        $response->assertSee('Rata-rata Bulanan');
+        $response->assertSee('Puncak Konsumsi Bulanan');
+        $response->assertSee('50,00 m³');
+    }
+
+    public function test_utilitas_detail_route_redirects_to_show(): void
+    {
+        $response = $this->actingAs($this->admin)->get(route('admin.utilitas.detail', 'AirBersih'));
+
+        $response->assertRedirect(route('admin.utilitas.show', [
+            'jenis' => 'AirBersih',
+            'tahun' => date('Y'),
+        ]));
+    }
 }

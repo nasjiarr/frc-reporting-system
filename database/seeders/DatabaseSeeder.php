@@ -184,5 +184,8 @@ class DatabaseSeeder extends Seeder
                 'selesai_pada' => now()->subDay(1),
             ]
         );
+
+        // 8. Seed Dataset Utilitas Komprehensif (7 Jenis x 7 Bulan)
+        $this->call(UtilitasSeeder::class);
     }
 }

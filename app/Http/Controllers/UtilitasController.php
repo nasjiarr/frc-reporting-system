@@ -292,43 +292,81 @@ class UtilitasController extends Controller
 
     public function showDetail(Request $request, $jenis)
     {
-        $tahun = $request->query('tahun', date('Y'));
-
-        // Ambil data utilitas berdasarkan jenis dan tahun
-        $dataUtilitas = \App\Models\Utilitas::with(['airBersih', 'airHujan', 'listrikMdp', 'listrikSdp', 'listrikLift', 'listrikAc', 'listrikLampu'])
-            ->where('jenis_utilitas', $jenis)
-            ->where('periode', 'like', "$tahun-%")
-            ->get();
-
-        // Inisialisasi data 12 bulan (Jan - Des)
-        $labels = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
-        $consumptions = array_fill(0, 12, 0);
-
-        foreach ($dataUtilitas as $util) {
-            // Ambil bulan dari format YYYY-MM (index 5, panjang 2)
-            $bulanIndex = (int) substr($util->periode, 5, 2) - 1;
-            if ($bulanIndex >= 0 && $bulanIndex < 12) {
-                $consumptions[$bulanIndex] += $util->total_konsumsi; // Menggunakan accessor total_konsumsi dari model Utilitas
-            }
-        }
-
-        return view('admin.utilitas.detail', compact('jenis', 'tahun', 'labels', 'consumptions', 'dataUtilitas'));
+        return redirect()->route('admin.utilitas.show', [
+            'jenis' => $jenis,
+            'tahun' => $request->query('tahun', date('Y'))
+        ]);
     }
 
     public function index()
     {
-        // Daftar 7 jenis utilitas secara statis
-        $jenisUtilitas = [
-            ['nama' => 'Air Bersih', 'slug' => 'AirBersih', 'icon' => 'droplet', 'warna' => 'blue'],
-            ['nama' => 'Air Hujan', 'slug' => 'AirHujan', 'icon' => 'cloud-rain', 'warna' => 'cyan'],
-            ['nama' => 'Listrik MDP', 'slug' => 'MDP', 'icon' => 'bolt', 'warna' => 'amber'],
-            ['nama' => 'Listrik SDP', 'slug' => 'SDP', 'icon' => 'zap', 'warna' => 'yellow'],
-            ['nama' => 'Listrik Lift', 'slug' => 'Lift', 'icon' => 'arrow-up-down', 'warna' => 'orange'],
-            ['nama' => 'Listrik AC', 'slug' => 'AC', 'icon' => 'wind', 'warna' => 'indigo'],
-            ['nama' => 'Listrik Lampu', 'slug' => 'Lampu', 'icon' => 'lightbulb', 'warna' => 'emerald'],
+        $kategoriConfig = [
+            'AirBersih' => ['nama' => 'Air Bersih', 'icon' => 'droplet', 'warna' => 'blue', 'unit' => 'm³'],
+            'AirHujan'  => ['nama' => 'Air Hujan', 'icon' => 'cloud-rain', 'warna' => 'cyan', 'unit' => 'm³'],
+            'MDP'       => ['nama' => 'Listrik MDP (Panel Utama)', 'icon' => 'bolt', 'warna' => 'amber', 'unit' => 'kWh'],
+            'SDP'       => ['nama' => 'Listrik SDP (Panel Distribusi)', 'icon' => 'zap', 'warna' => 'yellow', 'unit' => 'kWh'],
+            'Lift'      => ['nama' => 'Listrik Lift', 'icon' => 'arrow-up-down', 'warna' => 'orange', 'unit' => 'kWh'],
+            'AC'        => ['nama' => 'Listrik AC (3 Lantai)', 'icon' => 'wind', 'warna' => 'indigo', 'unit' => 'kWh'],
+            'Lampu'     => ['nama' => 'Listrik Lampu (3 Lantai)', 'icon' => 'lightbulb', 'warna' => 'emerald', 'unit' => 'kWh'],
         ];
 
-        return view('admin.utilitas.index', compact('jenisUtilitas'));
+        $allUtilitas = Utilitas::with(['airBersih', 'airHujan', 'listrikMdp', 'listrikSdp', 'listrikLift', 'listrikAc', 'listrikLampu'])
+            ->orderBy('periode', 'desc')
+            ->get()
+            ->groupBy('jenis_utilitas');
+
+        $jenisUtilitas = [];
+        $totalListrikBulanIni = 0;
+        $totalAirBulanIni = 0;
+        $periodeTerbaru = null;
+
+        foreach ($kategoriConfig as $slug => $cfg) {
+            $records = $allUtilitas->get($slug, collect());
+            $latest = $records->first();
+            $previous = $records->count() > 1 ? $records->get(1) : null;
+
+            $latestKonsumsi = $latest ? $latest->total_konsumsi : null;
+            $prevKonsumsi = $previous ? $previous->total_konsumsi : null;
+
+            $tren = null;
+            $trenPersen = null;
+            if ($latestKonsumsi !== null && $prevKonsumsi !== null && $prevKonsumsi > 0) {
+                $diff = $latestKonsumsi - $prevKonsumsi;
+                $trenPersen = round(($diff / $prevKonsumsi) * 100, 1);
+                $tren = $trenPersen > 0 ? 'up' : ($trenPersen < 0 ? 'down' : 'same');
+            }
+
+            if ($latest) {
+                if (!$periodeTerbaru || $latest->periode > $periodeTerbaru) {
+                    $periodeTerbaru = $latest->periode;
+                }
+                if (in_array($slug, ['AirBersih', 'AirHujan'])) {
+                    $totalAirBulanIni += $latestKonsumsi;
+                } elseif ($slug === 'MDP') {
+                    $totalListrikBulanIni += $latestKonsumsi;
+                }
+            }
+
+            $jenisUtilitas[] = [
+                'nama'           => $cfg['nama'],
+                'slug'           => $slug,
+                'icon'           => $cfg['icon'],
+                'warna'          => $cfg['warna'],
+                'unit'           => $cfg['unit'],
+                'latest_periode' => $latest?->periode,
+                'latest_konsumsi'=> $latestKonsumsi,
+                'tren'           => $tren,
+                'tren_persen'    => $trenPersen !== null ? abs($trenPersen) : null,
+                'total_records'  => $records->count(),
+            ];
+        }
+
+        return view('admin.utilitas.index', compact(
+            'jenisUtilitas',
+            'totalListrikBulanIni',
+            'totalAirBulanIni',
+            'periodeTerbaru'
+        ));
     }
 
     public function show(Request $request, $jenis)
@@ -336,10 +374,10 @@ class UtilitasController extends Controller
         $tahun = $request->query('tahun', date('Y'));
 
         // Ambil riwayat data khusus jenis ini
-        $riwayat = \App\Models\Utilitas::with(['petugas', 'airBersih', 'airHujan', 'listrikMdp', 'listrikSdp', 'listrikLift', 'listrikAc', 'listrikLampu'])
+        $riwayat = Utilitas::with(['petugas', 'airBersih', 'airHujan', 'listrikMdp', 'listrikSdp', 'listrikLift', 'listrikAc', 'listrikLampu'])
             ->where('jenis_utilitas', $jenis)
             ->where('periode', 'like', "$tahun-%")
-            ->latest('periode')
+            ->orderBy('periode', 'desc')
             ->get();
 
         // Data untuk Grafik
@@ -353,7 +391,22 @@ class UtilitasController extends Controller
             }
         }
 
-        return view('admin.utilitas.show', compact('jenis', 'tahun', 'riwayat', 'labels', 'consumptions'));
+        // Statistik Ringkasan Tahun Berjalan
+        $recordedValues = array_filter($consumptions, fn ($v) => $v > 0);
+        $totalTahunIni = array_sum($consumptions);
+        $rataRataBulanan = count($recordedValues) > 0 ? $totalTahunIni / count($recordedValues) : 0;
+        $konsumsiTertinggi = count($recordedValues) > 0 ? max($recordedValues) : 0;
+
+        return view('admin.utilitas.show', compact(
+            'jenis',
+            'tahun',
+            'riwayat',
+            'labels',
+            'consumptions',
+            'totalTahunIni',
+            'rataRataBulanan',
+            'konsumsiTertinggi'
+        ));
     }
 
     public function exportPdf(Request $request, $jenis)
