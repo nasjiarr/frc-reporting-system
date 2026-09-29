@@ -6,7 +6,39 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Sistem Pelaporan FRC') }}</title>
+    @php
+        $pageTitle = $title ?? match (request()->route()?->getName()) {
+            'dashboard' => 'Dashboard',
+            'admin.dashboard' => 'Dashboard Admin',
+            'admin.penugasan.index' => 'Penugasan Teknisi',
+            'admin.laporan.index' => 'Laporan Saya',
+            'admin.laporan.create' => 'Buat Laporan',
+            'admin.laporan.show' => 'Detail Laporan',
+            'admin.laporan.selesai' => 'Laporan Selesai',
+            'admin.utilitas.index' => 'Monitoring Utilitas',
+            'admin.utilitas.create' => 'Catat Utilitas',
+            'admin.utilitas.show', 'admin.utilitas.detail' => 'Detail Utilitas',
+            'admin.users.index' => 'Kelola Pengguna',
+            'pelapor.dashboard' => 'Dashboard Pelapor',
+            'pelapor.laporan.index' => 'Laporan Saya',
+            'pelapor.laporan.create' => 'Buat Laporan Baru',
+            'pelapor.laporan.show' => 'Detail Laporan',
+            'teknisi.dashboard' => 'Dashboard Teknisi',
+            'teknisi.tugas-aktif' => 'Tugas Aktif',
+            'teknisi.tugas.show' => 'Detail Tugas',
+            'teknisi.riwayat' => 'Riwayat Pekerjaan',
+            'kepala.dashboard' => 'Dashboard Pimpinan',
+            'kepala.laporan.index' => 'Rekap Seluruh Laporan',
+            'kepala.laporan.create' => 'Buat Laporan',
+            'kepala.laporan.show' => 'Detail Laporan',
+            'kepala.laporan_saya.index' => 'Laporan Saya',
+            'kepala.utilitas.index' => 'Rekap Utilitas',
+            'kepala.kinerja.index' => 'Kinerja Teknisi',
+            'profile.edit' => 'Pengaturan Profil',
+            default => null,
+        };
+    @endphp
+    <title>{{ $pageTitle ? $pageTitle . ' - ' : '' }}{{ config('app.name', 'FRC Reporting System') }}</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

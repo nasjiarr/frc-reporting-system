@@ -6,7 +6,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>Login - {{ config('app.name', 'Sistem Pelaporan FRC') }}</title>
+    @php
+        $pageTitle = $title ?? match (request()->route()?->getName()) {
+            'login' => 'Masuk',
+            'register' => 'Daftar Akun',
+            'password.request' => 'Lupa Password',
+            'password.reset' => 'Reset Password',
+            default => 'Masuk',
+        };
+    @endphp
+    <title>{{ $pageTitle }} - {{ config('app.name', 'FRC Reporting System') }}</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
