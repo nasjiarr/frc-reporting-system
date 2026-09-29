@@ -51,62 +51,62 @@
             $roleBadgeConfig = [
                 'Admin' => [
                     'label' => 'Administrator',
-                    'badge' => 'bg-indigo-500/10 text-indigo-300 ring-1 ring-indigo-500/30',
-                    'dot' => 'bg-indigo-400 shadow-[0_0_8px_rgba(129,140,248,0.6)]',
+                    'badge' => 'bg-indigo-50 dark:bg-indigo-500/10 text-indigo-700 dark:text-indigo-300 ring-1 ring-indigo-500/20 dark:ring-indigo-500/30',
+                    'dot' => 'bg-indigo-500 dark:bg-indigo-400 shadow-[0_0_8px_rgba(129,140,248,0.6)]',
                     'avatar' => 'from-indigo-600 to-indigo-700 text-white',
                 ],
                 'Teknisi' => [
                     'label' => 'Teknisi Lapangan',
-                    'badge' => 'bg-amber-500/10 text-amber-300 ring-1 ring-amber-500/30',
-                    'dot' => 'bg-amber-400 shadow-[0_0_8px_rgba(251,191,36,0.6)]',
+                    'badge' => 'bg-amber-50 dark:bg-amber-500/10 text-amber-700 dark:text-amber-300 ring-1 ring-amber-500/20 dark:ring-amber-500/30',
+                    'dot' => 'bg-amber-500 dark:bg-amber-400 shadow-[0_0_8px_rgba(251,191,36,0.6)]',
                     'avatar' => 'from-amber-600 to-amber-700 text-white',
                 ],
                 'Pelapor' => [
                     'label' => 'Pelapor / Staff',
-                    'badge' => 'bg-sky-500/10 text-sky-300 ring-1 ring-sky-500/30',
-                    'dot' => 'bg-sky-400 shadow-[0_0_8px_rgba(56,189,248,0.6)]',
+                    'badge' => 'bg-sky-50 dark:bg-sky-500/10 text-sky-700 dark:text-sky-300 ring-1 ring-sky-500/20 dark:ring-sky-500/30',
+                    'dot' => 'bg-sky-500 dark:bg-sky-400 shadow-[0_0_8px_rgba(56,189,248,0.6)]',
                     'avatar' => 'from-sky-600 to-sky-700 text-white',
                 ],
                 'KepalaFRC' => [
                     'label' => 'Kepala FRC',
-                    'badge' => 'bg-emerald-500/10 text-emerald-300 ring-1 ring-emerald-500/30',
-                    'dot' => 'bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.6)]',
+                    'badge' => 'bg-emerald-50 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 ring-1 ring-emerald-500/20 dark:ring-emerald-500/30',
+                    'dot' => 'bg-emerald-500 dark:bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.6)]',
                     'avatar' => 'from-emerald-600 to-emerald-700 text-white',
                 ],
             ];
             $currentRoleConfig = $roleBadgeConfig[$role] ?? [
                 'label' => $role,
-                'badge' => 'bg-slate-800 text-slate-300 ring-1 ring-slate-700',
+                'badge' => 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 ring-1 ring-slate-200 dark:ring-slate-700',
                 'dot' => 'bg-slate-400',
                 'avatar' => 'from-slate-700 to-slate-800 text-white',
             ];
         @endphp
 
-        <!-- Sidebar Navigation (Modern Clean SaaS) -->
-        <aside class="fixed inset-y-0 left-0 z-50 w-72 bg-slate-900 border-r border-slate-800/80 flex flex-col shadow-2xl transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0"
+        <!-- Sidebar Navigation (Modern Clean SaaS, Adaptive Dark/Light) -->
+        <aside class="fixed inset-y-0 left-0 z-50 w-72 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800/80 flex flex-col shadow-2xl lg:shadow-none transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0"
                :class="{ '-translate-x-full': !sidebarOpen, 'translate-x-0': sidebarOpen }">
 
             <!-- Sidebar Header & Branding -->
-            <div class="h-20 flex items-center justify-between px-5 border-b border-slate-800/80 bg-slate-900/60 backdrop-blur-sm">
+            <div class="h-20 flex items-center justify-between px-5 border-b border-slate-200/80 dark:border-slate-800/80 bg-white/80 dark:bg-slate-900/60 backdrop-blur-sm">
                 <a href="{{ route('dashboard') }}" class="flex items-center gap-3.5 group">
-                    <div class="flex items-center justify-center h-11 w-11 rounded-xl bg-white p-2 shadow-md shadow-black/20 group-hover:scale-105 group-hover:ring-2 group-hover:ring-indigo-500/40 transition-all duration-200">
+                    <div class="flex items-center justify-center h-11 w-11 rounded-xl bg-slate-50 dark:bg-white p-2 shadow-sm border border-slate-200 dark:border-transparent group-hover:scale-105 group-hover:ring-2 group-hover:ring-indigo-500/40 transition-all duration-200">
                         <img src="{{ asset('images/logo-frc.png') }}" alt="Logo FRC" class="h-7 w-auto object-contain">
                     </div>
                     <div class="flex flex-col">
                         <div class="flex items-center gap-1.5 leading-none">
-                            <span class="font-bold text-base tracking-tight text-white group-hover:text-indigo-200 transition-colors">
-                                FRC<span class="text-indigo-400">Report</span>
+                            <span class="font-bold text-base tracking-tight text-slate-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-200 transition-colors">
+                                FRC<span class="text-indigo-600 dark:text-indigo-400">Report</span>
                             </span>
                         </div>
                         <div class="mt-1">
-                            <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-medium tracking-wide uppercase {{ $currentRoleConfig['badge'] }}">
+                            <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-semibold tracking-wide uppercase {{ $currentRoleConfig['badge'] }}">
                                 <span class="w-1.5 h-1.5 rounded-full {{ $currentRoleConfig['dot'] }}"></span>
                                 {{ $currentRoleConfig['label'] }}
                             </span>
                         </div>
                     </div>
                 </a>
-                <button @click="sidebarOpen = false" class="lg:hidden p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 focus:outline-none transition-colors" title="Tutup Menu">
+                <button @click="sidebarOpen = false" class="lg:hidden p-1.5 rounded-lg text-slate-400 hover:text-slate-700 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 focus:outline-none transition-colors" title="Tutup Menu">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                     </svg>
@@ -114,17 +114,17 @@
             </div>
 
             <!-- Scrollable Navigation Items -->
-            <nav class="flex-1 overflow-y-auto px-4 py-5 space-y-6" style="scrollbar-width: thin; scrollbar-color: #334155 transparent;">
+            <nav class="flex-1 overflow-y-auto px-4 py-5 space-y-6" style="scrollbar-width: thin;">
                 @if(Auth::user()->role === 'Admin')
                     <!-- Section: OVERVIEW -->
                     <div class="space-y-1">
-                        <div class="px-3 pb-1 text-[11px] font-semibold tracking-wider text-slate-400 uppercase font-mono">
+                        <div class="px-3 pb-1 text-[11px] font-semibold tracking-wider text-slate-400 dark:text-slate-500 uppercase font-mono">
                             OVERVIEW
                         </div>
                         @php $active = request()->routeIs(['admin.dashboard', 'dashboard']); @endphp
                         <a href="{{ route('admin.dashboard') }}"
-                           class="group flex items-center gap-3 px-3 py-2 text-sm rounded-xl transition-all duration-150 {{ $active ? 'bg-indigo-600/15 text-indigo-300 font-semibold ring-1 ring-indigo-500/30 shadow-sm shadow-indigo-950/40' : 'text-slate-400 hover:text-white hover:bg-slate-800/60 font-medium' }}">
-                            <svg class="w-5 h-5 flex-shrink-0 transition-colors duration-150 {{ $active ? 'text-indigo-400' : 'text-slate-400 group-hover:text-slate-200' }}" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
+                           class="group flex items-center gap-3 px-3 py-2 text-sm rounded-xl transition-all duration-150 {{ $active ? 'bg-indigo-50 dark:bg-indigo-600/15 text-indigo-700 dark:text-indigo-300 font-semibold ring-1 ring-indigo-500/20 dark:ring-indigo-500/30 shadow-sm' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/60 font-medium' }}">
+                            <svg class="w-5 h-5 flex-shrink-0 transition-colors duration-150 {{ $active ? 'text-indigo-600 dark:text-indigo-400' : 'text-slate-400 dark:text-slate-400 group-hover:text-slate-600 dark:group-hover:text-slate-200' }}" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z" />
                             </svg>
                             <span>Dashboard</span>
@@ -133,13 +133,13 @@
 
                     <!-- Section: MANAJEMEN TIKET -->
                     <div class="space-y-1">
-                        <div class="px-3 pb-1 text-[11px] font-semibold tracking-wider text-slate-400 uppercase font-mono">
+                        <div class="px-3 pb-1 text-[11px] font-semibold tracking-wider text-slate-400 dark:text-slate-500 uppercase font-mono">
                             MANAJEMEN TIKET
                         </div>
                         @php $active = request()->routeIs('admin.penugasan.*'); @endphp
                         <a href="{{ route('admin.penugasan.index') }}"
-                           class="group flex items-center gap-3 px-3 py-2 text-sm rounded-xl transition-all duration-150 {{ $active ? 'bg-indigo-600/15 text-indigo-300 font-semibold ring-1 ring-indigo-500/30 shadow-sm shadow-indigo-950/40' : 'text-slate-400 hover:text-white hover:bg-slate-800/60 font-medium' }}">
-                            <svg class="w-5 h-5 flex-shrink-0 transition-colors duration-150 {{ $active ? 'text-indigo-400' : 'text-slate-400 group-hover:text-slate-200' }}" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
+                           class="group flex items-center gap-3 px-3 py-2 text-sm rounded-xl transition-all duration-150 {{ $active ? 'bg-indigo-50 dark:bg-indigo-600/15 text-indigo-700 dark:text-indigo-300 font-semibold ring-1 ring-indigo-500/20 dark:ring-indigo-500/30 shadow-sm' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/60 font-medium' }}">
+                            <svg class="w-5 h-5 flex-shrink-0 transition-colors duration-150 {{ $active ? 'text-indigo-600 dark:text-indigo-400' : 'text-slate-400 dark:text-slate-400 group-hover:text-slate-600 dark:group-hover:text-slate-200' }}" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                             </svg>
                             <span>Penugasan</span>
@@ -147,8 +147,8 @@
 
                         @php $active = request()->routeIs(['admin.laporan.index', 'admin.laporan.create', 'admin.laporan.show']); @endphp
                         <a href="{{ route('admin.laporan.index') }}"
-                           class="group flex items-center gap-3 px-3 py-2 text-sm rounded-xl transition-all duration-150 {{ $active ? 'bg-indigo-600/15 text-indigo-300 font-semibold ring-1 ring-indigo-500/30 shadow-sm shadow-indigo-950/40' : 'text-slate-400 hover:text-white hover:bg-slate-800/60 font-medium' }}">
-                            <svg class="w-5 h-5 flex-shrink-0 transition-colors duration-150 {{ $active ? 'text-indigo-400' : 'text-slate-400 group-hover:text-slate-200' }}" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
+                           class="group flex items-center gap-3 px-3 py-2 text-sm rounded-xl transition-all duration-150 {{ $active ? 'bg-indigo-50 dark:bg-indigo-600/15 text-indigo-700 dark:text-indigo-300 font-semibold ring-1 ring-indigo-500/20 dark:ring-indigo-500/30 shadow-sm' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/60 font-medium' }}">
+                            <svg class="w-5 h-5 flex-shrink-0 transition-colors duration-150 {{ $active ? 'text-indigo-600 dark:text-indigo-400' : 'text-slate-400 dark:text-slate-400 group-hover:text-slate-600 dark:group-hover:text-slate-200' }}" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                             </svg>
                             <span>Laporan Saya</span>
@@ -156,8 +156,8 @@
 
                         @php $active = request()->routeIs('admin.laporan.selesai'); @endphp
                         <a href="{{ route('admin.laporan.selesai') }}"
-                           class="group flex items-center gap-3 px-3 py-2 text-sm rounded-xl transition-all duration-150 {{ $active ? 'bg-indigo-600/15 text-indigo-300 font-semibold ring-1 ring-indigo-500/30 shadow-sm shadow-indigo-950/40' : 'text-slate-400 hover:text-white hover:bg-slate-800/60 font-medium' }}">
-                            <svg class="w-5 h-5 flex-shrink-0 transition-colors duration-150 {{ $active ? 'text-indigo-400' : 'text-slate-400 group-hover:text-slate-200' }}" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
+                           class="group flex items-center gap-3 px-3 py-2 text-sm rounded-xl transition-all duration-150 {{ $active ? 'bg-indigo-50 dark:bg-indigo-600/15 text-indigo-700 dark:text-indigo-300 font-semibold ring-1 ring-indigo-500/20 dark:ring-indigo-500/30 shadow-sm' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/60 font-medium' }}">
+                            <svg class="w-5 h-5 flex-shrink-0 transition-colors duration-150 {{ $active ? 'text-indigo-600 dark:text-indigo-400' : 'text-slate-400 dark:text-slate-400 group-hover:text-slate-600 dark:group-hover:text-slate-200' }}" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
                             <span>Laporan Selesai</span>
@@ -166,13 +166,13 @@
 
                     <!-- Section: MONITORING & UTILITAS -->
                     <div class="space-y-1">
-                        <div class="px-3 pb-1 text-[11px] font-semibold tracking-wider text-slate-400 uppercase font-mono">
+                        <div class="px-3 pb-1 text-[11px] font-semibold tracking-wider text-slate-400 dark:text-slate-500 uppercase font-mono">
                             MONITORING & UTILITAS
                         </div>
                         @php $active = request()->routeIs('admin.utilitas.*'); @endphp
                         <a href="{{ route('admin.utilitas.index') }}"
-                           class="group flex items-center gap-3 px-3 py-2 text-sm rounded-xl transition-all duration-150 {{ $active ? 'bg-indigo-600/15 text-indigo-300 font-semibold ring-1 ring-indigo-500/30 shadow-sm shadow-indigo-950/40' : 'text-slate-400 hover:text-white hover:bg-slate-800/60 font-medium' }}">
-                            <svg class="w-5 h-5 flex-shrink-0 transition-colors duration-150 {{ $active ? 'text-indigo-400' : 'text-slate-400 group-hover:text-slate-200' }}" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
+                           class="group flex items-center gap-3 px-3 py-2 text-sm rounded-xl transition-all duration-150 {{ $active ? 'bg-indigo-50 dark:bg-indigo-600/15 text-indigo-700 dark:text-indigo-300 font-semibold ring-1 ring-indigo-500/20 dark:ring-indigo-500/30 shadow-sm' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/60 font-medium' }}">
+                            <svg class="w-5 h-5 flex-shrink-0 transition-colors duration-150 {{ $active ? 'text-indigo-600 dark:text-indigo-400' : 'text-slate-400 dark:text-slate-400 group-hover:text-slate-600 dark:group-hover:text-slate-200' }}" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                             </svg>
@@ -182,13 +182,13 @@
 
                     <!-- Section: PENGATURAN -->
                     <div class="space-y-1">
-                        <div class="px-3 pb-1 text-[11px] font-semibold tracking-wider text-slate-400 uppercase font-mono">
+                        <div class="px-3 pb-1 text-[11px] font-semibold tracking-wider text-slate-400 dark:text-slate-500 uppercase font-mono">
                             PENGATURAN
                         </div>
                         @php $active = request()->routeIs('admin.users.*'); @endphp
                         <a href="{{ route('admin.users.index') }}"
-                           class="group flex items-center gap-3 px-3 py-2 text-sm rounded-xl transition-all duration-150 {{ $active ? 'bg-indigo-600/15 text-indigo-300 font-semibold ring-1 ring-indigo-500/30 shadow-sm shadow-indigo-950/40' : 'text-slate-400 hover:text-white hover:bg-slate-800/60 font-medium' }}">
-                            <svg class="w-5 h-5 flex-shrink-0 transition-colors duration-150 {{ $active ? 'text-indigo-400' : 'text-slate-400 group-hover:text-slate-200' }}" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
+                           class="group flex items-center gap-3 px-3 py-2 text-sm rounded-xl transition-all duration-150 {{ $active ? 'bg-indigo-50 dark:bg-indigo-600/15 text-indigo-700 dark:text-indigo-300 font-semibold ring-1 ring-indigo-500/20 dark:ring-indigo-500/30 shadow-sm' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/60 font-medium' }}">
+                            <svg class="w-5 h-5 flex-shrink-0 transition-colors duration-150 {{ $active ? 'text-indigo-600 dark:text-indigo-400' : 'text-slate-400 dark:text-slate-400 group-hover:text-slate-600 dark:group-hover:text-slate-200' }}" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
                             </svg>
                             <span>Kelola User</span>
@@ -197,13 +197,13 @@
                 @elseif(Auth::user()->role === 'Pelapor')
                     <!-- Section: OVERVIEW -->
                     <div class="space-y-1">
-                        <div class="px-3 pb-1 text-[11px] font-semibold tracking-wider text-slate-400 uppercase font-mono">
+                        <div class="px-3 pb-1 text-[11px] font-semibold tracking-wider text-slate-400 dark:text-slate-500 uppercase font-mono">
                             OVERVIEW
                         </div>
                         @php $active = request()->routeIs(['pelapor.dashboard', 'dashboard']); @endphp
                         <a href="{{ route('pelapor.dashboard') }}"
-                           class="group flex items-center gap-3 px-3 py-2 text-sm rounded-xl transition-all duration-150 {{ $active ? 'bg-indigo-600/15 text-indigo-300 font-semibold ring-1 ring-indigo-500/30 shadow-sm shadow-indigo-950/40' : 'text-slate-400 hover:text-white hover:bg-slate-800/60 font-medium' }}">
-                            <svg class="w-5 h-5 flex-shrink-0 transition-colors duration-150 {{ $active ? 'text-indigo-400' : 'text-slate-400 group-hover:text-slate-200' }}" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
+                           class="group flex items-center gap-3 px-3 py-2 text-sm rounded-xl transition-all duration-150 {{ $active ? 'bg-indigo-50 dark:bg-indigo-600/15 text-indigo-700 dark:text-indigo-300 font-semibold ring-1 ring-indigo-500/20 dark:ring-indigo-500/30 shadow-sm' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/60 font-medium' }}">
+                            <svg class="w-5 h-5 flex-shrink-0 transition-colors duration-150 {{ $active ? 'text-indigo-600 dark:text-indigo-400' : 'text-slate-400 dark:text-slate-400 group-hover:text-slate-600 dark:group-hover:text-slate-200' }}" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z" />
                             </svg>
                             <span>Dashboard</span>
@@ -212,13 +212,13 @@
 
                     <!-- Section: PELAPORAN KERUSAKAN -->
                     <div class="space-y-1">
-                        <div class="px-3 pb-1 text-[11px] font-semibold tracking-wider text-slate-400 uppercase font-mono">
+                        <div class="px-3 pb-1 text-[11px] font-semibold tracking-wider text-slate-400 dark:text-slate-500 uppercase font-mono">
                             PELAPORAN KERUSAKAN
                         </div>
                         @php $active = request()->routeIs('pelapor.laporan.create'); @endphp
                         <a href="{{ route('pelapor.laporan.create') }}"
-                           class="group flex items-center gap-3 px-3 py-2 text-sm rounded-xl transition-all duration-150 {{ $active ? 'bg-indigo-600/15 text-indigo-300 font-semibold ring-1 ring-indigo-500/30 shadow-sm shadow-indigo-950/40' : 'text-slate-400 hover:text-white hover:bg-slate-800/60 font-medium' }}">
-                            <svg class="w-5 h-5 flex-shrink-0 transition-colors duration-150 {{ $active ? 'text-indigo-400' : 'text-slate-400 group-hover:text-slate-200' }}" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
+                           class="group flex items-center gap-3 px-3 py-2 text-sm rounded-xl transition-all duration-150 {{ $active ? 'bg-indigo-50 dark:bg-indigo-600/15 text-indigo-700 dark:text-indigo-300 font-semibold ring-1 ring-indigo-500/20 dark:ring-indigo-500/30 shadow-sm' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/60 font-medium' }}">
+                            <svg class="w-5 h-5 flex-shrink-0 transition-colors duration-150 {{ $active ? 'text-indigo-600 dark:text-indigo-400' : 'text-slate-400 dark:text-slate-400 group-hover:text-slate-600 dark:group-hover:text-slate-200' }}" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
                             <span>Buat Laporan Baru</span>
@@ -226,8 +226,8 @@
 
                         @php $active = request()->routeIs(['pelapor.laporan.index', 'pelapor.laporan.show']); @endphp
                         <a href="{{ route('pelapor.laporan.index') }}"
-                           class="group flex items-center gap-3 px-3 py-2 text-sm rounded-xl transition-all duration-150 {{ $active ? 'bg-indigo-600/15 text-indigo-300 font-semibold ring-1 ring-indigo-500/30 shadow-sm shadow-indigo-950/40' : 'text-slate-400 hover:text-white hover:bg-slate-800/60 font-medium' }}">
-                            <svg class="w-5 h-5 flex-shrink-0 transition-colors duration-150 {{ $active ? 'text-indigo-400' : 'text-slate-400 group-hover:text-slate-200' }}" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
+                           class="group flex items-center gap-3 px-3 py-2 text-sm rounded-xl transition-all duration-150 {{ $active ? 'bg-indigo-50 dark:bg-indigo-600/15 text-indigo-700 dark:text-indigo-300 font-semibold ring-1 ring-indigo-500/20 dark:ring-indigo-500/30 shadow-sm' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/60 font-medium' }}">
+                            <svg class="w-5 h-5 flex-shrink-0 transition-colors duration-150 {{ $active ? 'text-indigo-600 dark:text-indigo-400' : 'text-slate-400 dark:text-slate-400 group-hover:text-slate-600 dark:group-hover:text-slate-200' }}" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                             </svg>
                             <span>Laporan Saya</span>
@@ -236,13 +236,13 @@
                 @elseif(Auth::user()->role === 'Teknisi')
                     <!-- Section: OVERVIEW -->
                     <div class="space-y-1">
-                        <div class="px-3 pb-1 text-[11px] font-semibold tracking-wider text-slate-400 uppercase font-mono">
+                        <div class="px-3 pb-1 text-[11px] font-semibold tracking-wider text-slate-400 dark:text-slate-500 uppercase font-mono">
                             OVERVIEW
                         </div>
                         @php $active = request()->routeIs(['teknisi.dashboard', 'dashboard']); @endphp
                         <a href="{{ route('teknisi.dashboard') }}"
-                           class="group flex items-center gap-3 px-3 py-2 text-sm rounded-xl transition-all duration-150 {{ $active ? 'bg-indigo-600/15 text-indigo-300 font-semibold ring-1 ring-indigo-500/30 shadow-sm shadow-indigo-950/40' : 'text-slate-400 hover:text-white hover:bg-slate-800/60 font-medium' }}">
-                            <svg class="w-5 h-5 flex-shrink-0 transition-colors duration-150 {{ $active ? 'text-indigo-400' : 'text-slate-400 group-hover:text-slate-200' }}" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
+                           class="group flex items-center gap-3 px-3 py-2 text-sm rounded-xl transition-all duration-150 {{ $active ? 'bg-indigo-50 dark:bg-indigo-600/15 text-indigo-700 dark:text-indigo-300 font-semibold ring-1 ring-indigo-500/20 dark:ring-indigo-500/30 shadow-sm' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/60 font-medium' }}">
+                            <svg class="w-5 h-5 flex-shrink-0 transition-colors duration-150 {{ $active ? 'text-indigo-600 dark:text-indigo-400' : 'text-slate-400 dark:text-slate-400 group-hover:text-slate-600 dark:group-hover:text-slate-200' }}" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z" />
                             </svg>
                             <span>Dashboard</span>
@@ -251,13 +251,13 @@
 
                     <!-- Section: PENUGASAN KERJA -->
                     <div class="space-y-1">
-                        <div class="px-3 pb-1 text-[11px] font-semibold tracking-wider text-slate-400 uppercase font-mono">
+                        <div class="px-3 pb-1 text-[11px] font-semibold tracking-wider text-slate-400 dark:text-slate-500 uppercase font-mono">
                             PENUGASAN KERJA
                         </div>
                         @php $active = request()->routeIs('teknisi.tugas-aktif') || request()->routeIs('teknisi.tugas.*'); @endphp
                         <a href="{{ route('teknisi.tugas-aktif') }}"
-                           class="group flex items-center gap-3 px-3 py-2 text-sm rounded-xl transition-all duration-150 {{ $active ? 'bg-indigo-600/15 text-indigo-300 font-semibold ring-1 ring-indigo-500/30 shadow-sm shadow-indigo-950/40' : 'text-slate-400 hover:text-white hover:bg-slate-800/60 font-medium' }}">
-                            <svg class="w-5 h-5 flex-shrink-0 transition-colors duration-150 {{ $active ? 'text-indigo-400' : 'text-slate-400 group-hover:text-slate-200' }}" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
+                           class="group flex items-center gap-3 px-3 py-2 text-sm rounded-xl transition-all duration-150 {{ $active ? 'bg-indigo-50 dark:bg-indigo-600/15 text-indigo-700 dark:text-indigo-300 font-semibold ring-1 ring-indigo-500/20 dark:ring-indigo-500/30 shadow-sm' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/60 font-medium' }}">
+                            <svg class="w-5 h-5 flex-shrink-0 transition-colors duration-150 {{ $active ? 'text-indigo-600 dark:text-indigo-400' : 'text-slate-400 dark:text-slate-400 group-hover:text-slate-600 dark:group-hover:text-slate-200' }}" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M11.42 15.17L17.25 21A2.652 2.652 0 0021 17.25l-5.877-5.877M11.42 15.17l2.496-3.03c.317-.384.74-.626 1.208-.766M11.42 15.17l-4.655 5.653a2.548 2.548 0 11-3.586-3.586l6.837-5.63m5.108-.233c.55-.164 1.163-.188 1.743-.03a4.5 4.5 0 004.486-6.32l-3.276 3.277a3.004 3.004 0 01-2.25-2.25l3.276-3.276a4.5 4.5 0 00-6.32 4.486c.158.58.134 1.193-.03 1.743l-1.42 1.42" />
                             </svg>
                             <span>Tugas Aktif</span>
@@ -265,8 +265,8 @@
 
                         @php $active = request()->routeIs('teknisi.riwayat'); @endphp
                         <a href="{{ route('teknisi.riwayat') }}"
-                           class="group flex items-center gap-3 px-3 py-2 text-sm rounded-xl transition-all duration-150 {{ $active ? 'bg-indigo-600/15 text-indigo-300 font-semibold ring-1 ring-indigo-500/30 shadow-sm shadow-indigo-950/40' : 'text-slate-400 hover:text-white hover:bg-slate-800/60 font-medium' }}">
-                            <svg class="w-5 h-5 flex-shrink-0 transition-colors duration-150 {{ $active ? 'text-indigo-400' : 'text-slate-400 group-hover:text-slate-200' }}" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
+                           class="group flex items-center gap-3 px-3 py-2 text-sm rounded-xl transition-all duration-150 {{ $active ? 'bg-indigo-50 dark:bg-indigo-600/15 text-indigo-700 dark:text-indigo-300 font-semibold ring-1 ring-indigo-500/20 dark:ring-indigo-500/30 shadow-sm' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/60 font-medium' }}">
+                            <svg class="w-5 h-5 flex-shrink-0 transition-colors duration-150 {{ $active ? 'text-indigo-600 dark:text-indigo-400' : 'text-slate-400 dark:text-slate-400 group-hover:text-slate-600 dark:group-hover:text-slate-200' }}" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
                             <span>Riwayat Pekerjaan</span>
@@ -275,13 +275,13 @@
                 @elseif(Auth::user()->role === 'KepalaFRC')
                     <!-- Section: OVERVIEW -->
                     <div class="space-y-1">
-                        <div class="px-3 pb-1 text-[11px] font-semibold tracking-wider text-slate-400 uppercase font-mono">
+                        <div class="px-3 pb-1 text-[11px] font-semibold tracking-wider text-slate-400 dark:text-slate-500 uppercase font-mono">
                             OVERVIEW
                         </div>
                         @php $active = request()->routeIs(['kepala.dashboard', 'dashboard']); @endphp
                         <a href="{{ route('kepala.dashboard') }}"
-                           class="group flex items-center gap-3 px-3 py-2 text-sm rounded-xl transition-all duration-150 {{ $active ? 'bg-indigo-600/15 text-indigo-300 font-semibold ring-1 ring-indigo-500/30 shadow-sm shadow-indigo-950/40' : 'text-slate-400 hover:text-white hover:bg-slate-800/60 font-medium' }}">
-                            <svg class="w-5 h-5 flex-shrink-0 transition-colors duration-150 {{ $active ? 'text-indigo-400' : 'text-slate-400 group-hover:text-slate-200' }}" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
+                           class="group flex items-center gap-3 px-3 py-2 text-sm rounded-xl transition-all duration-150 {{ $active ? 'bg-indigo-50 dark:bg-indigo-600/15 text-indigo-700 dark:text-indigo-300 font-semibold ring-1 ring-indigo-500/20 dark:ring-indigo-500/30 shadow-sm' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/60 font-medium' }}">
+                            <svg class="w-5 h-5 flex-shrink-0 transition-colors duration-150 {{ $active ? 'text-indigo-600 dark:text-indigo-400' : 'text-slate-400 dark:text-slate-400 group-hover:text-slate-600 dark:group-hover:text-slate-200' }}" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z" />
                             </svg>
                             <span>Dashboard</span>
@@ -290,13 +290,13 @@
 
                     <!-- Section: MONITORING & LAPORAN -->
                     <div class="space-y-1">
-                        <div class="px-3 pb-1 text-[11px] font-semibold tracking-wider text-slate-400 uppercase font-mono">
+                        <div class="px-3 pb-1 text-[11px] font-semibold tracking-wider text-slate-400 dark:text-slate-500 uppercase font-mono">
                             MONITORING & LAPORAN
                         </div>
                         @php $active = request()->routeIs(['kepala.laporan.index', 'kepala.laporan.show']); @endphp
                         <a href="{{ route('kepala.laporan.index') }}"
-                           class="group flex items-center gap-3 px-3 py-2 text-sm rounded-xl transition-all duration-150 {{ $active ? 'bg-indigo-600/15 text-indigo-300 font-semibold ring-1 ring-indigo-500/30 shadow-sm shadow-indigo-950/40' : 'text-slate-400 hover:text-white hover:bg-slate-800/60 font-medium' }}">
-                            <svg class="w-5 h-5 flex-shrink-0 transition-colors duration-150 {{ $active ? 'text-indigo-400' : 'text-slate-400 group-hover:text-slate-200' }}" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
+                           class="group flex items-center gap-3 px-3 py-2 text-sm rounded-xl transition-all duration-150 {{ $active ? 'bg-indigo-50 dark:bg-indigo-600/15 text-indigo-700 dark:text-indigo-300 font-semibold ring-1 ring-indigo-500/20 dark:ring-indigo-500/30 shadow-sm' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/60 font-medium' }}">
+                            <svg class="w-5 h-5 flex-shrink-0 transition-colors duration-150 {{ $active ? 'text-indigo-600 dark:text-indigo-400' : 'text-slate-400 dark:text-slate-400 group-hover:text-slate-600 dark:group-hover:text-slate-200' }}" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                             </svg>
                             <span>Rekap Seluruh Laporan</span>
@@ -304,8 +304,8 @@
 
                         @php $active = request()->routeIs('kepala.laporan_saya.*'); @endphp
                         <a href="{{ route('kepala.laporan_saya.index') }}"
-                           class="group flex items-center gap-3 px-3 py-2 text-sm rounded-xl transition-all duration-150 {{ $active ? 'bg-indigo-600/15 text-indigo-300 font-semibold ring-1 ring-indigo-500/30 shadow-sm shadow-indigo-950/40' : 'text-slate-400 hover:text-white hover:bg-slate-800/60 font-medium' }}">
-                            <svg class="w-5 h-5 flex-shrink-0 transition-colors duration-150 {{ $active ? 'text-indigo-400' : 'text-slate-400 group-hover:text-slate-200' }}" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
+                           class="group flex items-center gap-3 px-3 py-2 text-sm rounded-xl transition-all duration-150 {{ $active ? 'bg-indigo-50 dark:bg-indigo-600/15 text-indigo-700 dark:text-indigo-300 font-semibold ring-1 ring-indigo-500/20 dark:ring-indigo-500/30 shadow-sm' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/60 font-medium' }}">
+                            <svg class="w-5 h-5 flex-shrink-0 transition-colors duration-150 {{ $active ? 'text-indigo-600 dark:text-indigo-400' : 'text-slate-400 dark:text-slate-400 group-hover:text-slate-600 dark:group-hover:text-slate-200' }}" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                             </svg>
                             <span>Laporan Saya</span>
@@ -313,8 +313,8 @@
 
                         @php $active = request()->routeIs('kepala.laporan.create'); @endphp
                         <a href="{{ route('kepala.laporan.create') }}"
-                           class="group flex items-center gap-3 px-3 py-2 text-sm rounded-xl transition-all duration-150 {{ $active ? 'bg-indigo-600/15 text-indigo-300 font-semibold ring-1 ring-indigo-500/30 shadow-sm shadow-indigo-950/40' : 'text-slate-400 hover:text-white hover:bg-slate-800/60 font-medium' }}">
-                            <svg class="w-5 h-5 flex-shrink-0 transition-colors duration-150 {{ $active ? 'text-indigo-400' : 'text-slate-400 group-hover:text-slate-200' }}" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
+                           class="group flex items-center gap-3 px-3 py-2 text-sm rounded-xl transition-all duration-150 {{ $active ? 'bg-indigo-50 dark:bg-indigo-600/15 text-indigo-700 dark:text-indigo-300 font-semibold ring-1 ring-indigo-500/20 dark:ring-indigo-500/30 shadow-sm' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/60 font-medium' }}">
+                            <svg class="w-5 h-5 flex-shrink-0 transition-colors duration-150 {{ $active ? 'text-indigo-600 dark:text-indigo-400' : 'text-slate-400 dark:text-slate-400 group-hover:text-slate-600 dark:group-hover:text-slate-200' }}" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
                             <span>Buat Laporan</span>
@@ -323,13 +323,13 @@
 
                     <!-- Section: UTILITAS & EVALUASI -->
                     <div class="space-y-1">
-                        <div class="px-3 pb-1 text-[11px] font-semibold tracking-wider text-slate-400 uppercase font-mono">
+                        <div class="px-3 pb-1 text-[11px] font-semibold tracking-wider text-slate-400 dark:text-slate-500 uppercase font-mono">
                             UTILITAS & EVALUASI
                         </div>
                         @php $active = request()->routeIs('kepala.utilitas.*'); @endphp
                         <a href="{{ route('kepala.utilitas.index') }}"
-                           class="group flex items-center gap-3 px-3 py-2 text-sm rounded-xl transition-all duration-150 {{ $active ? 'bg-indigo-600/15 text-indigo-300 font-semibold ring-1 ring-indigo-500/30 shadow-sm shadow-indigo-950/40' : 'text-slate-400 hover:text-white hover:bg-slate-800/60 font-medium' }}">
-                            <svg class="w-5 h-5 flex-shrink-0 transition-colors duration-150 {{ $active ? 'text-indigo-400' : 'text-slate-400 group-hover:text-slate-200' }}" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
+                           class="group flex items-center gap-3 px-3 py-2 text-sm rounded-xl transition-all duration-150 {{ $active ? 'bg-indigo-50 dark:bg-indigo-600/15 text-indigo-700 dark:text-indigo-300 font-semibold ring-1 ring-indigo-500/20 dark:ring-indigo-500/30 shadow-sm' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/60 font-medium' }}">
+                            <svg class="w-5 h-5 flex-shrink-0 transition-colors duration-150 {{ $active ? 'text-indigo-600 dark:text-indigo-400' : 'text-slate-400 dark:text-slate-400 group-hover:text-slate-600 dark:group-hover:text-slate-200' }}" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                             </svg>
@@ -338,8 +338,8 @@
 
                         @php $active = request()->routeIs('kepala.kinerja.*'); @endphp
                         <a href="{{ route('kepala.kinerja.index') }}"
-                           class="group flex items-center gap-3 px-3 py-2 text-sm rounded-xl transition-all duration-150 {{ $active ? 'bg-indigo-600/15 text-indigo-300 font-semibold ring-1 ring-indigo-500/30 shadow-sm shadow-indigo-950/40' : 'text-slate-400 hover:text-white hover:bg-slate-800/60 font-medium' }}">
-                            <svg class="w-5 h-5 flex-shrink-0 transition-colors duration-150 {{ $active ? 'text-indigo-400' : 'text-slate-400 group-hover:text-slate-200' }}" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
+                           class="group flex items-center gap-3 px-3 py-2 text-sm rounded-xl transition-all duration-150 {{ $active ? 'bg-indigo-50 dark:bg-indigo-600/15 text-indigo-700 dark:text-indigo-300 font-semibold ring-1 ring-indigo-500/20 dark:ring-indigo-500/30 shadow-sm' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/60 font-medium' }}">
+                            <svg class="w-5 h-5 flex-shrink-0 transition-colors duration-150 {{ $active ? 'text-indigo-600 dark:text-indigo-400' : 'text-slate-400 dark:text-slate-400 group-hover:text-slate-600 dark:group-hover:text-slate-200' }}" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" />
                             </svg>
                             <span>Kinerja Teknisi</span>
@@ -349,20 +349,20 @@
             </nav>
 
             <!-- Sidebar Footer: Mini User Profile Card -->
-            <div class="p-3.5 border-t border-slate-800/80 bg-slate-950/40">
-                <div class="p-2 rounded-xl bg-slate-900/80 border border-slate-800/90 flex items-center justify-between gap-2.5 shadow-sm">
+            <div class="p-3.5 border-t border-slate-200/80 dark:border-slate-800/80 bg-slate-50/60 dark:bg-slate-950/40">
+                <div class="p-2 rounded-xl bg-white dark:bg-slate-900/80 border border-slate-200/80 dark:border-slate-800/90 flex items-center justify-between gap-2.5 shadow-sm">
                     <a href="{{ route('profile.edit') }}" class="flex items-center gap-2.5 min-w-0 flex-1 group" title="Pengaturan Profil Akun">
                         <div class="relative flex-shrink-0">
                             <div class="w-8 h-8 rounded-lg flex items-center justify-center text-xs font-bold shadow-inner bg-gradient-to-tr {{ $currentRoleConfig['avatar'] }}">
                                 {{ strtoupper(substr(Auth::user()->nama_lengkap ?? Auth::user()->name ?? 'U', 0, 2)) }}
                             </div>
-                            <span class="absolute -bottom-0.5 -right-0.5 w-2 h-2 rounded-full ring-2 ring-slate-900 {{ $currentRoleConfig['dot'] }}"></span>
+                            <span class="absolute -bottom-0.5 -right-0.5 w-2 h-2 rounded-full ring-2 ring-white dark:ring-slate-900 {{ $currentRoleConfig['dot'] }}"></span>
                         </div>
                         <div class="min-w-0 flex-1">
-                            <p class="text-xs font-semibold text-slate-200 truncate group-hover:text-indigo-300 transition-colors">
+                            <p class="text-xs font-semibold text-slate-800 dark:text-slate-200 truncate group-hover:text-indigo-600 dark:group-hover:text-indigo-300 transition-colors">
                                 {{ Auth::user()->nama_lengkap ?? Auth::user()->name }}
                             </p>
-                            <p class="text-[10px] text-slate-400 truncate">
+                            <p class="text-[10px] text-slate-500 dark:text-slate-400 truncate">
                                 {{ Auth::user()->email }}
                             </p>
                         </div>
@@ -370,11 +370,11 @@
 
                     <div class="flex items-center gap-0.5 flex-shrink-0">
                         <!-- Theme Toggle Quick Button -->
-                        <button @click="toggleTheme()" type="button" class="p-1.5 text-slate-400 hover:text-amber-300 hover:bg-slate-800 rounded-lg transition-colors" :title="darkMode ? 'Ubah ke Mode Terang' : 'Ubah ke Mode Gelap'">
+                        <button @click="toggleTheme()" type="button" class="p-1.5 text-slate-400 hover:text-amber-500 dark:hover:text-amber-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors" :title="darkMode ? 'Ubah ke Mode Terang' : 'Ubah ke Mode Gelap'">
                             <svg x-show="darkMode" style="display: none;" class="w-4 h-4 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
                             </svg>
-                            <svg x-show="!darkMode" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg x-show="!darkMode" class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
                             </svg>
                         </button>
@@ -382,7 +382,7 @@
                         <!-- Logout Quick Button -->
                         <form method="POST" action="{{ route('logout') }}" class="inline">
                             @csrf
-                            <button type="submit" class="p-1.5 text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 rounded-lg transition-colors" title="Keluar / Log Out">
+                            <button type="submit" class="p-1.5 text-slate-400 hover:text-rose-600 dark:hover:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-500/10 rounded-lg transition-colors" title="Keluar / Log Out">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9" />
                                 </svg>
