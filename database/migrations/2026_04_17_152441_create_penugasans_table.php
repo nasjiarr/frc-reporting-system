@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreignId('teknisi_id')->constrained('users')->onDelete('restrict');
             $table->foreignId('assigned_by')->constrained('users')->onDelete('restrict');
             $table->text('instruksi')->nullable();
-            $table->enum('status_tugas', ['Ditugaskan', 'Dikerjakan', 'Tertunda'])->default('Ditugaskan');
+            $table->enum('status_tugas', ['Ditugaskan', 'Dikerjakan', 'Tertunda', 'Selesai'])->default('Ditugaskan');
             $table->timestamp('assigned_at')->useCurrent();
             $table->timestamps(); // Opsional tapi direkomendasikan untuk track update data
         });
