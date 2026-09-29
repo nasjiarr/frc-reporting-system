@@ -44,5 +44,12 @@
                 Masuk
             </button>
         </div>
+
+        <div class="text-center text-sm text-gray-500 pt-2">
+            Belum memiliki akun?
+            <a href="{{ route('register') }}" class="font-semibold text-indigo-600 hover:text-indigo-500 transition-colors">
+                Daftar sekarang
+            </a>
+        </div>
     </form>
 </x-guest-layout>
