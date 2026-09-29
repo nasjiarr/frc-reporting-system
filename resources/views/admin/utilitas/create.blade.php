@@ -3,7 +3,7 @@
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-100 leading-tight">Catat Stand Meter Utilitas</h2>
     </x-slot>
 
-    <div x-data="{ jenis: 'AirBersih' }" class="max-w-4xl mx-auto">
+    <div x-data="{ jenis: '{{ old('jenis_utilitas', request('jenis', 'AirBersih')) }}' }" class="max-w-4xl mx-auto">
         <x-card>
             <form action="{{ route('admin.utilitas.store') }}" method="POST">
                 @csrf
@@ -23,15 +23,15 @@
                     </div>
                     <div>
                         <x-input-label value="Periode Bulan (YYYY-MM)" />
-                        <x-text-input type="month" name="periode" value="{{ date('Y-m') }}" required />
+                        <x-text-input type="month" name="periode" value="{{ old('periode', date('Y-m')) }}" required />
                     </div>
                     <div>
                         <x-input-label value="Tanggal Pengecekan Awal" />
-                        <x-text-input type="date" name="tgl_awal" required />
+                        <x-text-input type="date" name="tgl_awal" value="{{ old('tgl_awal') }}" required />
                     </div>
                     <div>
                         <x-input-label value="Tanggal Pengecekan Akhir" />
-                        <x-text-input type="date" name="tgl_akhir" required />
+                        <x-text-input type="date" name="tgl_akhir" value="{{ old('tgl_akhir') }}" required />
                     </div>
                 </div>
 
@@ -39,11 +39,11 @@
                     <div class="bg-blue-50 dark:bg-blue-900/30 p-4 rounded-lg border border-blue-100 dark:border-blue-800 grid grid-cols-2 gap-4">
                         <div>
                             <x-input-label value="Stand Meter AWAL" />
-                            <x-text-input type="number" step="0.01" name="stand_awal" />
+                            <x-text-input type="number" step="0.01" name="stand_awal" value="{{ old('stand_awal') }}" />
                         </div>
                         <div>
                             <x-input-label value="Stand Meter AKHIR" />
-                            <x-text-input type="number" step="0.01" name="stand_akhir" />
+                            <x-text-input type="number" step="0.01" name="stand_akhir" value="{{ old('stand_akhir') }}" />
                         </div>
                     </div>
                 </div>
@@ -53,22 +53,22 @@
                         <div class="col-span-2 font-bold text-yellow-800 dark:text-yellow-300" x-text="jenis === 'Lift' ? 'Data Lift G (Kiri)' : 'Data SDP 1'"></div>
                         <div>
                             <x-input-label value="Stand AWAL" />
-                            <x-text-input type="number" step="0.01" name="stand_awal_1" />
+                            <x-text-input type="number" step="0.01" name="stand_awal_1" value="{{ old('stand_awal_1') }}" />
                         </div>
                         <div>
                             <x-input-label value="Stand AKHIR" />
-                            <x-text-input type="number" step="0.01" name="stand_akhir_1" />
+                            <x-text-input type="number" step="0.01" name="stand_akhir_1" value="{{ old('stand_akhir_1') }}" />
                         </div>
                     </div>
                     <div class="bg-yellow-50 dark:bg-yellow-900/30 p-4 rounded-lg border border-yellow-100 dark:border-yellow-800 grid grid-cols-2 gap-4">
                         <div class="col-span-2 font-bold text-yellow-800 dark:text-yellow-300" x-text="jenis === 'Lift' ? 'Data Lift G2 (Kanan)' : 'Data SDP 2'"></div>
                         <div>
                             <x-input-label value="Stand AWAL" />
-                            <x-text-input type="number" step="0.01" name="stand_awal_2" />
+                            <x-text-input type="number" step="0.01" name="stand_awal_2" value="{{ old('stand_awal_2') }}" />
                         </div>
                         <div>
                             <x-input-label value="Stand AKHIR" />
-                            <x-text-input type="number" step="0.01" name="stand_akhir_2" />
+                            <x-text-input type="number" step="0.01" name="stand_akhir_2" value="{{ old('stand_akhir_2') }}" />
                         </div>
                     </div>
                 </div>
@@ -79,11 +79,11 @@
                         <div class="col-span-2 font-bold text-purple-800 dark:text-purple-300">Lantai {{ $i }}</div>
                         <div>
                             <x-input-label value="Stand AWAL (L{{ $i }})" />
-                            <x-text-input type="number" step="0.01" name="stand_awal_l{{ $i }}" />
+                            <x-text-input type="number" step="0.01" name="stand_awal_l{{ $i }}" value="{{ old('stand_awal_l'.$i) }}" />
                         </div>
                         <div>
                             <x-input-label value="Stand AKHIR (L{{ $i }})" />
-                            <x-text-input type="number" step="0.01" name="stand_akhir_l{{ $i }}" />
+                            <x-text-input type="number" step="0.01" name="stand_akhir_l{{ $i }}" value="{{ old('stand_akhir_l'.$i) }}" />
                         </div>
                 </div>
                 @endfor

@@ -536,7 +536,7 @@
                     </header>
                     @endisset
 
-                    <div class="mb-6">
+                    <div class="mb-6 space-y-3">
                         @if (session('success'))
                         <div class="p-4 border-l-4 border-emerald-500 bg-emerald-50 text-emerald-800 rounded-md shadow-sm text-sm font-medium">
                             {{ session('success') }}
@@ -546,6 +546,17 @@
                         @if (session('error'))
                         <div class="p-4 border-l-4 border-rose-500 bg-rose-50 text-rose-800 rounded-md shadow-sm text-sm font-medium">
                             {{ session('error') }}
+                        </div>
+                        @endif
+
+                        @if ($errors->any())
+                        <div class="p-4 border-l-4 border-rose-500 bg-rose-50 text-rose-800 rounded-md shadow-sm text-sm">
+                            <div class="font-bold mb-1">Terdapat kesalahan pada input data:</div>
+                            <ul class="list-disc list-inside space-y-0.5 text-xs text-rose-700">
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
                         </div>
                         @endif
                     </div>

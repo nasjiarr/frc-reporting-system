@@ -109,4 +109,54 @@ class UtilitasTest extends TestCase
         $this->actingAs($this->pelapor)->get(route('admin.utilitas.index'))->assertStatus(403);
         $this->actingAs($this->pelapor)->get(route('kepala.utilitas.index'))->assertStatus(403);
     }
+
+    public function test_admin_cannot_store_duplicate_periode_for_same_utilitas(): void
+    {
+        $response = $this->actingAs($this->admin)->post(route('admin.utilitas.store'), [
+            'jenis_utilitas' => 'AirBersih',
+            'periode' => '2026-09', // Periode yang sudah ada di setUp
+            'tgl_awal' => '2026-09-01',
+            'tgl_akhir' => '2026-09-30',
+            'stand_awal' => 150.00,
+            'stand_akhir' => 200.00,
+        ]);
+
+        $response->assertSessionHasErrors('periode');
+    }
+
+    public function test_admin_cannot_input_stand_akhir_less_than_stand_awal(): void
+    {
+        $response = $this->actingAs($this->admin)->post(route('admin.utilitas.store'), [
+            'jenis_utilitas' => 'AirHujan',
+            'periode' => '2026-10',
+            'tgl_awal' => '2026-10-01',
+            'tgl_akhir' => '2026-10-31',
+            'stand_awal' => 500.00,
+            'stand_akhir' => 450.00, // Error: stand akhir < stand awal
+        ]);
+
+        $response->assertSessionHasErrors('stand_akhir');
+    }
+
+    public function test_admin_can_successfully_store_new_utilitas(): void
+    {
+        $response = $this->actingAs($this->admin)->post(route('admin.utilitas.store'), [
+            'jenis_utilitas' => 'MDP',
+            'periode' => '2026-10',
+            'tgl_awal' => '2026-10-01',
+            'tgl_akhir' => '2026-10-31',
+            'stand_awal' => 1000.00,
+            'stand_akhir' => 1250.00,
+        ]);
+
+        $response->assertRedirect(route('admin.utilitas.create'));
+        $this->assertDatabaseHas('utilitas', [
+            'jenis_utilitas' => 'MDP',
+            'periode' => '2026-10',
+        ]);
+        $this->assertDatabaseHas('listrik_mdp', [
+            'stand_awal' => 1000.00,
+            'stand_akhir' => 1250.00,
+        ]);
+    }
 }

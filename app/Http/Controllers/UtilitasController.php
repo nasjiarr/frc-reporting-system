@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rule;
 use App\Models\Utilitas;
 use App\Models\AirBersih;
 use App\Models\AirHujan;
@@ -32,13 +33,49 @@ class UtilitasController extends Controller
     // Method untuk memproses data dari form dinamis
     public function store(Request $request)
     {
-        // 1. Validasi Input Dasar
-        $request->validate([
-            'jenis_utilitas' => 'required|in:AirBersih,AirHujan,MDP,SDP,Lift,AC,Lampu',
-            'periode'        => 'required|date_format:Y-m',
-            'tgl_awal'       => 'required|date',
-            'tgl_akhir'      => 'required|date|after_or_equal:tgl_awal',
-        ]);
+        $jenis = $request->jenis_utilitas;
+
+        // 1. Validasi Input Dasar & Spesifik
+        $rules = [
+            'jenis_utilitas' => ['required', 'in:AirBersih,AirHujan,MDP,SDP,Lift,AC,Lampu'],
+            'periode'        => [
+                'required',
+                'date_format:Y-m',
+                Rule::unique('utilitas', 'periode')->where(fn ($query) => $query->where('jenis_utilitas', $jenis)),
+            ],
+            'tgl_awal'       => ['required', 'date'],
+            'tgl_akhir'      => ['required', 'date', 'after_or_equal:tgl_awal'],
+        ];
+
+        if (in_array($jenis, ['AirBersih', 'AirHujan', 'MDP'])) {
+            $rules['stand_awal']  = ['required', 'numeric', 'min:0'];
+            $rules['stand_akhir'] = ['required', 'numeric', 'gte:stand_awal'];
+        } elseif (in_array($jenis, ['SDP', 'Lift'])) {
+            $rules['stand_awal_1']  = ['required', 'numeric', 'min:0'];
+            $rules['stand_akhir_1'] = ['required', 'numeric', 'gte:stand_awal_1'];
+            $rules['stand_awal_2']  = ['required', 'numeric', 'min:0'];
+            $rules['stand_akhir_2'] = ['required', 'numeric', 'gte:stand_awal_2'];
+        } elseif (in_array($jenis, ['AC', 'Lampu'])) {
+            $rules['stand_awal_l1']  = ['required', 'numeric', 'min:0'];
+            $rules['stand_akhir_l1'] = ['required', 'numeric', 'gte:stand_awal_l1'];
+            $rules['stand_awal_l2']  = ['required', 'numeric', 'min:0'];
+            $rules['stand_akhir_l2'] = ['required', 'numeric', 'gte:stand_awal_l2'];
+            $rules['stand_awal_l3']  = ['required', 'numeric', 'min:0'];
+            $rules['stand_akhir_l3'] = ['required', 'numeric', 'gte:stand_awal_l3'];
+        }
+
+        $customMessages = [
+            'periode.unique' => 'Data utilitas untuk jenis dan periode ini sudah ada.',
+            'tgl_akhir.after_or_equal' => 'Tanggal akhir harus sama dengan atau setelah tanggal awal.',
+            'stand_akhir.gte' => 'Stand meter akhir tidak boleh lebih kecil dari stand meter awal.',
+            'stand_akhir_1.gte' => 'Stand meter akhir (1) tidak boleh lebih kecil dari stand awal.',
+            'stand_akhir_2.gte' => 'Stand meter akhir (2) tidak boleh lebih kecil dari stand awal.',
+            'stand_akhir_l1.gte' => 'Stand akhir Lantai 1 tidak boleh lebih kecil dari stand awal.',
+            'stand_akhir_l2.gte' => 'Stand akhir Lantai 2 tidak boleh lebih kecil dari stand awal.',
+            'stand_akhir_l3.gte' => 'Stand akhir Lantai 3 tidak boleh lebih kecil dari stand awal.',
+        ];
+
+        $request->validate($rules, $customMessages);
 
         try {
             DB::transaction(function () use ($request) {
@@ -153,6 +190,59 @@ class UtilitasController extends Controller
     public function update(Request $request, $id)
     {
         $utilitas = \App\Models\Utilitas::findOrFail($id);
+        $jenis = $utilitas->jenis_utilitas;
+
+        $rules = [
+            'tgl_awal'  => ['required', 'date'],
+            'tgl_akhir' => ['required', 'date', 'after_or_equal:tgl_awal'],
+        ];
+
+        if ($request->filled('periode')) {
+            $rules['periode'] = [
+                'required',
+                'date_format:Y-m',
+                Rule::unique('utilitas', 'periode')
+                    ->where(fn ($query) => $query->where('jenis_utilitas', $jenis))
+                    ->ignore($utilitas->id),
+            ];
+        }
+
+        if (in_array($jenis, ['AirBersih', 'AirHujan', 'MDP'])) {
+            $rules['stand_awal']  = ['required', 'numeric', 'min:0'];
+            $rules['stand_akhir'] = ['required', 'numeric', 'gte:stand_awal'];
+        } elseif ($jenis === 'SDP') {
+            $rules['stand_awal_sdp1']  = ['required', 'numeric', 'min:0'];
+            $rules['stand_akhir_sdp1'] = ['required', 'numeric', 'gte:stand_awal_sdp1'];
+            $rules['stand_awal_sdp2']  = ['required', 'numeric', 'min:0'];
+            $rules['stand_akhir_sdp2'] = ['required', 'numeric', 'gte:stand_awal_sdp2'];
+        } elseif ($jenis === 'Lift') {
+            $rules['stand_awal_g']   = ['required', 'numeric', 'min:0'];
+            $rules['stand_akhir_g']  = ['required', 'numeric', 'gte:stand_awal_g'];
+            $rules['stand_awal_g2']  = ['required', 'numeric', 'min:0'];
+            $rules['stand_akhir_g2'] = ['required', 'numeric', 'gte:stand_awal_g2'];
+        } elseif (in_array($jenis, ['AC', 'Lampu'])) {
+            $rules['stand_awal_l1']  = ['required', 'numeric', 'min:0'];
+            $rules['stand_akhir_l1'] = ['required', 'numeric', 'gte:stand_awal_l1'];
+            $rules['stand_awal_l2']  = ['required', 'numeric', 'min:0'];
+            $rules['stand_akhir_l2'] = ['required', 'numeric', 'gte:stand_awal_l2'];
+            $rules['stand_awal_l3']  = ['required', 'numeric', 'min:0'];
+            $rules['stand_akhir_l3'] = ['required', 'numeric', 'gte:stand_awal_l3'];
+        }
+
+        $customMessages = [
+            'periode.unique' => 'Data utilitas untuk jenis dan periode ini sudah ada.',
+            'tgl_akhir.after_or_equal' => 'Tanggal akhir harus sama dengan atau setelah tanggal awal.',
+            'stand_akhir.gte' => 'Stand meter akhir tidak boleh lebih kecil dari stand meter awal.',
+            'stand_akhir_sdp1.gte' => 'Stand akhir SDP 1 tidak boleh lebih kecil dari stand awal.',
+            'stand_akhir_sdp2.gte' => 'Stand akhir SDP 2 tidak boleh lebih kecil dari stand awal.',
+            'stand_akhir_g.gte' => 'Stand akhir Lift G tidak boleh lebih kecil dari stand awal.',
+            'stand_akhir_g2.gte' => 'Stand akhir Lift G2 tidak boleh lebih kecil dari stand awal.',
+            'stand_akhir_l1.gte' => 'Stand akhir Lantai 1 tidak boleh lebih kecil dari stand awal.',
+            'stand_akhir_l2.gte' => 'Stand akhir Lantai 2 tidak boleh lebih kecil dari stand awal.',
+            'stand_akhir_l3.gte' => 'Stand akhir Lantai 3 tidak boleh lebih kecil dari stand awal.',
+        ];
+
+        $request->validate($rules, $customMessages);
 
         return DB::transaction(function () use ($request, $utilitas) {
             // 1. Update Tabel Induk
