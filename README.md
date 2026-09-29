@@ -1,66 +1,229 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# FRC Reporting & Utility Monitoring System
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+[![Laravel](https://img.shields.io/badge/Laravel-10.x-FF2D20?style=for-the-badge&logo=laravel&logoColor=white)](https://laravel.com)
+[![PHP](https://img.shields.io/badge/PHP-8.1%2B-777BB4?style=for-the-badge&logo=php&logoColor=white)](https://php.net)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com)
+[![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white)](https://mysql.com)
+[![Tests](https://img.shields.io/badge/Tests-Passing%20(30%2F30)-success?style=for-the-badge&logo=githubactions&logoColor=white)](#-menjalankan-automated-tests)
 
-## About Laravel
+**FRC Reporting System** adalah platform web terpadu untuk **manajemen pelaporan kerusakan fasilitas (ticketing maintenance)** serta **pemantauan konsumsi utilitas energi dan air** di lingkungan **Field Research Center (FRC)** Sekolah Vokasi Universitas Gadjah Mada (UGM) di Kulon Progo.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+Sistem ini dirancang untuk menggantikan pencatatan manual dan pesan instan yang tersebar menjadi satu sistem terotomasi, akuntabel, dan transparan bagi civitas kampus, teknisi, pengelola sarana prasarana, hingga jajaran pimpinan.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+---
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## 🚀 Fitur Unggulan
 
-## Learning Laravel
+* 🛠️ **Siklus Pelaporan & Penugasan Terintegrasi:** Pelaporan kerusakan dilengkapi foto bukti awal, pemilihan 32 ruangan laboratorium/fasilitas spesifik FRC, disposisi teknisi dengan instruksi kerja, hingga form hasil perbaikan teknisi.
+* 💧⚡ **Pencatatan Utilitas Gedung Terpadu:**
+  * **Air:** Air Bersih ($m^3$) dan Air Hujan ($m^3$).
+  * **Listrik:** MDP (*Main Distribution Panel*), SDP (*Sub Distribution Panel* 1 & 2), Lift (G & G2), AC (Lantai 1–3), dan Lampu Penerangan (Lantai 1–3).
+  * Perhitungan konsumsi otomatis menggunakan *stored generated columns* pada basis data.
+* 📊 **Visualisasi Grafik Interaktif:** Grafik tren konsumsi utilitas bulanan dan tahunan secara dinamis menggunakan **Chart.js**.
+* 📄 **Ekspor Dokumen Resmi PDF Berwarna:**
+  * Berita Acara Perbaikan Kerusakan (dilengkapi komparasi foto *before* dan *after*).
+  * Rekapitulasi Laporan Masuk & Selesai (filter bulanan).
+  * Laporan Rekap Konsumsi Utilitas Terpadu FRC.
+* 🔔 **Sistem Notifikasi In-App Real-Time:** Peringatan otomatis untuk setiap perubahan status laporan (*Baru* $\rightarrow$ *Diproses* $\rightarrow$ *Selesai* / *Ditolak*) dengan indikator counter *unread* dan penanda sudah dibaca via AJAX.
+* 🌗 **Dukungan Tema Gelap & Terang (Dark/Light Mode):** Tampilan antarmuka responsif yang nyaman digunakan di berbagai perangkat dan kondisi pencahayaan.
+* 🛡️ **Keamanan Berlapis (Hardened Security):**
+  * *Role-Based Access Control* (RBAC) ketat via Middleware.
+  * Proteksi IDOR (*Insecure Direct Object References*) pada penyelesaian tugas teknisi.
+  * Transaksi basis data atomik (`DB::transaction`).
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+---
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+## 🛠️ Tech Stack
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+| Layer | Teknologi |
+| :--- | :--- |
+| **Backend Framework** | [Laravel 10](https://laravel.com) (PHP 8.1+) |
+| **Basis Data** | [MySQL](https://www.mysql.com) / [MariaDB](https://mariadb.org) (Testing: SQLite in-memory) |
+| **Frontend Styling** | [Tailwind CSS](https://tailwindcss.com) & [Blade UI Kit Heroicons](https://blade-ui-kit.com) |
+| **Interaktivitas Frontend** | [Alpine.js](https://alpinejs.dev) & Vanilla JavaScript |
+| **Visualisasi Data** | [Chart.js](https://www.chartjs.org) |
+| **PDF Reporting Engine** | [barryvdh/laravel-dompdf](https://github.com/barryvdh/laravel-dompdf) |
+| **Autentikasi** | [Laravel Breeze](https://laravel.com/docs/10.x/starter-kits#laravel-breeze) |
+| **Asset Bundler** | [Vite](https://vitejs.dev) |
 
-## Laravel Sponsors
+---
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+## 👥 Peran Pengguna & Alur Kerja
 
-### Premium Partners
+Aplikasi mengimplementasikan **Role-Based Access Control (RBAC)** dengan 4 jenis peran:
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+```mermaid
+sequenceDiagram
+    autonumber
+    actor Pelapor as Pelapor / Pimpinan
+    actor Admin as Admin Sarpras
+    actor Teknisi as Teknisi
+    participant System as Sistem FRC
 
-## Contributing
+    Pelapor->>System: Buat Laporan Kerusakan + Foto Sebelum
+    System-->>Admin: Notifikasi Laporan Masuk (Status: Baru)
+    
+    alt Laporan Disetujui
+        Admin->>System: Tugaskan Teknisi + Instruksi
+        System-->>Pelapor: Status berubah menjadi "Diproses"
+        System-->>Teknisi: Notifikasi Penugasan Baru
+        Teknisi->>System: Kerjakan Perbaikan
+        Teknisi->>System: Submit Hasil (Tindakan, Material, Foto Sesudah)
+        System-->>Admin: Notifikasi Pekerjaan Selesai
+        System-->>Pelapor: Notifikasi Laporan Selesai
+        Admin->>System: Cetak Berita Acara Perbaikan (PDF)
+    else Laporan Tidak Valid
+        Admin->>System: Tolak Laporan + Alasan Penolakan
+        System-->>Pelapor: Notifikasi Laporan Ditolak
+    end
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### Rincian Tanggung Jawab Role:
+1. **Pelapor (Dosen, Mahasiswa, Staf Umum):**
+   * Mengisi formulir laporan kerusakan sarpras dengan foto bukti awal.
+   * Memilih nama ruangan spesifik dari master data 32 ruangan/laboratorium FRC.
+   * Melacak status pengerjaan tiket dan menerima notifikasi penyelesaian.
+2. **Admin (Pengelola Operasional & Sarpras):**
+   * Pusat kendali operasional, verifikasi laporan masuk, dan disposisi teknisi.
+   * Penolakan laporan jika duplikat atau tidak relevan disertai alasan resmi.
+   * Pencatatan meteran berkala (Air & Listrik) seluruh fasilitas gedung.
+   * Pengelolaan akun pengguna (tambah user & toggle aktivasi status akun).
+   * Cetak rekapitulasi laporan dan berita acara PDF.
+3. **Teknisi (Tim Pemeliharaan / Maintenance):**
+   * Menerima daftar penugasan aktif beserta instruksi khusus dari Admin.
+   * Memperbarui pengerjaan dan mengisi form penyelesaian (tindakan, material yang digunakan, serta unggah foto sesudah perbaikan).
+   * Melihat riwayat perbaikan yang telah diselesaikan.
+4. **Kepala FRC (Pimpinan / Eksekutif):**
+   * Memantau KPI operasional (laporan masuk, berjalan, selesai).
+   * Memantau metrik produktivitas dan ranking kinerja teknisi.
+   * Mengamati grafik tren dan rekap utilitas bulanan/tahunan gedung FRC.
+   * Mengunduh rekapitulasi utilitas dan laporan kerusakan terpadu (PDF).
+   * Fasilitas pembuatan laporan langsung jika menemukan kerusakan.
 
-## Code of Conduct
+---
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+## 🔑 Akun Demo Seeder
 
-## Security Vulnerabilities
+Semua akun dummy berikut telah disediakan secara otomatis oleh database seeder dengan **password seragam**: `password123`
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+| Peran (Role) | Nama Lengkap | Email Akun | Password |
+| :--- | :--- | :--- | :--- |
+| **Admin** | Ari Kustanto | `admin@frc.com` | `password123` |
+| **Kepala FRC** | Pimpinan FRC | `kepala@frc.com` | `password123` |
+| **Teknisi (Listrik)** | Budi Teknisi (Listrik) | `teknisi1@frc.com` | `password123` |
+| **Teknisi (Air & AC)** | Joko Teknisi (Air & AC) | `teknisi2@frc.com` | `password123` |
+| **Pelapor 1** | Rahayu | `pelapor1@frc.com` | `password123` |
+| **Pelapor 2** | Jono | `pelapor2@frc.com` | `password123` |
+| **Pelapor 3** | Keling | `pelapor3@frc.com` | `password123` |
 
-## License
+---
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## 💻 Panduan Instalasi Lokal
+
+Ikuti langkah-langkah berikut untuk menjalankan project di komputer lokal:
+
+### 1. Prasyarat Sistem
+* PHP $\ge$ 8.1 dengan ekstensi `pdo`, `pdo_mysql`, `gd`, `fileinfo`, `mbstring`.
+* Composer $\ge$ 2.x
+* Node.js $\ge$ 18.x & NPM
+* Server MySQL / MariaDB (misal via Laragon, XAMPP, atau Docker)
+
+### 2. Kloning Repositori
+```bash
+git clone https://github.com/nasjiarr/frc-reporting-system.git
+cd frc-reporting-system
+```
+
+### 3. Instal Dependensi Backend & Frontend
+```bash
+# Instal paket PHP via Composer
+composer install
+
+# Instal dependensi JavaScript via NPM
+npm install
+```
+
+### 4. Konfigurasi Environment (`.env`)
+Salin file `.env.example` menjadi `.env` lalu generate application key:
+```bash
+cp .env.example .env
+php artisan key:generate
+```
+
+Buka file `.env` dan sesuaikan koneksi database Anda:
+```env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=frc_reporting
+DB_USERNAME=root
+DB_PASSWORD=
+```
+*(Pastikan basis data `frc_reporting` sudah dibuat di MySQL Anda).*
+
+### 5. Jalankan Migrasi & Seeder Database
+Eksekusi migrasi tabel beserta data demo bawaan (akun pengguna, dummy laporan, dummy penugasan, dan data utilitas):
+```bash
+php artisan migrate --seed
+```
+
+### 6. Hubungkan Symlink Storage (Penting)
+Agar foto bukti kerusakan awal dan foto hasil perbaikan teknisi dapat tampil di browser dan dokumen PDF:
+```bash
+php artisan storage:link
+```
+
+### 7. Jalankan Server Aplikasi
+Jalankan dev server Laravel dan Vite asset compiler pada 2 terminal terpisah:
+
+**Terminal 1 (Laravel Server):**
+```bash
+php artisan serve
+```
+
+**Terminal 2 (Vite Compiler):**
+```bash
+npm run dev
+```
+
+Aplikasi sekarang dapat diakses melalui browser di: **`http://localhost:8000`**
+
+---
+
+## 🧪 Menjalankan Automated Tests
+
+Aplikasi dilengkapi pengujian unit & feature test komprehensif menggunakan **PHPUnit** dengan koneksi basis data SQLite in-memory:
+
+```bash
+# Menjalankan seluruh test suite
+php artisan test
+
+# Menjalankan test alur pelaporan end-to-end secara spesifik
+php artisan test --filter=LaporanWorkflowTest
+```
+
+Cakupan pengujian otomatis [LaporanWorkflowTest](tests/Feature/LaporanWorkflowTest.php):
+* ✅ Validasi pembuatan laporan baru oleh Pelapor (status awal `Baru`).
+* ✅ Validasi penugasan teknisi oleh Admin (status berubah `Diproses` & tiket penugasan tercatat).
+* ✅ Validasi penyelesaian tugas oleh Teknisi (unggah bukti foto & status menjadi `Selesai`).
+* ✅ Validasi proteksi anti-IDOR (teknisi dilarang menyelesaikan tugas milik teknisi lain).
+* ✅ Validasi otorisasi RBAC (role non-admin diblokir dengan kode HTTP 403 saat mengakses rute admin).
+
+---
+
+## 🏛️ Master Lokasi Gedung FRC
+
+Daftar master ruangan FRC UGM dikelola secara terpusat pada file konfigurasi [`config/frc.php`](config/frc.php), mencakup laboratorium produksi terapan seperti:
+* *Wood pellet production laboratory*
+* *Cocoa production & packaging laboratory*
+* *Dairy production & packaging laboratory*
+* *Patient simulators & phantoms for medical nursing production*
+* *Product analysis & quality control laboratory*
+* *Incubation & Design Room 1–4, IT Design Room*
+* *Showroom, Conference Room, Seminar Rooms, Mushola, Panel Room, dsb.*
+
+---
+
+## 📄 Lisensi
+
+Project ini dikembangkan di bawah lisensi open-source [MIT License](LICENSE).
