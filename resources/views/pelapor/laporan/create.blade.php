@@ -58,6 +58,7 @@
                             <input type="file" name="foto_sebelum" id="foto_sebelum" accept=".jpg,.jpeg,.png"
                                 class="block w-full text-sm text-gray-500 dark:text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 file:dark:bg-indigo-900/50 file:dark:text-indigo-300 hover:file:dark:bg-indigo-900/70 transition-colors" required>
                         </div>
+                        <p id="file-name-preview" class="mt-2 text-sm text-indigo-600 dark:text-indigo-400 font-medium"></p>
                         @error('foto_sebelum')
                         <p class="mt-1 text-sm text-rose-600">{{ $message }}</p>
                         @enderror

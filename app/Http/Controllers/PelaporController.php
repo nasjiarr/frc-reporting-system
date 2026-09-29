@@ -51,6 +51,11 @@ class PelaporController extends Controller
             'lokasi'        => 'required|string|max:255',
             'deskripsi'     => 'required|string',
             'foto_sebelum'  => 'required|image|mimes:jpeg,png,jpg|max:2048',
+        ], [
+            'foto_sebelum.required' => 'Foto bukti kerusakan wajib diunggah.',
+            'foto_sebelum.image'    => 'File bukti kerusakan harus berupa gambar.',
+            'foto_sebelum.mimes'    => 'Format foto harus berupa JPG atau PNG.',
+            'foto_sebelum.max'      => 'Ukuran foto maksimal adalah 2 MB.',
         ]);
 
         $path = null;
