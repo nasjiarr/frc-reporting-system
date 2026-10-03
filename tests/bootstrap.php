@@ -1,4 +1,7 @@
 <?php
+
+require __DIR__ . '/../vendor/autoload.php';
+
 spl_autoload_register(function ($class) {
     if (str_starts_with($class, 'App\\')) {
         $path = dirname(__DIR__) . '/app/' . str_replace('\\', '/', substr($class, 4)) . '.php';
@@ -15,24 +18,3 @@ spl_autoload_register(function ($class) {
         }
     }
 }, true, true);
-
-$app = new Illuminate\Foundation\Application(
-    $_ENV['APP_BASE_PATH'] ?? dirname(__DIR__)
-);
-
-$app->singleton(
-    Illuminate\Contracts\Http\Kernel::class,
-    App\Http\Kernel::class
-);
-
-$app->singleton(
-    Illuminate\Contracts\Console\Kernel::class,
-    App\Console\Kernel::class
-);
-
-$app->singleton(
-    Illuminate\Contracts\Debug\ExceptionHandler::class,
-    App\Exceptions\Handler::class
-);
-
-return $app;

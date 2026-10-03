@@ -17,6 +17,7 @@ class PelaporController extends Controller
             'baru'     => Laporan::where('pelapor_id', $userId)->where('status', 'Baru')->count(),
             'diproses' => Laporan::where('pelapor_id', $userId)->where('status', 'Diproses')->count(),
             'selesai'  => Laporan::where('pelapor_id', $userId)->where('status', 'Selesai')->count(),
+            'ditolak'  => Laporan::where('pelapor_id', $userId)->where('status', 'Ditolak')->count(),
         ];
 
         $laporanTerbaru = Laporan::where('pelapor_id', $userId)->latest()->take(5)->get();
