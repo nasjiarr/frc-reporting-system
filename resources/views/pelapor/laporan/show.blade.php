@@ -201,7 +201,7 @@
                                  @click="openLightbox($el.dataset.imgSrc, $el.dataset.imgTitle)">
                                 <img src="{{ asset('storage/' . $laporan->foto_sebelum) }}"
                                      alt="Bukti Kerusakan: {{ $laporan->judul }}"
-                                     class="w-full h-64 sm:h-80 md:h-96 object-cover object-center transition-transform duration-500 group-hover:scale-105">
+                                     class="w-full h-64 sm:h-80 md:h-96 object-contain object-center transition-transform duration-500 group-hover:scale-[1.02]">
 
                                 <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20 opacity-80 group-hover:opacity-100 transition-opacity pointer-events-none"></div>
 
@@ -353,7 +353,7 @@
                                          @click="openLightbox($el.dataset.imgSrc, $el.dataset.imgTitle)">
                                         <img src="{{ asset('storage/' . ($laporan->foto_sebelum ?? $laporan->penugasan->hasilPerbaikan->foto_sebelum)) }}"
                                              alt="Kondisi Sebelum Perbaikan"
-                                             class="w-full h-56 sm:h-64 object-cover object-center transition-transform duration-500 group-hover:scale-105">
+                                             class="w-full h-56 sm:h-64 object-contain object-center transition-transform duration-500 group-hover:scale-[1.02]">
                                         <div class="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors"></div>
                                         <div class="absolute bottom-2 right-2">
                                             <span class="px-2.5 py-1 bg-black/70 backdrop-blur-sm text-white text-[11px] font-medium rounded-lg flex items-center gap-1">
@@ -387,7 +387,7 @@
                                          @click="openLightbox($el.dataset.imgSrc, $el.dataset.imgTitle)">
                                         <img src="{{ asset('storage/' . $laporan->penugasan->hasilPerbaikan->foto_sesudah) }}"
                                              alt="Kondisi Sesudah Perbaikan"
-                                             class="w-full h-56 sm:h-64 object-cover object-center transition-transform duration-500 group-hover:scale-105">
+                                             class="w-full h-56 sm:h-64 object-contain object-center transition-transform duration-500 group-hover:scale-[1.02]">
                                         <div class="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors"></div>
                                         <div class="absolute bottom-2 right-2">
                                             <span class="px-2.5 py-1 bg-black/70 backdrop-blur-sm text-white text-[11px] font-medium rounded-lg flex items-center gap-1">
@@ -406,7 +406,6 @@
                                         <p class="text-xs">Foto bukti sesudah tidak tersedia</p>
                                     </div>
                                     @endif
-                                </div>
                                 </div>
                             </div>
                         </div>
@@ -452,16 +451,16 @@
                     </div>
 
                     <!-- Vertical Stepper Component -->
-                    <div class="relative pl-6 space-y-8 before:absolute before:left-[15px] before:top-3 before:bottom-3 before:w-0.5 before:bg-gray-200 dark:before:bg-gray-700">
+                    <div class="relative pl-8 space-y-8 before:absolute before:left-3.5 before:top-3.5 before:bottom-3.5 before:w-0.5 before:bg-gray-200 dark:before:bg-gray-700">
 
                         <!-- Step 1: Laporan Dibuat / Diterima (Selalu Selesai) -->
                         <div class="relative group">
-                            <span class="absolute -left-[33px] top-0 flex items-center justify-center w-7 h-7 rounded-full bg-emerald-600 text-white ring-4 ring-white dark:ring-gray-800 shadow-sm">
+                            <span class="absolute -left-8 top-0 flex items-center justify-center w-7 h-7 rounded-full bg-emerald-600 text-white ring-4 ring-white dark:ring-gray-800 shadow-sm">
                                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path>
                                 </svg>
                             </span>
-                            <div class="space-y-0.5">
+                            <div class="pl-2 space-y-0.5">
                                 <div class="flex items-center justify-between">
                                     <h4 class="text-sm font-bold text-gray-900 dark:text-gray-100">Laporan Diterima</h4>
                                     <span class="text-[11px] text-emerald-600 dark:text-emerald-400 font-semibold">Terkirim</span>
@@ -478,12 +477,12 @@
                         <!-- Step 2: Verifikasi & Penugasan Teknisi -->
                         <div class="relative group">
                             @if($laporan->status === 'Ditolak')
-                                <span class="absolute -left-[33px] top-0 flex items-center justify-center w-7 h-7 rounded-full bg-rose-600 text-white ring-4 ring-white dark:ring-gray-800 shadow-sm">
+                                <span class="absolute -left-8 top-0 flex items-center justify-center w-7 h-7 rounded-full bg-rose-600 text-white ring-4 ring-white dark:ring-gray-800 shadow-sm">
                                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"></path>
                                     </svg>
                                 </span>
-                                <div class="space-y-0.5">
+                                <div class="pl-2 space-y-0.5">
                                     <div class="flex items-center justify-between">
                                         <h4 class="text-sm font-bold text-rose-700 dark:text-rose-400">Verifikasi Admin (Ditolak)</h4>
                                         <span class="text-[11px] text-rose-600 dark:text-rose-400 font-semibold">Ditolak</span>
@@ -496,12 +495,12 @@
                                     </p>
                                 </div>
                             @elseif($laporan->penugasan)
-                                <span class="absolute -left-[33px] top-0 flex items-center justify-center w-7 h-7 rounded-full bg-emerald-600 text-white ring-4 ring-white dark:ring-gray-800 shadow-sm">
+                                <span class="absolute -left-8 top-0 flex items-center justify-center w-7 h-7 rounded-full bg-emerald-600 text-white ring-4 ring-white dark:ring-gray-800 shadow-sm">
                                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path>
                                     </svg>
                                 </span>
-                                <div class="space-y-0.5">
+                                <div class="pl-2 space-y-0.5">
                                     <div class="flex items-center justify-between">
                                         <h4 class="text-sm font-bold text-gray-900 dark:text-gray-100">Ditugaskan ke Teknisi</h4>
                                         <span class="text-[11px] text-emerald-600 dark:text-emerald-400 font-semibold">Selesai</span>
@@ -514,10 +513,10 @@
                                     </p>
                                 </div>
                             @else
-                                <span class="absolute -left-[33px] top-0 flex items-center justify-center w-7 h-7 rounded-full bg-blue-600 text-white ring-4 ring-blue-100 dark:ring-blue-900/50 shadow-sm animate-pulse">
+                                <span class="absolute -left-8 top-0 flex items-center justify-center w-7 h-7 rounded-full bg-blue-600 text-white ring-4 ring-blue-100 dark:ring-blue-900/50 shadow-sm animate-pulse">
                                     <span class="w-2 h-2 rounded-full bg-white"></span>
                                 </span>
-                                <div class="space-y-0.5">
+                                <div class="pl-2 space-y-0.5">
                                     <div class="flex items-center justify-between">
                                         <h4 class="text-sm font-bold text-blue-600 dark:text-blue-400">Verifikasi &amp; Penugasan</h4>
                                         <span class="text-[11px] text-blue-600 dark:text-blue-400 font-semibold">Menunggu</span>
@@ -532,22 +531,22 @@
                         <!-- Step 3: Sedang Dikerjakan oleh Teknisi -->
                         <div class="relative group">
                             @if($laporan->status === 'Ditolak')
-                                <span class="absolute -left-[33px] top-0 flex items-center justify-center w-7 h-7 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-400 ring-4 ring-white dark:ring-gray-800">
+                                <span class="absolute -left-8 top-0 flex items-center justify-center w-7 h-7 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-400 ring-4 ring-white dark:ring-gray-800">
                                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"></path>
                                     </svg>
                                 </span>
-                                <div class="space-y-0.5 opacity-60">
+                                <div class="pl-2 space-y-0.5 opacity-60">
                                     <h4 class="text-sm font-semibold text-gray-700 dark:text-gray-300">Pengerjaan di Lapangan</h4>
                                     <p class="text-xs text-gray-500 dark:text-gray-400">Tahap pengerjaan dibatalkan.</p>
                                 </div>
                             @elseif($laporan->status === 'Selesai')
-                                <span class="absolute -left-[33px] top-0 flex items-center justify-center w-7 h-7 rounded-full bg-emerald-600 text-white ring-4 ring-white dark:ring-gray-800 shadow-sm">
+                                <span class="absolute -left-8 top-0 flex items-center justify-center w-7 h-7 rounded-full bg-emerald-600 text-white ring-4 ring-white dark:ring-gray-800 shadow-sm">
                                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path>
                                     </svg>
                                 </span>
-                                <div class="space-y-0.5">
+                                <div class="pl-2 space-y-0.5">
                                     <div class="flex items-center justify-between">
                                         <h4 class="text-sm font-bold text-gray-900 dark:text-gray-100">Perbaikan Selesai</h4>
                                         <span class="text-[11px] text-emerald-600 dark:text-emerald-400 font-semibold">Tuntas</span>
@@ -557,12 +556,12 @@
                                     </p>
                                 </div>
                             @elseif($laporan->penugasan && $laporan->penugasan->status_tugas === 'Dikerjakan')
-                                <span class="absolute -left-[33px] top-0 flex items-center justify-center w-7 h-7 rounded-full bg-amber-500 text-white ring-4 ring-amber-100 dark:ring-amber-900/50 shadow-sm animate-pulse">
+                                <span class="absolute -left-8 top-0 flex items-center justify-center w-7 h-7 rounded-full bg-amber-500 text-white ring-4 ring-amber-100 dark:ring-amber-900/50 shadow-sm animate-pulse">
                                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
                                     </svg>
                                 </span>
-                                <div class="space-y-0.5">
+                                <div class="pl-2 space-y-0.5">
                                     <div class="flex items-center justify-between">
                                         <h4 class="text-sm font-bold text-amber-600 dark:text-amber-400">Sedang Dikerjakan</h4>
                                         <span class="text-[11px] text-amber-600 dark:text-amber-400 font-semibold">Proses</span>
@@ -572,12 +571,12 @@
                                     </p>
                                 </div>
                             @elseif($laporan->penugasan)
-                                <span class="absolute -left-[33px] top-0 flex items-center justify-center w-7 h-7 rounded-full bg-amber-100 dark:bg-amber-900/60 text-amber-600 dark:text-amber-400 ring-4 ring-white dark:ring-gray-800">
+                                <span class="absolute -left-8 top-0 flex items-center justify-center w-7 h-7 rounded-full bg-amber-100 dark:bg-amber-900/60 text-amber-600 dark:text-amber-400 ring-4 ring-white dark:ring-gray-800">
                                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                                     </svg>
                                 </span>
-                                <div class="space-y-0.5">
+                                <div class="pl-2 space-y-0.5">
                                     <div class="flex items-center justify-between">
                                         <h4 class="text-sm font-semibold text-gray-900 dark:text-gray-100">Menunggu Tindakan</h4>
                                         <span class="text-[11px] text-gray-500 font-medium">Antrean</span>
@@ -587,10 +586,10 @@
                                     </p>
                                 </div>
                             @else
-                                <span class="absolute -left-[33px] top-0 flex items-center justify-center w-7 h-7 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-400 ring-4 ring-white dark:ring-gray-800">
+                                <span class="absolute -left-8 top-0 flex items-center justify-center w-7 h-7 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-400 ring-4 ring-white dark:ring-gray-800">
                                     <span class="w-2 h-2 rounded-full bg-gray-300 dark:bg-gray-600"></span>
                                 </span>
-                                <div class="space-y-0.5 opacity-60">
+                                <div class="pl-2 space-y-0.5 opacity-60">
                                     <h4 class="text-sm font-semibold text-gray-700 dark:text-gray-300">Pengerjaan di Lapangan</h4>
                                     <p class="text-xs text-gray-400 dark:text-gray-500">Menunggu teknisi ditugaskan.</p>
                                 </div>
@@ -600,22 +599,22 @@
                         <!-- Step 4: Selesai Diperbaiki / Hasil Diunggah -->
                         <div class="relative group">
                             @if($laporan->status === 'Ditolak')
-                                <span class="absolute -left-[33px] top-0 flex items-center justify-center w-7 h-7 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-400 ring-4 ring-white dark:ring-gray-800">
+                                <span class="absolute -left-8 top-0 flex items-center justify-center w-7 h-7 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-400 ring-4 ring-white dark:ring-gray-800">
                                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"></path>
                                     </svg>
                                 </span>
-                                <div class="space-y-0.5 opacity-60">
+                                <div class="pl-2 space-y-0.5 opacity-60">
                                     <h4 class="text-sm font-semibold text-gray-700 dark:text-gray-300">Resolusi Selesai</h4>
                                     <p class="text-xs text-gray-500 dark:text-gray-400">Laporan ditutup dengan status ditolak.</p>
                                 </div>
                             @elseif($laporan->status === 'Selesai')
-                                <span class="absolute -left-[33px] top-0 flex items-center justify-center w-7 h-7 rounded-full bg-emerald-600 text-white ring-4 ring-emerald-100 dark:ring-emerald-900/50 shadow-md">
+                                <span class="absolute -left-8 top-0 flex items-center justify-center w-7 h-7 rounded-full bg-emerald-600 text-white ring-4 ring-emerald-100 dark:ring-emerald-900/50 shadow-md">
                                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path>
                                     </svg>
                                 </span>
-                                <div class="space-y-0.5">
+                                <div class="pl-2 space-y-0.5">
                                     <div class="flex items-center justify-between">
                                         <h4 class="text-sm font-bold text-emerald-700 dark:text-emerald-300">Selesai &amp; Terverifikasi</h4>
                                         <span class="text-[11px] text-emerald-600 dark:text-emerald-400 font-bold uppercase">Selesai</span>
@@ -628,10 +627,10 @@
                                     </p>
                                 </div>
                             @else
-                                <span class="absolute -left-[33px] top-0 flex items-center justify-center w-7 h-7 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-400 ring-4 ring-white dark:ring-gray-800">
+                                <span class="absolute -left-8 top-0 flex items-center justify-center w-7 h-7 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-400 ring-4 ring-white dark:ring-gray-800">
                                     <span class="w-2 h-2 rounded-full bg-gray-300 dark:bg-gray-600"></span>
                                 </span>
-                                <div class="space-y-0.5 opacity-60">
+                                <div class="pl-2 space-y-0.5 opacity-60">
                                     <h4 class="text-sm font-semibold text-gray-700 dark:text-gray-300">Selesai &amp; Terverifikasi</h4>
                                     <p class="text-xs text-gray-400 dark:text-gray-500">Tahap akhir setelah perbaikan tuntas.</p>
                                 </div>
