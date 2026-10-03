@@ -1,11 +1,11 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex justify-between items-end">
+        <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
             <div>
                 <h2 class="text-2xl font-semibold text-gray-800 dark:text-gray-100 tracking-tight">Daftar Laporan Saya</h2>
                 <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Kelola dan pantau seluruh riwayat pelaporan Anda.</p>
             </div>
-            <a href="{{ route('pelapor.laporan.create') }}" class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 focus:bg-indigo-700 active:bg-indigo-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
+            <a href="{{ route('pelapor.laporan.create') }}" class="w-full sm:w-auto inline-flex items-center justify-center px-4 py-2.5 sm:py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 focus:bg-indigo-700 active:bg-indigo-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
                 <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
                 </svg>
@@ -15,7 +15,7 @@
     </x-slot>
 
     <div class="mb-6 p-4 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm">
-        <form method="GET" action="{{ route('pelapor.laporan.index') }}" class="flex flex-col sm:flex-row items-end gap-4">
+        <form method="GET" action="{{ route('pelapor.laporan.index') }}" class="flex flex-col sm:flex-row items-stretch sm:items-end gap-3 sm:gap-4">
             <div class="w-full sm:w-64">
                 <label for="status" class="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-200 mb-1">Saring berdasarkan status</label>
                 <select name="status" id="status" class="block w-full rounded-md border-0 py-1.5 text-gray-900 dark:text-gray-100 dark:bg-gray-700 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-600 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
@@ -26,14 +26,55 @@
                     <option value="Ditolak" {{ request('status') == 'Ditolak' ? 'selected' : '' }}>Ditolak</option>
                 </select>
             </div>
-            <button type="submit" class="inline-flex items-center px-4 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md font-semibold text-xs text-gray-700 dark:text-gray-200 uppercase tracking-widest hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150 h-9">
+            <button type="submit" class="w-full sm:w-auto inline-flex items-center justify-center px-4 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md font-semibold text-xs text-gray-700 dark:text-gray-200 uppercase tracking-widest hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150 h-9">
                 Terapkan Filter
             </button>
         </form>
     </div>
 
     <div class="bg-white dark:bg-gray-800 overflow-hidden border border-gray-200 dark:border-gray-700 sm:rounded-lg shadow-sm">
-        <div class="overflow-x-auto">
+        <!-- Mobile Card List (< md) -->
+        <div class="md:hidden divide-y divide-gray-200 dark:divide-gray-700">
+            @forelse($laporans as $lap)
+            <div class="p-4 space-y-2.5">
+                <div class="flex items-center justify-between">
+                    <span class="text-xs text-gray-500 dark:text-gray-400">
+                        {{ $lap->created_at->format('d M Y') }}
+                    </span>
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
+                        {{ $lap->status == 'Baru' ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-300' : '' }}
+                        {{ $lap->status == 'Diproses' ? 'bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-300' : '' }}
+                        {{ $lap->status == 'Selesai' ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/50 dark:text-emerald-300' : '' }}
+                        {{ $lap->status == 'Ditolak' ? 'bg-rose-100 text-rose-800 dark:bg-rose-900/50 dark:text-rose-300' : '' }}">
+                        {{ $lap->status }}
+                    </span>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-gray-900 dark:text-gray-100 text-sm">{{ $lap->judul }}</h4>
+                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">{{ $lap->lokasi }}</p>
+                </div>
+                <div class="pt-2 flex justify-end">
+                    <a href="{{ route('pelapor.laporan.show', $lap->id) }}" class="inline-flex items-center text-xs font-semibold text-indigo-600 dark:text-indigo-400 hover:text-indigo-900 dark:hover:text-indigo-300 transition-colors">
+                        <span>Lihat Detail</span>
+                        <svg class="w-3.5 h-3.5 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+            @empty
+            <div class="px-6 py-12 text-center">
+                <svg class="mx-auto h-12 w-12 text-gray-300 dark:text-gray-600 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                <h3 class="text-sm font-medium text-gray-900 dark:text-gray-100">Belum ada data laporan</h3>
+                <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Anda belum pernah membuat laporan atau filter tidak cocok.</p>
+            </div>
+            @endforelse
+        </div>
+
+        <!-- Desktop Table View (>= md) -->
+        <div class="hidden md:block overflow-x-auto">
             <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                 <thead class="bg-gray-50 dark:bg-gray-900/50">
                     <tr>

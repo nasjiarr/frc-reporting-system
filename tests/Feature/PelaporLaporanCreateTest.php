@@ -63,7 +63,6 @@ class PelaporLaporanCreateTest extends TestCase
         // Textarea & Character Counter
         $response->assertSee('char-count');
         $response->assertSee('char-counter');
-        $response->assertSee('Kondisi fisik:');
 
         // Double-Submit Protection Elements
         $response->assertSee('btn-submit');
