@@ -88,10 +88,14 @@ class PelaporController extends Controller
 
     public function show($id)
     {
-        // Pastikan pelapor hanya bisa melihat laporannya sendiri (Keamanan)
-        $laporan = Laporan::with(['penugasan.teknisi', 'penugasan.hasilPerbaikan'])
-            ->where('pelapor_id', auth()->id())
+        // Pastikan eager loading relasi pelapor, penugasan.teknisi, dan penugasan.hasilPerbaikan
+        $laporan = Laporan::with(['pelapor', 'penugasan.teknisi', 'penugasan.hasilPerbaikan'])
             ->findOrFail($id);
+
+        // Pastikan pelapor hanya bisa melihat laporannya sendiri (403 jika milik orang lain)
+        if ((int) $laporan->pelapor_id !== (int) auth()->id()) {
+            abort(403, 'Anda tidak memiliki hak akses untuk melihat laporan ini.');
+        }
 
         return view('pelapor.laporan.show', compact('laporan'));
     }
