@@ -15,35 +15,92 @@ class TeknisiController extends Controller
     {
         $userId = auth()->id();
 
-        // 1. Data untuk Cards
-        $jumlahTugasAktif = Penugasan::where('teknisi_id', $userId)
-            ->whereIn('status_tugas', ['Ditugaskan', 'Dikerjakan'])
+        // 1. Data untuk KPI Stat Cards
+        $totalDitugaskan = Penugasan::where('teknisi_id', $userId)
+            ->where('status_tugas', 'Ditugaskan')
             ->count();
 
-        $jumlahTugasSelesai = Penugasan::where('teknisi_id', $userId)
+        $totalDikerjakan = Penugasan::where('teknisi_id', $userId)
+            ->where('status_tugas', 'Dikerjakan')
+            ->count();
+
+        $totalAktif = $totalDitugaskan + $totalDikerjakan;
+
+        $totalSelesaiBulanIni = Penugasan::where('teknisi_id', $userId)
+            ->where('status_tugas', 'Selesai')
+            ->whereMonth('updated_at', now()->month)
+            ->whereYear('updated_at', now()->year)
+            ->count();
+
+        $totalSelesaiSemua = Penugasan::where('teknisi_id', $userId)
             ->where('status_tugas', 'Selesai')
             ->count();
 
-        // 2. Data untuk Tabel Tugas Aktif Saat Ini
-        $tugasAktif = Penugasan::with('laporan')
+        // Variabel lama untuk kompatibilitas
+        $jumlahTugasAktif = $totalAktif;
+        $jumlahTugasSelesai = $totalSelesaiSemua;
+
+        // 2. Data untuk Tabel/Kartu Tugas Aktif Saat Ini
+        $tugasAktif = Penugasan::with(['laporan.pelapor', 'assigner'])
             ->where('teknisi_id', $userId)
             ->whereIn('status_tugas', ['Ditugaskan', 'Dikerjakan'])
             ->latest()
             ->get();
 
-        return view('teknisi.dashboard', compact('jumlahTugasAktif', 'jumlahTugasSelesai', 'tugasAktif'));
+        return view('teknisi.dashboard', compact(
+            'totalDitugaskan',
+            'totalDikerjakan',
+            'totalAktif',
+            'totalSelesaiBulanIni',
+            'totalSelesaiSemua',
+            'jumlahTugasAktif',
+            'jumlahTugasSelesai',
+            'tugasAktif'
+        ));
     }
 
-    // Tambahkan method baru ini
     public function tugasAktif()
     {
-        $tugasAktif = Penugasan::with('laporan')
+        $tugasAktif = Penugasan::with(['laporan.pelapor', 'assigner'])
             ->where('teknisi_id', auth()->id())
             ->whereIn('status_tugas', ['Ditugaskan', 'Dikerjakan'])
             ->latest()
             ->get();
 
         return view('teknisi.tugas-aktif', compact('tugasAktif'));
+    }
+
+    public function mulaiKerjakan($id)
+    {
+        $tugas = Penugasan::with('laporan.pelapor')->findOrFail($id);
+
+        if ($tugas->teknisi_id !== auth()->id()) {
+            abort(403);
+        }
+
+        if ($tugas->status_tugas === 'Ditugaskan') {
+            DB::transaction(function () use ($tugas) {
+                $tugas->update(['status_tugas' => 'Dikerjakan']);
+
+                if ($tugas->laporan && $tugas->laporan->status !== 'Diproses') {
+                    $tugas->laporan->update(['status' => 'Diproses']);
+                }
+
+                // Kirim notifikasi ke pelapor
+                if ($tugas->laporan && $tugas->laporan->pelapor_id) {
+                    $teknisiNama = auth()->user()->nama_lengkap ?? auth()->user()->name ?? 'Teknisi';
+                    Notifikasi::create([
+                        'user_id' => $tugas->laporan->pelapor_id,
+                        'judul' => 'Perbaikan Dimulai',
+                        'pesan' => "Teknisi {$teknisiNama} telah mulai mengerjakan perbaikan untuk laporan: {$tugas->laporan->judul}.",
+                    ]);
+                }
+            });
+
+            return redirect()->back()->with('success', 'Status penugasan berhasil diperbarui menjadi Dikerjakan.');
+        }
+
+        return redirect()->back()->with('info', 'Penugasan sudah berstatus ' . $tugas->status_tugas . '.');
     }
 
     public function show($id)
