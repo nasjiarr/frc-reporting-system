@@ -103,6 +103,11 @@ export async function processImageUpload(inputElement) {
         dataTransfer.items.add(compressed);
         inputElement.files = dataTransfer.files;
 
+        inputElement.dispatchEvent(new CustomEvent('image:compressed', {
+            bubbles: true,
+            detail: { originalSize: file.size, compressedSize: compressed.size }
+        }));
+
         showFeedback(
             inputElement,
             `✓ Foto otomatis dioptimasi: ${formatBytes(file.size)} → ${formatBytes(compressed.size)} (Siap diunggah)`,
