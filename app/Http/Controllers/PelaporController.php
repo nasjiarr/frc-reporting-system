@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Models\Laporan;
 use App\Models\User;
 use App\Models\Notifikasi;
@@ -64,24 +65,27 @@ class PelaporController extends Controller
             $path = $request->file('foto_sebelum')->store('foto_sebelum', 'public');
         }
 
-        $laporan = Laporan::create([
-            'pelapor_id'    => auth()->id(),
-            'judul'         => $request->judul,
-            'lokasi'        => $request->lokasi,
-            'deskripsi'     => $request->deskripsi,
-            'foto_sebelum'  => $path,
-            'status'        => 'Baru',
-        ]);
-
-        // Mengirim notifikasi ke semua Admin
-        $admins = User::where('role', 'Admin')->get();
-        foreach ($admins as $admin) {
-            Notifikasi::create([
-                'user_id' => $admin->id,
-                'judul'   => 'Laporan Kerusakan Baru',
-                'pesan'   => "Terdapat laporan baru mengenai '{$laporan->judul}' di {$laporan->lokasi}.",
+        DB::transaction(function () use ($request, $path) {
+            $laporan = Laporan::create([
+                'pelapor_id'    => auth()->id(),
+                'judul'         => $request->judul,
+                'lokasi'        => $request->lokasi,
+                'deskripsi'     => $request->deskripsi,
+                'foto_sebelum'  => $path,
+                'status'        => 'Baru',
             ]);
-        }
+
+            // Mengirim notifikasi ke semua Admin yang aktif
+            $admins = User::where('role', 'Admin')->where('is_active', true)->get();
+            foreach ($admins as $admin) {
+                Notifikasi::create([
+                    'user_id' => $admin->id,
+                    'judul'   => 'Laporan Kerusakan Baru',
+                    'pesan'   => "Terdapat laporan baru mengenai '{$laporan->judul}' di {$laporan->lokasi}.",
+                    'link'    => route('admin.laporan.show', $laporan->id, false),
+                ]);
+            }
+        });
 
         return redirect()->route('pelapor.laporan.index')->with('success', 'Laporan berhasil dikirim.');
     }

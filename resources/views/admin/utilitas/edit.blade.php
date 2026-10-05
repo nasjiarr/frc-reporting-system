@@ -34,19 +34,19 @@
                 <div class="grid grid-cols-2 gap-4">
                     <div>
                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Tanggal Awal</label>
-                        <input type="date" name="tgl_awal" value="{{ $relasi->tgl_awal ?? '' }}" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" required>
+                        <input type="date" name="tgl_awal" value="{{ $relasi->tgl_awal ?? '' }}" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm [color-scheme:light] dark:[color-scheme:dark]" required>
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Tanggal Akhir</label>
-                        <input type="date" name="tgl_akhir" value="{{ $relasi->tgl_akhir ?? '' }}" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" required>
+                        <input type="date" name="tgl_akhir" value="{{ $relasi->tgl_akhir ?? '' }}" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm [color-scheme:light] dark:[color-scheme:dark]" required>
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Stand Awal</label>
-                        <input type="number" step="0.01" name="stand_awal" value="{{ $relasi->stand_awal ?? '' }}" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" required>
+                        <input type="number" step="0.01" name="stand_awal" value="{{ $relasi->stand_awal ?? '' }}" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm [color-scheme:light] dark:[color-scheme:dark]" required>
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Stand Akhir</label>
-                        <input type="number" step="0.01" name="stand_akhir" value="{{ $relasi->stand_akhir ?? '' }}" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" required>
+                        <input type="number" step="0.01" name="stand_akhir" value="{{ $relasi->stand_akhir ?? '' }}" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm [color-scheme:light] dark:[color-scheme:dark]" required>
                     </div>
                 </div>
                 @break
@@ -66,33 +66,33 @@
                 <div class="grid grid-cols-2 gap-4">
                     <div>
                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Tanggal Awal</label>
-                        <input type="date" name="tgl_awal" value="{{ $relasi->tgl_awal ?? '' }}" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" required>
+                        <input type="date" name="tgl_awal" value="{{ $relasi->tgl_awal ?? '' }}" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm [color-scheme:light] dark:[color-scheme:dark]" required>
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Tanggal Akhir</label>
-                        <input type="date" name="tgl_akhir" value="{{ $relasi->tgl_akhir ?? '' }}" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" required>
+                        <input type="date" name="tgl_akhir" value="{{ $relasi->tgl_akhir ?? '' }}" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm [color-scheme:light] dark:[color-scheme:dark]" required>
                     </div>
                 </div>
                 <div class="grid grid-cols-2 gap-4 mt-6">
                     <div class="col-span-2 font-bold text-yellow-800 dark:text-yellow-300">{{ $label1 }}</div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Stand Awal</label>
-                        <input type="number" step="0.01" name="stand_awal{{ $p1 }}" value="{{ $relasi->{'stand_awal'.$p1} ?? '' }}" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" required>
+                        <input type="number" step="0.01" name="stand_awal{{ $p1 }}" value="{{ $relasi->{'stand_awal'.$p1} ?? '' }}" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm [color-scheme:light] dark:[color-scheme:dark]" required>
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Stand Akhir</label>
-                        <input type="number" step="0.01" name="stand_akhir{{ $p1 }}" value="{{ $relasi->{'stand_akhir'.$p1} ?? '' }}" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" required>
+                        <input type="number" step="0.01" name="stand_akhir{{ $p1 }}" value="{{ $relasi->{'stand_akhir'.$p1} ?? '' }}" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm [color-scheme:light] dark:[color-scheme:dark]" required>
                     </div>
                 </div>
                 <div class="grid grid-cols-2 gap-4 mt-6">
                     <div class="col-span-2 font-bold text-yellow-800 dark:text-yellow-300">{{ $label2 }}</div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Stand Awal</label>
-                        <input type="number" step="0.01" name="stand_awal{{ $p2 }}" value="{{ $relasi->{'stand_awal'.$p2} ?? '' }}" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" required>
+                        <input type="number" step="0.01" name="stand_awal{{ $p2 }}" value="{{ $relasi->{'stand_awal'.$p2} ?? '' }}" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm [color-scheme:light] dark:[color-scheme:dark]" required>
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Stand Akhir</label>
-                        <input type="number" step="0.01" name="stand_akhir{{ $p2 }}" value="{{ $relasi->{'stand_akhir'.$p2} ?? '' }}" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" required>
+                        <input type="number" step="0.01" name="stand_akhir{{ $p2 }}" value="{{ $relasi->{'stand_akhir'.$p2} ?? '' }}" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm [color-scheme:light] dark:[color-scheme:dark]" required>
                     </div>
                 </div>
                 @break
@@ -108,11 +108,11 @@
                 <div class="grid grid-cols-2 gap-4">
                     <div>
                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Tanggal Awal</label>
-                        <input type="date" name="tgl_awal" value="{{ $relasi->tgl_awal ?? '' }}" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" required>
+                        <input type="date" name="tgl_awal" value="{{ $relasi->tgl_awal ?? '' }}" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm [color-scheme:light] dark:[color-scheme:dark]" required>
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Tanggal Akhir</label>
-                        <input type="date" name="tgl_akhir" value="{{ $relasi->tgl_akhir ?? '' }}" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" required>
+                        <input type="date" name="tgl_akhir" value="{{ $relasi->tgl_akhir ?? '' }}" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm [color-scheme:light] dark:[color-scheme:dark]" required>
                     </div>
                 </div>
                 @for($i = 1; $i <= 3; $i++)

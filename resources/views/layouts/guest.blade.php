@@ -60,7 +60,7 @@
                 <!-- BANTALAN LOGO YANG TELAH DIRAPIKAN -->
                 <div class="flex items-center justify-center w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48 bg-white rounded-full shadow-xl mb-6 sm:mb-8 mx-auto">
                     <!-- object-contain memastikan logo tidak terdistorsi -->
-                    <img src="{{ asset('images/logo-frc.png') }}" alt="Logo FRC" class="w-20 sm:w-24 md:w-32 h-auto object-contain drop-shadow-sm">
+                    <img src="{{ asset('images/logo-frc.png') }}" alt="Logo FRC" class="w-28 sm:w-36 md:w-44 h-auto object-contain drop-shadow-sm">
                 </div>
 
                 <h1 class="text-4xl sm:text-5xl font-bold text-white tracking-tight mb-3 sm:mb-4">

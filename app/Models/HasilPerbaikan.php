@@ -25,4 +25,9 @@ class HasilPerbaikan extends Model
     {
         return $this->belongsTo(Penugasan::class);
     }
+
+    public function getMaterialAttribute()
+    {
+        return $this->material_digunakan;
+    }
 }

@@ -177,7 +177,7 @@
                                     <span>Chat WA</span>
                                 </a>
                                 @if($telUrl)
-                                <a href="{{ $telUrl }}" class="min-h-[38px] px-3 py-2 rounded-xl bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-300 transition flex items-center justify-center" title="Telepon Pelapor">
+                                <a href="{{ $telUrl }}" class="min-h-[38px] px-3 py-2 rounded-xl bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-300 dark:hover:bg-slate-600 transition flex items-center justify-center" title="Telepon Pelapor">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
                                     </svg>
@@ -277,7 +277,13 @@
                                 @endif
                             </div>
 
-                            <div class="pt-4 flex justify-end">
+                            <div class="pt-4 flex items-center justify-between flex-wrap gap-3">
+                                <a href="{{ route('teknisi.riwayat.export_pdf', $tugas->id) }}" class="inline-flex items-center gap-2 px-4 py-2.5 bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800/80 text-rose-700 dark:text-rose-300 rounded-xl font-semibold text-xs hover:bg-rose-100 dark:hover:bg-rose-900/60 transition shadow-xs">
+                                    <svg class="w-4 h-4 text-rose-600 dark:text-rose-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                    </svg>
+                                    <span>Unduh Berita Acara (PDF)</span>
+                                </a>
                                 <a href="{{ route('teknisi.riwayat') }}" class="inline-flex items-center px-4 py-2.5 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-xl font-bold text-xs text-slate-700 dark:text-slate-200 uppercase tracking-wider hover:bg-slate-50 dark:hover:bg-slate-600 transition shadow-xs">
                                     Kembali ke Riwayat
                                 </a>

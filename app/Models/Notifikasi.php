@@ -12,6 +12,7 @@ class Notifikasi extends Model
         'user_id',
         'judul',
         'pesan',
+        'link',
         'is_read'
     ];
 

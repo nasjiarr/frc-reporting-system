@@ -17,7 +17,7 @@ class AdminController extends Controller
 {
     public function dashboard()
     {
-        // 1. Data Statistik (Eksis)
+        // 1. Data Statistik
         $stats = [
             'laporan_baru' => \App\Models\Laporan::where('status', 'Baru')->count(),
             'tugas_aktif'  => \App\Models\Penugasan::whereIn('status_tugas', ['Ditugaskan', 'Dikerjakan'])->count(),
@@ -28,13 +28,13 @@ class AdminController extends Controller
             'pengguna_aktif' => \App\Models\User::where('is_active', true)->count(),
         ];
 
-        // --- TAMBAHAN LOGIKA INSTRUKSI #3 ---
-        // Cek apakah ada data di tabel utilitas dengan periode bulan ini (Format: YYYY-MM)
+        // 2. Status Utilitas Bulan Ini
         $currentPeriode = now()->format('Y-m');
-        $bln_ini_belum_isi = !\App\Models\Utilitas::where('periode', $currentPeriode)->exists();
-        // ------------------------------------
+        $utilitasBulanIni = \App\Models\Utilitas::where('periode', $currentPeriode)->get();
+        $bln_ini_belum_isi = $utilitasBulanIni->isEmpty();
+        $utilitasCount = $utilitasBulanIni->count();
 
-        // 2. Data Panel Kiri & Kanan (Eksis)
+        // 3. Data Panel Kiri & Kanan
         $laporanPerluTindakLanjut = \App\Models\Laporan::with('pelapor')
             ->where('status', 'Baru')
             ->latest()
@@ -48,50 +48,169 @@ class AdminController extends Controller
             ->take(5)
             ->get();
 
-        // Kirim variabel bln_ini_belum_isi ke view
+        // 4. Data Teknisi & Beban Kerja Aktif
+        $teknisiList = \App\Models\User::where('role', 'Teknisi')
+            ->where('is_active', true)
+            ->withCount(['tugas_teknisi as tugas_aktif_count' => function ($q) {
+                $q->whereIn('status_tugas', ['Ditugaskan', 'Dikerjakan']);
+            }])
+            ->orderBy('tugas_aktif_count', 'asc')
+            ->get();
+
+        // 5. Daftar Laporan Baru untuk Assign Modal
+        $laporanBaruList = \App\Models\Laporan::where('status', 'Baru')->latest()->get();
+
         return view('admin.dashboard', compact(
             'stats',
             'laporanPerluTindakLanjut',
             'penugasanAktif',
-            'bln_ini_belum_isi'
+            'bln_ini_belum_isi',
+            'utilitasCount',
+            'teknisiList',
+            'laporanBaruList'
         ));
     }
 
     public function index(Request $request)
     {
-        $users = User::when($request->role, fn($q) => $q->where('role', $request->role))->get();
-        return view('admin.users.index', compact('users'));
+        // 1. Metrik / Statistik KPI Pengguna
+        $stats = [
+            'total' => User::count(),
+            'aktif' => User::where('is_active', true)->count(),
+            'nonaktif' => User::where('is_active', false)->count(),
+            'teknisi_total' => User::where('role', 'Teknisi')->count(),
+            'teknisi_ready' => User::where('role', 'Teknisi')
+                ->where('is_active', true)
+                ->whereDoesntHave('tugas_teknisi', function ($q) {
+                    $q->whereIn('status_tugas', ['Ditugaskan', 'Dikerjakan']);
+                })
+                ->count(),
+            'pelapor_total' => User::where('role', 'Pelapor')->count(),
+            'admin_total' => User::where('role', 'Admin')->count(),
+        ];
+
+        // 2. Query Pengguna dengan Filter, Search & Relasi Beban Tugas Teknisi
+        $query = User::query()
+            ->withCount(['tugas_teknisi as tugas_aktif_count' => function ($q) {
+                $q->whereIn('status_tugas', ['Ditugaskan', 'Dikerjakan']);
+            }]);
+
+        // Filter Pencarian (Nama, Email, No. Telepon)
+        if ($request->filled('search')) {
+            $search = trim($request->search);
+            $query->where(function ($q) use ($search) {
+                $q->where('nama_lengkap', 'like', "%{$search}%")
+                    ->orWhere('email', 'like', "%{$search}%")
+                    ->orWhere('no_telepon', 'like', "%{$search}%");
+            });
+        }
+
+        // Filter Role
+        if ($request->filled('role')) {
+            $query->where('role', $request->role);
+        }
+
+        // Filter Status Akun (Aktif / Nonaktif)
+        if ($request->filled('status')) {
+            if ($request->status === 'aktif') {
+                $query->where('is_active', true);
+            } elseif ($request->status === 'nonaktif') {
+                $query->where('is_active', false);
+            }
+        }
+
+        // Pagination 10 data per halaman dengan query string terikat
+        $users = $query->latest()->paginate(10)->withQueryString();
+
+        return view('admin.users.index', compact('users', 'stats'));
     }
 
     public function store(Request $request)
     {
         $data = $request->validate([
-            'nama_lengkap' => 'required|string',
-            'email' => 'required|email|unique:users',
-            'no_telepon' => 'required',
-            'role' => 'required',
+            'nama_lengkap' => 'required|string|max:255',
+            'email' => 'required|email|max:255|unique:users,email',
+            'no_telepon' => 'required|string|max:30',
+            'role' => 'required|in:Admin,Teknisi,Pelapor,KepalaFRC',
             'password' => 'required|min:8'
+        ], [
+            'nama_lengkap.required' => 'Nama lengkap wajib diisi.',
+            'email.required' => 'Alamat email wajib diisi.',
+            'email.email' => 'Format email tidak valid.',
+            'email.unique' => 'Email ini sudah terdaftar di sistem.',
+            'no_telepon.required' => 'Nomor telepon/WA wajib diisi.',
+            'role.required' => 'Role hak akses wajib dipilih.',
+            'role.in' => 'Role yang dipilih tidak valid.',
+            'password.required' => 'Password wajib diisi.',
+            'password.min' => 'Password minimal harus 8 karakter.',
         ]);
 
+        $data['name'] = $data['nama_lengkap'];
         $data['password'] = Hash::make($data['password']);
-        User::create($data);
+        $data['is_active'] = true;
+        $user = User::create($data);
 
-        return back()->with('success', 'User berhasil ditambahkan.');
+        return back()->with('success', "Pengguna {$user->nama_lengkap} berhasil ditambahkan.");
     }
 
-    public function penugasanIndex()
+    public function penugasanIndex(Request $request)
     {
-        // 1. (Baru) Mengambil data semua penugasan untuk ditampilkan di tabel monitoring beserta relasinya
-        $penugasans = \App\Models\Penugasan::with(['laporan', 'teknisi'])
+        // 1. Ambil data teknisi dengan beban kerja aktif
+        $teknisi = User::where('role', 'Teknisi')
+            ->where('is_active', true)
+            ->withCount(['tugas_teknisi as tugas_aktif_count' => function ($q) {
+                $q->whereIn('status_tugas', ['Ditugaskan', 'Dikerjakan']);
+            }])
+            ->orderBy('tugas_aktif_count', 'asc')
+            ->get();
+
+        // 2. Laporan baru yang menunggu penugasan
+        $laporanBaru = Laporan::with('pelapor')
+            ->where('status', 'Baru')
             ->latest()
-            ->paginate(10);
+            ->get();
 
-        // 2. (Lama) Dipertahankan agar tidak error jika ada form/modal penugasan yang masih memakai data ini
-        $laporanBaru = \App\Models\Laporan::where('status', 'Baru')->latest()->get();
-        $teknisi = \App\Models\User::where('role', 'Teknisi')->get();
+        // 3. Query monitoring penugasan dengan filter & pencarian
+        $penugasanQuery = Penugasan::with(['laporan.pelapor', 'teknisi', 'assigner', 'hasilPerbaikan'])
+            ->has('laporan');
 
-        // 3. Kirim ketiga variabel ke View
-        return view('admin.penugasan.index', compact('penugasans', 'laporanBaru', 'teknisi'));
+        if ($request->filled('status')) {
+            $penugasanQuery->where('status_tugas', $request->status);
+        }
+
+        if ($request->filled('teknisi_id')) {
+            $penugasanQuery->where('teknisi_id', $request->teknisi_id);
+        }
+
+        if ($request->filled('search')) {
+            $keyword = '%' . trim($request->search) . '%';
+            $penugasanQuery->where(function ($q) use ($keyword) {
+                $q->whereHas('laporan', function ($lq) use ($keyword) {
+                    $lq->where('judul', 'like', $keyword)
+                       ->orWhere('lokasi', 'like', $keyword)
+                       ->orWhereHas('pelapor', function ($pq) use ($keyword) {
+                           $pq->where('nama_lengkap', 'like', $keyword);
+                       });
+                })->orWhereHas('teknisi', function ($tq) use ($keyword) {
+                    $tq->where('nama_lengkap', 'like', $keyword);
+                });
+            });
+        }
+
+        $penugasans = $penugasanQuery->latest('assigned_at')->paginate(10)->withQueryString();
+
+        // 4. Statistik untuk KPI Cards
+        $stats = [
+            'menunggu' => $laporanBaru->count(),
+            'ditugaskan' => Penugasan::where('status_tugas', 'Ditugaskan')->count(),
+            'dikerjakan' => Penugasan::where('status_tugas', 'Dikerjakan')->count(),
+            'tugas_aktif' => Penugasan::whereIn('status_tugas', ['Ditugaskan', 'Dikerjakan'])->count(),
+            'selesai' => Penugasan::where('status_tugas', 'Selesai')->count(),
+            'teknisi_total' => $teknisi->count(),
+            'teknisi_ready' => $teknisi->where('tugas_aktif_count', 0)->count(),
+        ];
+
+        return view('admin.penugasan.index', compact('penugasans', 'laporanBaru', 'teknisi', 'stats'));
     }
 
     public function assignStore(Request $request, Laporan $laporan)
@@ -100,7 +219,7 @@ class AdminController extends Controller
 
         // HAPUS backslash (\) sebelum DB, sehingga menjadi seperti ini:
         DB::transaction(function () use ($request, $laporan) {
-            Penugasan::create([
+            $penugasan = Penugasan::create([
                 'laporan_id' => $laporan->id,
                 'teknisi_id' => $request->teknisi_id,
                 'assigned_by' => auth()->id(),
@@ -115,13 +234,21 @@ class AdminController extends Controller
                 'user_id' => $request->teknisi_id,
                 'judul'   => 'Tugas Baru Diberikan',
                 'pesan'   => "Anda telah ditugaskan untuk memperbaiki: '{$laporan->judul}' di {$laporan->lokasi}. Silakan cek detail penugasan Anda.",
+                'link'    => route('teknisi.tugas.show', $penugasan->id, false),
             ]);
+
+            $pelaporLink = match ($laporan->pelapor?->role) {
+                'Admin'     => route('admin.laporan.show', $laporan->id, false),
+                'KepalaFRC' => route('kepala.laporan.show', $laporan->id, false),
+                default     => route('pelapor.laporan.show', $laporan->id, false),
+            };
 
             // Notifikasi kepada Pelapor
             Notifikasi::create([
                 'user_id' => $laporan->pelapor_id,
                 'judul'   => 'Laporan Diproses',
                 'pesan'   => "Laporan Anda yang berjudul '{$laporan->judul}' telah ditugaskan kepada teknisi dan sedang dalam proses perbaikan.",
+                'link'    => $pelaporLink,
             ]);
         });
 
@@ -137,16 +264,25 @@ class AdminController extends Controller
             'alasan_penolakan.max' => 'Alasan penolakan maksimal 1000 karakter.',
         ]);
 
-        $laporan->update([
-            'status' => 'Ditolak',
-            'alasan_penolakan' => $request->alasan_penolakan,
-        ]);
+        DB::transaction(function () use ($request, $laporan) {
+            $laporan->update([
+                'status' => 'Ditolak',
+                'alasan_penolakan' => $request->alasan_penolakan,
+            ]);
 
-        Notifikasi::create([
-            'user_id' => $laporan->pelapor_id,
-            'judul' => 'Laporan Ditolak',
-            'pesan' => "Laporan Anda yang berjudul '{$laporan->judul}' ditolak oleh Admin. Alasan: {$request->alasan_penolakan}",
-        ]);
+            $pelaporLink = match ($laporan->pelapor?->role) {
+                'Admin'     => route('admin.laporan.show', $laporan->id, false),
+                'KepalaFRC' => route('kepala.laporan.show', $laporan->id, false),
+                default     => route('pelapor.laporan.show', $laporan->id, false),
+            };
+
+            Notifikasi::create([
+                'user_id' => $laporan->pelapor_id,
+                'judul' => 'Laporan Ditolak',
+                'pesan' => "Laporan Anda yang berjudul '{$laporan->judul}' ditolak oleh Admin. Alasan: {$request->alasan_penolakan}",
+                'link' => $pelaporLink,
+            ]);
+        });
 
         return back()->with('success', 'Laporan berhasil ditolak.');
     }
@@ -154,14 +290,30 @@ class AdminController extends Controller
     public function update(Request $request, User $user)
     {
         $data = $request->validate([
-            'nama_lengkap' => 'required|string',
+            'nama_lengkap' => 'required|string|max:255',
             // Validasi email harus unik, KECUALI untuk email milik user ini sendiri
-            'email' => 'required|email|unique:users,email,' . $user->id,
-            'no_telepon' => 'required|string',
+            'email' => 'required|email|max:255|unique:users,email,' . $user->id,
+            'no_telepon' => 'required|string|max:30',
             'role' => 'required|in:Admin,Teknisi,Pelapor,KepalaFRC',
             // Password opsional saat edit (hanya diisi jika ingin diganti)
             'password' => 'nullable|min:8'
+        ], [
+            'nama_lengkap.required' => 'Nama lengkap wajib diisi.',
+            'email.required' => 'Alamat email wajib diisi.',
+            'email.email' => 'Format email tidak valid.',
+            'email.unique' => 'Email ini sudah digunakan oleh akun lain.',
+            'no_telepon.required' => 'Nomor telepon/WA wajib diisi.',
+            'role.required' => 'Role hak akses wajib dipilih.',
+            'role.in' => 'Role tidak valid.',
+            'password.min' => 'Password baru minimal harus 8 karakter.',
         ]);
+
+        // Proteksi Self-Lockout: Admin yang sedang login tidak boleh mengubah perannya sendiri menjadi non-Admin
+        if (auth()->id() === $user->id && $data['role'] !== 'Admin') {
+            return back()->with('error', 'Tindakan Ditolak: Anda tidak dapat mengubah peran akun Anda sendiri.');
+        }
+
+        $data['name'] = $data['nama_lengkap'];
 
         // Cek apakah form password diisi
         if ($request->filled('password')) {
@@ -173,7 +325,7 @@ class AdminController extends Controller
 
         $user->update($data);
 
-        return back()->with('success', 'Data pengguna berhasil diperbarui.');
+        return back()->with('success', "Data pengguna {$user->nama_lengkap} berhasil diperbarui.");
     }
 
     public function laporanIndex()
@@ -210,24 +362,30 @@ class AdminController extends Controller
             $fotoPath = $request->file('foto_sebelum')->store('foto_sebelum', 'public');
         }
 
-        $laporan = Laporan::create([
-            'pelapor_id' => auth()->id(),
-            'judul' => $request->judul,
-            'lokasi' => $request->lokasi,
-            'deskripsi' => $request->deskripsi,
-            'foto_sebelum' => $fotoPath, // Simpan path gambar ke DB
-            'status' => 'Baru',
-        ]);
-
-        // Notifikasi untuk Admin yang lain (mengecualikan admin yang membuat laporan)
-        $admins = User::where('role', 'Admin')->where('id', '!=', auth()->id())->get();
-        foreach ($admins as $admin) {
-            Notifikasi::create([
-                'user_id' => $admin->id,
-                'judul'   => 'Laporan Kerusakan Baru',
-                'pesan'   => "Terdapat laporan baru dari sesama Admin mengenai '{$laporan->judul}' di {$laporan->lokasi}.",
+        DB::transaction(function () use ($request, $fotoPath) {
+            $laporan = Laporan::create([
+                'pelapor_id' => auth()->id(),
+                'judul' => $request->judul,
+                'lokasi' => $request->lokasi,
+                'deskripsi' => $request->deskripsi,
+                'foto_sebelum' => $fotoPath, // Simpan path gambar ke DB
+                'status' => 'Baru',
             ]);
-        }
+
+            // Notifikasi untuk Admin yang lain (mengecualikan admin yang membuat laporan)
+            $admins = User::where('role', 'Admin')
+                ->where('is_active', true)
+                ->where('id', '!=', auth()->id())
+                ->get();
+            foreach ($admins as $admin) {
+                Notifikasi::create([
+                    'user_id' => $admin->id,
+                    'judul'   => 'Laporan Kerusakan Baru',
+                    'pesan'   => "Terdapat laporan baru dari sesama Admin mengenai '{$laporan->judul}' di {$laporan->lokasi}.",
+                    'link'    => route('admin.laporan.show', $laporan->id, false),
+                ]);
+            }
+        });
 
         return redirect()->route('admin.laporan.index')->with('success', 'Laporan Anda berhasil dibuat.');
     }

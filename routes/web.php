@@ -82,6 +82,7 @@ Route::middleware(['auth', 'role:Teknisi'])->prefix('teknisi')->name('teknisi.')
     Route::post('/tugas/{id}/mulai', [TeknisiController::class, 'mulaiKerjakan'])->name('tugas.mulai');
     Route::post('/tugas/{id}/selesai', [TeknisiController::class, 'updateProgress'])->name('tugas.update');
     Route::get('/riwayat', [TeknisiController::class, 'riwayat'])->name('riwayat');
+    Route::get('/riwayat/{id}/export-pdf', [TeknisiController::class, 'exportPdf'])->name('riwayat.export_pdf');
 });
 
 Route::middleware(['auth', 'role:KepalaFRC'])->prefix('kepala')->name('kepala.')->group(function () {
@@ -103,7 +104,7 @@ Route::get('/api/notifications/unread', function () {
         'count'  => Notifikasi::where('user_id', $userId)->where('is_read', false)->count(),
         'items'  => Notifikasi::where('user_id', $userId)->latest()->take(20)->get()
     ]);
-})->middleware('auth');
+})->middleware(['auth', 'throttle:60,1']);
 
 Route::post('/api/notifications/mark-read', function () {
     // Ubah status is_read menjadi true (1) untuk semua notifikasi user ini yang belum dibaca
@@ -112,6 +113,6 @@ Route::post('/api/notifications/mark-read', function () {
         ->update(['is_read' => true]);
 
     return response()->json(['success' => true]);
-})->middleware('auth');
+})->middleware(['auth', 'throttle:60,1']);
 
 require __DIR__ . '/auth.php';

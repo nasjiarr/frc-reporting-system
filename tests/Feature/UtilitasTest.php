@@ -59,6 +59,18 @@ class UtilitasTest extends TestCase
         $response->assertSee('Manajemen Utilitas Gedung');
     }
 
+    public function test_admin_can_view_catat_utilitas_create_page(): void
+    {
+        $response = $this->actingAs($this->admin)->get(route('admin.utilitas.create'));
+
+        $response->assertStatus(200);
+        $response->assertSee('Catat Stand Meter Utilitas');
+        $response->assertSee('AirBersih');
+        $response->assertSee('Simpan Data Utilitas');
+        $response->assertSee('dark:bg-gray-800');
+    }
+
+
     public function test_admin_edit_page_renders_html_view_not_raw_json(): void
     {
         $response = $this->actingAs($this->admin)->get(route('admin.utilitas.edit', $this->utilitasAir->id));

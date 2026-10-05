@@ -74,7 +74,7 @@
                     </div>
                     <span class="text-sm font-semibold">{{ session('success') }}</span>
                 </div>
-                <button type="button" @click="$el.closest('div').remove()" class="text-emerald-500 hover:text-emerald-700 dark:hover:text-emerald-300 p-1">
+                <button type="button" @click="$el.closest('div').remove()" class="text-emerald-500 hover:text-emerald-700 dark:text-emerald-400 dark:hover:text-emerald-300 p-1">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                 </button>
             </div>
@@ -90,15 +90,15 @@
                     </div>
                     <span class="text-sm font-semibold">{{ session('info') }}</span>
                 </div>
-                <button type="button" @click="$el.closest('div').remove()" class="text-blue-500 hover:text-blue-700 dark:hover:text-blue-300 p-1">
+                <button type="button" @click="$el.closest('div').remove()" class="text-blue-500 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 p-1">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                 </button>
             </div>
             @endif
 
             <!-- Hero Section / Greeting Banner -->
-            <div class="relative overflow-hidden bg-gradient-to-br from-amber-500/10 via-white to-indigo-50/40 dark:from-slate-800 dark:via-slate-800 dark:to-slate-800/90 rounded-2xl border border-amber-200/60 dark:border-slate-700/80 p-5 sm:p-7 shadow-sm">
-                <div class="absolute -right-8 -bottom-8 w-44 h-44 bg-amber-500/10 rounded-full blur-3xl pointer-events-none"></div>
+            <div class="relative overflow-hidden bg-gradient-to-br from-amber-500/10 via-white to-indigo-50/40 dark:from-slate-800 dark:via-slate-800/90 dark:to-amber-950/20 rounded-2xl border border-amber-200/60 dark:border-slate-700/80 p-5 sm:p-7 shadow-sm">
+                <div class="absolute -right-8 -bottom-8 w-44 h-44 bg-amber-500/10 dark:bg-amber-500/10 rounded-full blur-3xl pointer-events-none"></div>
 
                 <div class="relative flex flex-col md:flex-row md:items-center md:justify-between gap-5">
                     <div class="space-y-1.5 max-w-2xl">
@@ -135,7 +135,7 @@
                 <!-- 1. Tugas Baru Ditugaskan -->
                 <div @click="statusFilter = statusFilter === 'Ditugaskan' ? 'all' : 'Ditugaskan'"
                      :class="{'ring-2 ring-amber-500': statusFilter === 'Ditugaskan'}"
-                     class="cursor-pointer bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700/80 p-4 sm:p-5 shadow-sm hover:shadow-md transition-all duration-200 flex flex-col justify-between group hover:-translate-y-0.5">
+                     class="cursor-pointer bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700/80 hover:border-slate-300 dark:hover:border-slate-600 p-4 sm:p-5 shadow-sm hover:shadow-md transition-all duration-200 flex flex-col justify-between group hover:-translate-y-0.5">
                     <div class="flex items-center justify-between mb-3">
                         <span class="text-xs sm:text-sm font-semibold text-slate-600 dark:text-slate-300">Baru Ditugaskan</span>
                         <div class="p-2 sm:p-2.5 rounded-xl bg-amber-50 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 border border-amber-200/50 dark:border-amber-800/40 group-hover:scale-110 transition-transform">
@@ -151,14 +151,14 @@
                                 Butuh Respon
                             </span>
                         </div>
-                        <p class="text-[11px] text-slate-400 dark:text-slate-500 mt-1">Belum dikerjakan</p>
+                        <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-1">Belum dikerjakan</p>
                     </div>
                 </div>
 
                 <!-- 2. Sedang Dikerjakan -->
                 <div @click="statusFilter = statusFilter === 'Dikerjakan' ? 'all' : 'Dikerjakan'"
                      :class="{'ring-2 ring-blue-500': statusFilter === 'Dikerjakan'}"
-                     class="cursor-pointer bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700/80 p-4 sm:p-5 shadow-sm hover:shadow-md transition-all duration-200 flex flex-col justify-between group hover:-translate-y-0.5">
+                     class="cursor-pointer bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700/80 hover:border-slate-300 dark:hover:border-slate-600 p-4 sm:p-5 shadow-sm hover:shadow-md transition-all duration-200 flex flex-col justify-between group hover:-translate-y-0.5">
                     <div class="flex items-center justify-between mb-3">
                         <span class="text-xs sm:text-sm font-semibold text-slate-600 dark:text-slate-300">Sedang Dikerjakan</span>
                         <div class="p-2 sm:p-2.5 rounded-xl bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 border border-blue-200/50 dark:border-blue-800/40 group-hover:scale-110 transition-transform">
@@ -174,12 +174,12 @@
                                 In Progress
                             </span>
                         </div>
-                        <p class="text-[11px] text-slate-400 dark:text-slate-500 mt-1">Dalam proses perbaikan</p>
+                        <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-1">Dalam proses perbaikan</p>
                     </div>
                 </div>
 
                 <!-- 3. Selesai Bulan Ini -->
-                <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700/80 p-4 sm:p-5 shadow-sm hover:shadow-md transition-all duration-200 flex flex-col justify-between group hover:-translate-y-0.5">
+                <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700/80 hover:border-slate-300 dark:hover:border-slate-600 p-4 sm:p-5 shadow-sm hover:shadow-md transition-all duration-200 flex flex-col justify-between group hover:-translate-y-0.5">
                     <div class="flex items-center justify-between mb-3">
                         <span class="text-xs sm:text-sm font-semibold text-slate-600 dark:text-slate-300">Selesai Bulan Ini</span>
                         <div class="p-2 sm:p-2.5 rounded-xl bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 border border-emerald-200/50 dark:border-emerald-800/40 group-hover:scale-110 transition-transform">
@@ -195,12 +195,12 @@
                                 {{ now()->translatedFormat('M Y') }}
                             </span>
                         </div>
-                        <p class="text-[11px] text-slate-400 dark:text-slate-500 mt-1">Pencapaian performa</p>
+                        <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-1">Pencapaian performa</p>
                     </div>
                 </div>
 
                 <!-- 4. Total Selesai Riwayat -->
-                <a href="{{ route('teknisi.riwayat') }}" class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700/80 p-4 sm:p-5 shadow-sm hover:shadow-md transition-all duration-200 flex flex-col justify-between group hover:-translate-y-0.5">
+                <a href="{{ route('teknisi.riwayat') }}" class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700/80 hover:border-slate-300 dark:hover:border-slate-600 p-4 sm:p-5 shadow-sm hover:shadow-md transition-all duration-200 flex flex-col justify-between group hover:-translate-y-0.5">
                     <div class="flex items-center justify-between mb-3">
                         <span class="text-xs sm:text-sm font-semibold text-slate-600 dark:text-slate-300">Total Riwayat Selesai</span>
                         <div class="p-2 sm:p-2.5 rounded-xl bg-purple-50 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 border border-purple-200/50 dark:border-purple-800/40 group-hover:scale-110 transition-transform">
@@ -212,11 +212,11 @@
                     <div>
                         <div class="flex items-baseline justify-between">
                             <p class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white">{{ $totalSelesaiSemua }}</p>
-                            <span class="text-xs font-semibold text-purple-600 dark:text-purple-400 group-hover:underline inline-flex items-center">
+                            <span class="text-xs font-semibold text-purple-600 dark:text-purple-400 bg-purple-50 dark:bg-purple-900/40 px-2 py-0.5 rounded-full border border-purple-200 dark:border-purple-800/60 inline-flex items-center gap-1 group-hover:bg-purple-100 dark:group-hover:bg-purple-900/60 transition-colors">
                                 Arsip &rarr;
                             </span>
                         </div>
-                        <p class="text-[11px] text-slate-400 dark:text-slate-500 mt-1">Keseluruhan pekerjaan</p>
+                        <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-1">Keseluruhan pekerjaan</p>
                     </div>
                 </a>
             </div>
@@ -239,23 +239,23 @@
                         </div>
 
                         <!-- Status Filter Tabs -->
-                        <div class="flex items-center gap-1.5 p-1 bg-slate-100 dark:bg-slate-700/60 rounded-xl self-start sm:self-auto overflow-x-auto max-w-full">
+                        <div class="flex items-center gap-1.5 p-1 bg-slate-100 dark:bg-slate-900/80 border border-transparent dark:border-slate-700/70 rounded-xl self-start sm:self-auto overflow-x-auto max-w-full">
                             <button type="button"
                                     @click="statusFilter = 'all'"
-                                    :class="statusFilter === 'all' ? 'bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-xs font-bold' : 'text-slate-600 dark:text-slate-400 font-medium hover:text-slate-900 dark:hover:text-white'"
+                                    :class="statusFilter === 'all' ? 'bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-xs font-bold border border-slate-200/60 dark:border-slate-700' : 'text-slate-600 dark:text-slate-400 font-medium hover:text-slate-900 dark:hover:text-white hover:bg-slate-200/50 dark:hover:bg-slate-800/50'"
                                     class="px-3 py-1.5 rounded-lg text-xs transition-all whitespace-nowrap">
                                 Semua ({{ $totalAktif }})
                             </button>
                             <button type="button"
                                     @click="statusFilter = 'Ditugaskan'"
-                                    :class="statusFilter === 'Ditugaskan' ? 'bg-white dark:bg-slate-800 text-amber-600 dark:text-amber-400 shadow-xs font-bold' : 'text-slate-600 dark:text-slate-400 font-medium hover:text-slate-900 dark:hover:text-white'"
+                                    :class="statusFilter === 'Ditugaskan' ? 'bg-white dark:bg-slate-800 text-amber-600 dark:text-amber-400 shadow-xs font-bold border border-slate-200/60 dark:border-slate-700' : 'text-slate-600 dark:text-slate-400 font-medium hover:text-slate-900 dark:hover:text-white hover:bg-slate-200/50 dark:hover:bg-slate-800/50'"
                                     class="px-3 py-1.5 rounded-lg text-xs transition-all whitespace-nowrap flex items-center gap-1">
                                 <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
                                 Baru ({{ $totalDitugaskan }})
                             </button>
                             <button type="button"
                                     @click="statusFilter = 'Dikerjakan'"
-                                    :class="statusFilter === 'Dikerjakan' ? 'bg-white dark:bg-slate-800 text-blue-600 dark:text-blue-400 shadow-xs font-bold' : 'text-slate-600 dark:text-slate-400 font-medium hover:text-slate-900 dark:hover:text-white'"
+                                    :class="statusFilter === 'Dikerjakan' ? 'bg-white dark:bg-slate-800 text-blue-600 dark:text-blue-400 shadow-xs font-bold border border-slate-200/60 dark:border-slate-700' : 'text-slate-600 dark:text-slate-400 font-medium hover:text-slate-900 dark:hover:text-white hover:bg-slate-200/50 dark:hover:bg-slate-800/50'"
                                     class="px-3 py-1.5 rounded-lg text-xs transition-all whitespace-nowrap flex items-center gap-1">
                                 <span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
                                 Dikerjakan ({{ $totalDikerjakan }})
@@ -265,7 +265,7 @@
 
                     <!-- Search Input -->
                     <div class="relative">
-                        <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                        <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400 dark:text-slate-500">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                             </svg>
@@ -273,11 +273,11 @@
                         <input type="text"
                                x-model="search"
                                placeholder="Cari tugas berdasarkan judul kerusakan, lokasi, atau nama pelapor..."
-                               class="w-full pl-10 pr-9 py-2.5 text-xs sm:text-sm rounded-xl border-slate-200 dark:border-slate-700 dark:bg-slate-900/60 dark:text-gray-100 placeholder-slate-400 focus:border-amber-500 focus:ring-amber-500 transition-colors shadow-xs">
+                               class="w-full pl-10 pr-9 py-2.5 text-xs sm:text-sm rounded-xl border-slate-200 dark:border-slate-700 dark:bg-slate-900/60 dark:text-gray-100 placeholder-slate-400 dark:placeholder-slate-500 focus:border-amber-500 focus:ring-amber-500 dark:focus:border-amber-500 dark:focus:ring-amber-500 transition-colors shadow-xs">
                         <button type="button"
                                 x-show="search.length > 0"
                                 @click="search = ''"
-                                class="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
+                                class="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-200">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                         </button>
                     </div>
@@ -326,7 +326,7 @@
                                 </span>
                             @endif
 
-                            <div class="text-[11px] text-slate-400 dark:text-slate-500 flex items-center gap-1">
+                            <div class="text-[11px] text-slate-400 dark:text-slate-400 flex items-center gap-1">
                                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                                 </svg>
@@ -370,7 +370,7 @@
                                     <span>WA</span>
                                 </a>
                                 @if($telUrl)
-                                <a href="{{ $telUrl }}" class="p-1.5 rounded-lg bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-300 transition" title="Telepon">
+                                <a href="{{ $telUrl }}" class="p-1.5 rounded-lg bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-300 dark:hover:bg-slate-600 transition" title="Telepon">
                                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
                                     </svg>
@@ -378,7 +378,7 @@
                                 @endif
                             </div>
                             @else
-                            <span class="text-[10px] text-slate-400 italic">No kontak -</span>
+                            <span class="text-[10px] text-slate-400 dark:text-slate-500 italic">No kontak -</span>
                             @endif
                         </div>
 
@@ -530,7 +530,7 @@
                                                 @endif
                                             </div>
                                             @else
-                                            <span class="text-[11px] text-slate-400 italic">Tanpa nomor kontak</span>
+                                            <span class="text-[11px] text-slate-400 dark:text-slate-500 italic">Tanpa nomor kontak</span>
                                             @endif
                                         </div>
                                     </div>
@@ -538,7 +538,7 @@
 
                                 <td class="py-4 px-4 text-xs text-slate-600 dark:text-slate-400">
                                     <div class="font-medium text-slate-800 dark:text-slate-200">{{ $waktuRelatif }}</div>
-                                    <div class="text-[11px] text-slate-400">
+                                    <div class="text-[11px] text-slate-400 dark:text-slate-500">
                                         {{ $tugas->assigned_at ? $tugas->assigned_at->format('d M, H:i') : $tugas->created_at->format('d M, H:i') }}
                                     </div>
                                 </td>
@@ -667,7 +667,7 @@
                             </div>
                         </div>
 
-                        <button @click="previewOpen = false" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors">
+                        <button @click="previewOpen = false" class="text-slate-400 dark:text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                             </svg>
@@ -681,7 +681,7 @@
                         <div class="space-y-1.5">
                             <div class="flex items-center gap-2 flex-wrap">
                                 <span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold uppercase tracking-wider"
-                                      :class="p_status === 'Ditugaskan' ? 'bg-amber-100 dark:bg-amber-900/40 text-amber-800 dark:text-amber-300' : 'bg-blue-100 dark:bg-blue-900/40 text-blue-800 dark:text-blue-300'"
+                                      :class="p_status === 'Ditugaskan' ? 'bg-amber-100 dark:bg-amber-900/40 text-amber-800 dark:text-amber-300 border border-amber-200 dark:border-amber-800/60' : 'bg-blue-100 dark:bg-blue-900/40 text-blue-800 dark:text-blue-300 border border-blue-200 dark:border-blue-800/60'"
                                       x-text="p_status"></span>
                             </div>
                             <h4 class="text-xl font-extrabold text-slate-900 dark:text-white leading-tight" x-text="p_judul"></h4>
@@ -701,7 +701,7 @@
                                     <span x-text="p_pelapor_nama.charAt(0).toUpperCase()"></span>
                                 </div>
                                 <div>
-                                    <p class="text-xs text-slate-400 uppercase font-semibold">Pelapor Fasilitas</p>
+                                    <p class="text-xs text-slate-400 dark:text-slate-400 uppercase font-semibold">Pelapor Fasilitas</p>
                                     <p class="text-sm font-bold text-slate-900 dark:text-white" x-text="p_pelapor_nama"></p>
                                     <p class="text-xs text-slate-500 dark:text-slate-400" x-text="p_pelapor_telp ? p_pelapor_telp : 'Tidak mencantumkan nomor telepon'"></p>
                                 </div>
