@@ -421,11 +421,11 @@ class AdminController extends Controller
     // Method untuk melihat daftar laporan yang sudah selesai (Arsip)
     public function laporanSelesai(\Illuminate\Http\Request $request)
     {
-        $query = \App\Models\Laporan::with(['pelapor', 'penugasan.teknisi'])
+        $query = \App\Models\Laporan::with(['pelapor', 'penugasan.teknisi', 'penugasan.hasilPerbaikan'])
             ->where('status', 'Selesai');
 
         // Fitur Pencarian (Search)
-        if ($request->has('search') && $request->search != '') {
+        if ($request->filled('search')) {
             $search = $request->search;
             $query->where(function ($q) use ($search) {
                 $q->where('judul', 'like', '%' . $search . '%')
@@ -438,6 +438,30 @@ class AdminController extends Controller
                     ->orWhereHas('penugasan.teknisi', function ($qTeknisi) use ($search) {
                         $qTeknisi->where('nama_lengkap', 'like', '%' . $search . '%');
                     });
+            });
+        }
+
+        // Filter rentang tanggal berdasarkan tanggal penyelesaian tiket
+        if ($request->filled('tgl_mulai')) {
+            $tglMulai = $request->tgl_mulai;
+            $query->where(function ($q) use ($tglMulai) {
+                $q->whereHas('penugasan.hasilPerbaikan', function ($qHp) use ($tglMulai) {
+                    $qHp->whereDate('selesai_pada', '>=', $tglMulai);
+                })->orWhere(function ($qFallback) use ($tglMulai) {
+                    $qFallback->whereDoesntHave('penugasan.hasilPerbaikan')
+                        ->whereDate('updated_at', '>=', $tglMulai);
+                });
+            });
+        }
+        if ($request->filled('tgl_selesai')) {
+            $tglSelesai = $request->tgl_selesai;
+            $query->where(function ($q) use ($tglSelesai) {
+                $q->whereHas('penugasan.hasilPerbaikan', function ($qHp) use ($tglSelesai) {
+                    $qHp->whereDate('selesai_pada', '<=', $tglSelesai);
+                })->orWhere(function ($qFallback) use ($tglSelesai) {
+                    $qFallback->whereDoesntHave('penugasan.hasilPerbaikan')
+                        ->whereDate('updated_at', '<=', $tglSelesai);
+                });
             });
         }
 
@@ -474,21 +498,18 @@ class AdminController extends Controller
             return back()->with('error', 'Laporan belum selesai.');
         }
 
-        // 1. Konversi Foto SEBELUM (dari Pelapor)
-        $fotoSebelumBase64 = null;
-        $pathSebelum = public_path('storage/' . $laporan->foto_sebelum);
-        if ($laporan->foto_sebelum && file_exists($pathSebelum)) {
-            $dataSebelum = file_get_contents($pathSebelum);
-            $fotoSebelumBase64 = 'data:image/' . pathinfo($pathSebelum, PATHINFO_EXTENSION) . ';base64,' . base64_encode($dataSebelum);
+        // Validasi ketersediaan data penugasan & hasil perbaikan
+        if (!$laporan->penugasan || !$laporan->penugasan->hasilPerbaikan) {
+            return back()->with('error', 'Data hasil perbaikan belum lengkap untuk dicetak.');
         }
 
+        // 1. Konversi Foto SEBELUM (dari Pelapor)
+        $fotoSebelumBase64 = $this->convertFotoToBase64($laporan->foto_sebelum);
+
         // 2. Konversi Foto SESUDAH (dari Teknisi)
-        $fotoSesudahBase64 = null;
-        $pathSesudah = public_path('storage/' . $laporan->penugasan->hasilPerbaikan->foto_sesudah);
-        if ($laporan->penugasan->hasilPerbaikan->foto_sesudah && file_exists($pathSesudah)) {
-            $dataSesudah = file_get_contents($pathSesudah);
-            $fotoSesudahBase64 = 'data:image/' . pathinfo($pathSesudah, PATHINFO_EXTENSION) . ';base64,' . base64_encode($dataSesudah);
-        }
+        $fotoSesudahBase64 = $this->convertFotoToBase64(
+            $laporan->penugasan?->hasilPerbaikan?->foto_sesudah
+        );
 
         $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('admin.laporan.pdf', compact('laporan', 'fotoSebelumBase64', 'fotoSesudahBase64'));
         $pdf->setPaper('A4', 'portrait');
@@ -498,6 +519,8 @@ class AdminController extends Controller
 
     public function exportAllLaporan(Request $request)
     {
+        ini_set('memory_limit', '256M');
+
         $query = \App\Models\Laporan::with(['pelapor', 'penugasan.teknisi', 'penugasan.hasilPerbaikan']);
 
         // Terapkan filter yang sama dengan halaman index
@@ -505,8 +528,18 @@ class AdminController extends Controller
             $query->where('status', $request->status);
         }
 
-        if ($request->filled('tgl_mulai') && $request->filled('tgl_selesai')) {
-            $query->whereBetween('created_at', [$request->tgl_mulai, $request->tgl_selesai]);
+        // Filter tanggal pada rekap semua laporan
+        if ($request->filled('tgl_mulai')) {
+            $query->whereDate('created_at', '>=', $request->tgl_mulai);
+        }
+        if ($request->filled('tgl_selesai')) {
+            $query->whereDate('created_at', '<=', $request->tgl_selesai);
+        }
+
+        // Batasi maksimal 100 laporan untuk menjaga stabilitas DomPDF
+        $count = (clone $query)->count();
+        if ($count > 100) {
+            return back()->with('error', "Jumlah data yang akan diekspor ({$count} laporan) melebihi batas maksimal 100 laporan. Silakan persempit filter Anda.");
         }
 
         $laporans = $query->latest()->get();
@@ -519,9 +552,19 @@ class AdminController extends Controller
             );
         }
 
+        if ($request->filled('tgl_mulai') && $request->filled('tgl_selesai')) {
+            $periodeAll = \Carbon\Carbon::parse($request->tgl_mulai)->format('d/m/Y') . ' s/d ' . \Carbon\Carbon::parse($request->tgl_selesai)->format('d/m/Y');
+        } elseif ($request->filled('tgl_mulai')) {
+            $periodeAll = 'Mulai ' . \Carbon\Carbon::parse($request->tgl_mulai)->format('d/m/Y');
+        } elseif ($request->filled('tgl_selesai')) {
+            $periodeAll = 'Sampai ' . \Carbon\Carbon::parse($request->tgl_selesai)->format('d/m/Y');
+        } else {
+            $periodeAll = 'Semua Waktu';
+        }
+
         $filters = [
             'status' => $request->status ?? 'Semua',
-            'periode' => $request->filled('tgl_mulai') ? $request->tgl_mulai . ' s/d ' . $request->tgl_selesai : 'Semua Waktu'
+            'periode' => $periodeAll
         ];
 
         $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('admin.laporan.pdf_rekap', compact('laporans', 'filters'));
@@ -532,16 +575,60 @@ class AdminController extends Controller
 
     public function exportSelesaiPdf(Request $request)
     {
+        ini_set('memory_limit', '256M');
+
         // Ambil data hanya yang berstatus Selesai
         $query = \App\Models\Laporan::with(['pelapor', 'penugasan.teknisi', 'penugasan.hasilPerbaikan'])
             ->where('status', 'Selesai');
 
-        // Filter berdasarkan rentang tanggal jika diisi
-        if ($request->filled('tgl_mulai') && $request->filled('tgl_selesai')) {
-            $query->whereBetween('created_at', [$request->tgl_mulai, $request->tgl_selesai]);
+        // Filter kata kunci pencarian (identik dengan tampilan web)
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('judul', 'like', '%' . $search . '%')
+                    ->orWhere('lokasi', 'like', '%' . $search . '%')
+                    // Cari berdasarkan nama pelapor
+                    ->orWhereHas('pelapor', function ($qPelapor) use ($search) {
+                        $qPelapor->where('nama_lengkap', 'like', '%' . $search . '%');
+                    })
+                    // Cari berdasarkan nama teknisi
+                    ->orWhereHas('penugasan.teknisi', function ($qTeknisi) use ($search) {
+                        $qTeknisi->where('nama_lengkap', 'like', '%' . $search . '%');
+                    });
+            });
         }
 
-        $laporans = $query->latest()->get();
+        // Filter rentang tanggal berdasarkan tanggal penyelesaian tiket
+        if ($request->filled('tgl_mulai')) {
+            $tglMulai = $request->tgl_mulai;
+            $query->where(function ($q) use ($tglMulai) {
+                $q->whereHas('penugasan.hasilPerbaikan', function ($qHp) use ($tglMulai) {
+                    $qHp->whereDate('selesai_pada', '>=', $tglMulai);
+                })->orWhere(function ($qFallback) use ($tglMulai) {
+                    $qFallback->whereDoesntHave('penugasan.hasilPerbaikan')
+                        ->whereDate('updated_at', '>=', $tglMulai);
+                });
+            });
+        }
+        if ($request->filled('tgl_selesai')) {
+            $tglSelesai = $request->tgl_selesai;
+            $query->where(function ($q) use ($tglSelesai) {
+                $q->whereHas('penugasan.hasilPerbaikan', function ($qHp) use ($tglSelesai) {
+                    $qHp->whereDate('selesai_pada', '<=', $tglSelesai);
+                })->orWhere(function ($qFallback) use ($tglSelesai) {
+                    $qFallback->whereDoesntHave('penugasan.hasilPerbaikan')
+                        ->whereDate('updated_at', '<=', $tglSelesai);
+                });
+            });
+        }
+
+        // Batasi maksimal 100 laporan untuk menjaga stabilitas DomPDF
+        $count = (clone $query)->count();
+        if ($count > 100) {
+            return back()->with('error', "Jumlah data yang akan diekspor ({$count} laporan) melebihi batas maksimal 100 laporan. Silakan persempit rentang tanggal atau kata kunci pencarian Anda.");
+        }
+
+        $laporans = $query->latest('updated_at')->get();
 
         // Konversi foto sebelum & sesudah ke base64 untuk setiap laporan
         foreach ($laporans as $laporan) {
@@ -551,11 +638,20 @@ class AdminController extends Controller
             );
         }
 
-        $periode = $request->filled('tgl_mulai')
-            ? $request->tgl_mulai . ' s/d ' . $request->tgl_selesai
-            : 'Semua Periode';
+        // Susun teks periode untuk header PDF
+        if ($request->filled('tgl_mulai') && $request->filled('tgl_selesai')) {
+            $periode = \Carbon\Carbon::parse($request->tgl_mulai)->format('d/m/Y') . ' s/d ' . \Carbon\Carbon::parse($request->tgl_selesai)->format('d/m/Y');
+        } elseif ($request->filled('tgl_mulai')) {
+            $periode = 'Mulai ' . \Carbon\Carbon::parse($request->tgl_mulai)->format('d/m/Y');
+        } elseif ($request->filled('tgl_selesai')) {
+            $periode = 'Sampai ' . \Carbon\Carbon::parse($request->tgl_selesai)->format('d/m/Y');
+        } else {
+            $periode = 'Semua Periode';
+        }
 
-        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('admin.laporan.pdf_rekap_selesai', compact('laporans', 'periode'));
+        $search = $request->input('search');
+
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('admin.laporan.pdf_rekap_selesai', compact('laporans', 'periode', 'search'));
 
         // Gunakan Landscape agar informasi teknisi dan tindakan muat dalam tabel
         $pdf->setPaper('A4', 'landscape');

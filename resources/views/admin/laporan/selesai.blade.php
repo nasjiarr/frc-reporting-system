@@ -77,10 +77,13 @@
                     </thead>
                     <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                         @forelse($laporans as $lap)
+                        @php
+                            $tglSelesai = $lap->penugasan?->hasilPerbaikan?->selesai_pada ? \Carbon\Carbon::parse($lap->penugasan->hasilPerbaikan->selesai_pada) : $lap->updated_at;
+                        @endphp
                         <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors duration-150">
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-400">
-                                <span class="font-semibold text-gray-800 dark:text-gray-200">{{ $lap->updated_at->format('d M Y') }}</span>
-                                <div class="text-xs text-gray-400 dark:text-gray-500 mt-0.5">{{ $lap->updated_at->format('H:i') }} WIB</div>
+                                <span class="font-semibold text-gray-800 dark:text-gray-200">{{ $tglSelesai->format('d M Y') }}</span>
+                                <div class="text-xs text-gray-400 dark:text-gray-500 mt-0.5">{{ $tglSelesai->format('H:i') }} WIB</div>
                             </td>
                             <td class="px-6 py-4">
                                 <div class="text-sm font-bold text-indigo-700 dark:text-indigo-400">{{ $lap->judul }}</div>
@@ -113,6 +116,15 @@
                                     <a href="{{ route('admin.laporan.show', $lap->id) }}" class="inline-flex items-center text-indigo-600 dark:text-indigo-400 hover:text-indigo-900 dark:hover:text-indigo-300 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 px-3 py-1.5 rounded-md transition-colors font-semibold" title="Lihat Detail & Bukti">
                                         Lihat
                                     </a>
+
+                                    @if($lap->penugasan && $lap->penugasan->hasilPerbaikan)
+                                    <a href="{{ route('admin.laporan.export_pdf', $lap->id) }}" class="inline-flex items-center gap-1 text-emerald-600 dark:text-emerald-400 hover:text-emerald-900 dark:hover:text-emerald-300 bg-white dark:bg-gray-700 border border-emerald-200 dark:border-emerald-600 hover:bg-emerald-50 dark:hover:bg-gray-600 px-2.5 py-1.5 rounded-md transition-colors font-semibold" title="Cetak Berita Acara PDF">
+                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                        </svg>
+                                        PDF
+                                    </a>
+                                    @endif
 
                                     <button type="button"
                                         @click="deleteModalOpen = true; 

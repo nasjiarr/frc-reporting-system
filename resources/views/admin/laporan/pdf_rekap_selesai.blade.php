@@ -47,11 +47,11 @@
         }
 
         .foto-cell img {
-            max-width: 100px;
-            max-height: 75px;
-            object-fit: contain;
+            max-width: 90px;
+            max-height: 65px;
+            width: auto;
+            height: auto;
             border: 1px solid #ddd;
-            border-radius: 3px;
         }
 
         .no-foto {
@@ -65,14 +65,19 @@
 <body>
     <div class="header">
         <h2 style="margin:0;">REKAPITULASI LAPORAN KERUSAKAN SELESAI</h2>
-        <p style="margin:5px 0;">Gedung Field Research Center (FRC) | Periode: {{ $periode }}</p>
+        <p style="margin:5px 0;">
+            Gedung Field Research Center (FRC) &bull; Periode: {{ $periode }}
+            @if(!empty($search))
+                &bull; Kata Kunci: "{{ $search }}"
+            @endif
+        </p>
     </div>
 
     <table>
         <thead>
             <tr>
                 <th width="3%">No</th>
-                <th width="7%">Tanggal</th>
+                <th width="8%">Tgl. Selesai</th>
                 <th width="9%">Pelapor</th>
                 <th width="14%">Kerusakan & Lokasi</th>
                 <th width="9%">Teknisi</th>
@@ -83,18 +88,18 @@
             </tr>
         </thead>
         <tbody>
-            @foreach($laporans as $index => $laporan)
+            @forelse($laporans as $index => $laporan)
             <tr>
                 <td class="text-center">{{ $index + 1 }}</td>
-                <td>{{ $laporan->created_at->format('d/m/Y') }}</td>
+                <td>{{ ($laporan->penugasan?->hasilPerbaikan?->selesai_pada ? \Carbon\Carbon::parse($laporan->penugasan->hasilPerbaikan->selesai_pada) : $laporan->updated_at)->format('d/m/Y') }}</td>
                 <td>{{ $laporan->pelapor->nama_lengkap ?? '-' }}</td>
                 <td>
                     <strong>{{ $laporan->judul }}</strong><br>
                     <small>{{ $laporan->lokasi }}</small>
                 </td>
-                <td>{{ $laporan->penugasan->teknisi->nama_lengkap ?? '-' }}</td>
-                <td>{{ $laporan->penugasan->hasilPerbaikan->tindakan ?? '-' }}</td>
-                <td>{{ $laporan->penugasan->hasilPerbaikan->material ?? '-' }}</td>
+                <td>{{ $laporan->penugasan?->teknisi?->nama_lengkap ?? '-' }}</td>
+                <td>{{ $laporan->penugasan?->hasilPerbaikan?->tindakan ?? '-' }}</td>
+                <td>{{ $laporan->penugasan?->hasilPerbaikan?->material_digunakan ?? '-' }}</td>
                 <td class="foto-cell">
                     @if($laporan->foto_sebelum_base64)
                         <img src="{{ $laporan->foto_sebelum_base64 }}" alt="Foto Sebelum">
@@ -110,7 +115,13 @@
                     @endif
                 </td>
             </tr>
-            @endforeach
+            @empty
+            <tr>
+                <td colspan="9" class="text-center" style="padding: 20px; color: #666; font-style: italic;">
+                    Tidak ada data laporan selesai pada kriteria atau periode ini.
+                </td>
+            </tr>
+            @endforelse
         </tbody>
     </table>
 

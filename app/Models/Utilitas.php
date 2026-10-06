@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Utilitas extends Model
 {
+    public const JENIS_UTILITAS = ['AirBersih', 'AirHujan', 'MDP', 'SDP', 'Lift', 'AC', 'Lampu'];
+
     protected $table = 'utilitas';
     protected $fillable = ['petugas_id', 'jenis_utilitas', 'periode'];
 

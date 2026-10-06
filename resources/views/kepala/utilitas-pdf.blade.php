@@ -1,6 +1,8 @@
 <html>
 
 <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>Laporan Utilitas Terpadu FRC - {{ $periode }}</title>
     <style>
         body {
             font-family: sans-serif;
@@ -45,7 +47,7 @@
             </tr>
         </thead>
         <tbody>
-            @foreach($details as $item)
+            @forelse($details as $item)
             <tr>
                 <td>{{ $item->jenis_utilitas }}</td>
                 <td>{{ $item->petugas->nama_lengkap ?? '-' }}</td>
@@ -60,7 +62,13 @@
                     @endif
                 </td>
             </tr>
-            @endforeach
+            @empty
+            <tr>
+                <td colspan="4" style="text-align: center; color: #777; font-style: italic; padding: 20px;">
+                    Belum ada data pencatatan utilitas untuk periode ini.
+                </td>
+            </tr>
+            @endforelse
         </tbody>
     </table>
 </body>

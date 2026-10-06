@@ -55,7 +55,6 @@ Route::middleware(['auth', 'role:Admin'])->prefix('admin')->name('admin.')->grou
     Route::get('/utilitas', [UtilitasController::class, 'index'])->name('utilitas.index');
     Route::get('/utilitas/create', [UtilitasController::class, 'create'])->name('utilitas.create');
     Route::post('/utilitas', [UtilitasController::class, 'store'])->name('utilitas.store');
-    Route::post('/utilitas/air-bersih', [UtilitasController::class, 'storeAirBersih'])->name('utilitas.air_bersih.store');
     Route::get('/utilitas/{jenis}/detail', [UtilitasController::class, 'showDetail'])->name('utilitas.detail');
     Route::get('/utilitas/{jenis}/export-pdf', [UtilitasController::class, 'exportPdf'])->name('utilitas.export_pdf');
     Route::get('/utilitas/{id}/edit', [UtilitasController::class, 'edit'])->name('utilitas.edit');

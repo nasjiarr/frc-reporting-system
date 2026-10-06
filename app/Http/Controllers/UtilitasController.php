@@ -23,13 +23,6 @@ class UtilitasController extends Controller
         return view('admin.utilitas.create');
     }
 
-    // Method untuk menangani input spesifik air bersih jika dipanggil
-    public function storeAirBersih(Request $request)
-    {
-        $request->merge(['jenis_utilitas' => 'AirBersih']);
-        return $this->store($request);
-    }
-
     // Method untuk memproses data dari form dinamis
     public function store(Request $request)
     {
@@ -37,7 +30,7 @@ class UtilitasController extends Controller
 
         // 1. Validasi Input Dasar & Spesifik
         $rules = [
-            'jenis_utilitas' => ['required', 'in:AirBersih,AirHujan,MDP,SDP,Lift,AC,Lampu'],
+            'jenis_utilitas' => ['required', Rule::in(Utilitas::JENIS_UTILITAS)],
             'periode'        => [
                 'required',
                 'date_format:Y-m',
@@ -292,6 +285,8 @@ class UtilitasController extends Controller
 
     public function showDetail(Request $request, $jenis)
     {
+        abort_unless(in_array($jenis, Utilitas::JENIS_UTILITAS), 404);
+
         return redirect()->route('admin.utilitas.show', [
             'jenis' => $jenis,
             'tahun' => $request->query('tahun', date('Y'))
@@ -371,6 +366,8 @@ class UtilitasController extends Controller
 
     public function show(Request $request, $jenis)
     {
+        abort_unless(in_array($jenis, Utilitas::JENIS_UTILITAS), 404);
+
         $tahun = $request->query('tahun', date('Y'));
 
         // Ambil riwayat data khusus jenis ini
@@ -411,10 +408,23 @@ class UtilitasController extends Controller
 
     public function exportPdf(Request $request, $jenis)
     {
+        abort_unless(in_array($jenis, Utilitas::JENIS_UTILITAS), 404);
+
         $tahun = $request->query('tahun', date('Y'));
 
-        // Tarik data riwayat utilitas untuk diekspor ke PDF
-        $riwayat = Utilitas::with(['petugas'])
+        $relation = match ($jenis) {
+            'AirBersih' => 'airBersih',
+            'AirHujan'  => 'airHujan',
+            'MDP'       => 'listrikMdp',
+            'SDP'       => 'listrikSdp',
+            'Lift'      => 'listrikLift',
+            'AC'        => 'listrikAc',
+            'Lampu'     => 'listrikLampu',
+            default     => null
+        };
+
+        // Tarik data riwayat utilitas untuk diekspor ke PDF (eager loading cegah N+1)
+        $riwayat = Utilitas::with(array_filter(['petugas', $relation]))
             ->where('jenis_utilitas', $jenis)
             ->where('periode', 'like', "$tahun-%")
             ->latest('periode')

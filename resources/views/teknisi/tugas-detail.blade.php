@@ -260,7 +260,7 @@
                             <div>
                                 <p class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1.5">Material / Suku Cadang yang Digunakan</p>
                                 <div class="bg-slate-50 dark:bg-slate-900/50 p-3.5 rounded-xl border border-slate-200/80 dark:border-slate-700/80">
-                                    <p class="text-sm text-slate-800 dark:text-slate-200 font-medium">{{ $tugas->hasilPerbaikan->material ?? 'Tidak ada penggantian suku cadang' }}</p>
+                                    <p class="text-sm text-slate-800 dark:text-slate-200 font-medium">{{ $tugas->hasilPerbaikan?->material_digunakan ?? 'Tidak ada penggantian suku cadang' }}</p>
                                 </div>
                             </div>
 

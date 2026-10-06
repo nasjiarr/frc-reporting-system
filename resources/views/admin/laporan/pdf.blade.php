@@ -114,19 +114,19 @@
     <table>
         <tr>
             <td class="label">Nama Teknisi</td>
-            <td>: <strong>{{ $laporan->penugasan->teknisi->nama_lengkap ?? '-' }}</strong></td>
+            <td>: <strong>{{ $laporan->penugasan?->teknisi?->nama_lengkap ?? '-' }}</strong></td>
         </tr>
         <tr>
             <td class="label">Waktu Selesai</td>
-            <td>: {{ $laporan->penugasan->hasilPerbaikan->selesai_pada->format('d F Y, H:i') }}</td>
+            <td>: {{ $laporan->penugasan?->hasilPerbaikan?->selesai_pada ? \Carbon\Carbon::parse($laporan->penugasan->hasilPerbaikan->selesai_pada)->format('d F Y, H:i') : '-' }}</td>
         </tr>
         <tr>
             <td class="label">Keterangan Tindakan</td>
-            <td>: {{ $laporan->penugasan->hasilPerbaikan->tindakan }}</td>
+            <td>: {{ $laporan->penugasan?->hasilPerbaikan?->tindakan ?? '-' }}</td>
         </tr>
         <tr>
             <td class="label">Material Digunakan</td>
-            <td>: {{ $laporan->penugasan->hasilPerbaikan->material ?? '-' }}</td>
+            <td>: {{ $laporan->penugasan?->hasilPerbaikan?->material_digunakan ?? '-' }}</td>
         </tr>
     </table>
 
@@ -137,7 +137,7 @@
                 <p style="font-weight: bold; color: #e11d48;">KONDISI SEBELUM</p>
                 <div style="border: 1px solid #ddd; padding: 5px; height: 200px;">
                     @if($fotoSebelumBase64)
-                    <img src="{{ $fotoSebelumBase64 }}" style="max-width: 100%; max-height: 190px; object-fit: contain;">
+                    <img src="{{ $fotoSebelumBase64 }}" style="max-width: 95%; max-height: 185px; width: auto; height: auto; display: block; margin: 0 auto;">
                     @else
                     <p style="font-size: 10px; color: #999; margin-top: 80px;">Tidak ada foto sebelum</p>
                     @endif
@@ -147,7 +147,7 @@
                 <p style="font-weight: bold; color: #10b981;">KONDISI SESUDAH</p>
                 <div style="border: 1px solid #ddd; padding: 5px; height: 200px;">
                     @if($fotoSesudahBase64)
-                    <img src="{{ $fotoSesudahBase64 }}" style="max-width: 100%; max-height: 190px; object-fit: contain;">
+                    <img src="{{ $fotoSesudahBase64 }}" style="max-width: 95%; max-height: 185px; width: auto; height: auto; display: block; margin: 0 auto;">
                     @else
                     <p style="font-size: 10px; color: #999; margin-top: 80px;">Tidak ada foto sesudah</p>
                     @endif

@@ -116,6 +116,17 @@ class UtilitasTest extends TestCase
         $this->assertStringContainsString('application/pdf', $response->headers->get('content-type'));
     }
 
+    public function test_admin_can_export_utilitas_pdf(): void
+    {
+        $response = $this->actingAs($this->admin)->get(route('admin.utilitas.export_pdf', [
+            'jenis' => 'AirBersih',
+            'tahun' => '2026',
+        ]));
+
+        $response->assertStatus(200);
+        $this->assertStringContainsString('application/pdf', $response->headers->get('content-type'));
+    }
+
     public function test_pelapor_cannot_access_utilitas_admin_or_kepala_routes(): void
     {
         $this->actingAs($this->pelapor)->get(route('admin.utilitas.index'))->assertStatus(403);
@@ -192,5 +203,22 @@ class UtilitasTest extends TestCase
             'jenis' => 'AirBersih',
             'tahun' => date('Y'),
         ]));
+    }
+
+    public function test_invalid_jenis_utilitas_returns_404(): void
+    {
+        $this->actingAs($this->admin)->get(route('admin.utilitas.show', 'JenisNgawur'))->assertStatus(404);
+        $this->actingAs($this->admin)->get(route('admin.utilitas.export_pdf', 'JenisNgawur'))->assertStatus(404);
+        $this->actingAs($this->admin)->get(route('admin.utilitas.detail', 'JenisNgawur'))->assertStatus(404);
+    }
+
+    public function test_kepala_utilitas_pdf_view_renders_empty_state(): void
+    {
+        $view = $this->view('kepala.utilitas-pdf', [
+            'details' => collect([]),
+            'periode' => '2019-01',
+        ]);
+
+        $view->assertSee('Belum ada data pencatatan utilitas untuk periode ini.');
     }
 }

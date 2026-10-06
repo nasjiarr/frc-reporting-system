@@ -28,20 +28,12 @@ class KepalaFRCController extends Controller
     {
         $periode = $request->get('bulan', date('Y-m'));
 
-        // Data untuk Grafik (6 bulan terakhir)
-        $chartData = Utilitas::select('periode', 'jenis_utilitas')
-            ->where('periode', '<=', $periode)
-            ->orderBy('periode', 'asc')
-            ->take(12)
-            ->get()
-            ->groupBy('periode');
-
         // Detail tabel
         $details = Utilitas::with(['petugas', 'airBersih', 'airHujan', 'listrikMdp', 'listrikSdp', 'listrikLift', 'listrikAc', 'listrikLampu'])
             ->where('periode', $periode)
             ->get();
 
-        return view('kepala.utilitas-rekap', compact('details', 'chartData', 'periode'));
+        return view('kepala.utilitas-rekap', compact('details', 'periode'));
     }
 
     public function kinerjaTeknisi()

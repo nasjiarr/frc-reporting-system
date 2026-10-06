@@ -267,6 +267,10 @@ class TeknisiController extends Controller
             return back()->with('error', 'Pekerjaan belum selesai.');
         }
 
+        if (!$penugasan->hasilPerbaikan) {
+            return back()->with('error', 'Data hasil perbaikan belum lengkap untuk dicetak.');
+        }
+
         $laporan = $penugasan->laporan;
 
         // 1. Konversi Foto SEBELUM (dari Pelapor)
