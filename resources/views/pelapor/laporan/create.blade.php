@@ -20,17 +20,9 @@
             <span class="text-gray-800 dark:text-gray-200 font-semibold flex-shrink-0" aria-current="page">Buat Laporan</span>
         </nav>
 
-        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-            <div>
-                <h2 class="text-xl sm:text-3xl font-extrabold text-gray-900 dark:text-gray-100 tracking-tight">Form Pelaporan Kerusakan</h2>
-                <p class="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mt-1">Harap isi detail kerusakan secara spesifik agar teknisi dapat menangani kendala dengan cepat dan akurat.</p>
-            </div>
-            <a href="{{ route('pelapor.laporan.index') }}" class="inline-flex items-center gap-1.5 text-xs font-semibold text-gray-600 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors self-start sm:self-auto py-1">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
-                </svg>
-                <span>Kembali ke Laporan Saya</span>
-            </a>
+        <div>
+            <h2 class="text-xl sm:text-3xl font-extrabold text-gray-900 dark:text-gray-100 tracking-tight">Form Pelaporan Kerusakan</h2>
+            <p class="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mt-1">Harap isi detail kerusakan secara spesifik agar teknisi dapat menangani kendala dengan cepat dan akurat.</p>
         </div>
     </x-slot>
 

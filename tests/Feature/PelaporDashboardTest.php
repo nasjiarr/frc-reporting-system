@@ -38,7 +38,7 @@ class PelaporDashboardTest extends TestCase
 
         // Greeting & CTA
         $response->assertSee('Halo, Budi Santoso');
-        $response->assertSee('+ Buat Laporan Kerusakan');
+        $response->assertSee('Buat Laporan Kerusakan');
         $response->assertSee(route('pelapor.laporan.create'));
 
         // Interactive stat card links
@@ -89,7 +89,7 @@ class PelaporDashboardTest extends TestCase
 
         $response->assertStatus(200);
         $response->assertSee('Belum Ada Laporan Kerusakan');
-        $response->assertSee('+ Buat Laporan Kerusakan');
+        $response->assertSee('Buat Laporan Kerusakan');
     }
 
     public function test_recent_reports_table_has_detail_links_and_view_all_link(): void

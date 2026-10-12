@@ -57,6 +57,16 @@ class UtilitasTest extends TestCase
 
         $response->assertStatus(200);
         $response->assertSee('Manajemen Utilitas Gedung');
+        $response->assertSee('Listrik MDP Terakhir');
+        $response->assertSee('Konsumsi Air Terakhir');
+        $response->assertSee('Cakupan Kategori');
+        $response->assertSee('Total Pencatatan');
+        $response->assertSee('Air Bersih');
+        $response->assertSee('Air Hujan');
+        $response->assertSee('Listrik MDP (Panel Utama)');
+        $response->assertSee('Aktivitas Pencatatan Terakhir');
+        $response->assertSee('Catat Stand Meter');
+        $response->assertSee('dark:bg-gray-800');
     }
 
     public function test_admin_can_view_catat_utilitas_create_page(): void

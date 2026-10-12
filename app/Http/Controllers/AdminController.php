@@ -328,10 +328,16 @@ class AdminController extends Controller
         return back()->with('success', "Data pengguna {$user->nama_lengkap} berhasil diperbarui.");
     }
 
-    public function laporanIndex()
+    public function laporanIndex(Request $request)
     {
         // Mengambil laporan yang dibuat oleh Admin ini sendiri
-        $laporans = Laporan::where('pelapor_id', auth()->id())->latest()->paginate(10);
+        $query = Laporan::where('pelapor_id', auth()->id())->latest();
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        $laporans = $query->paginate(10)->withQueryString();
         return view('admin.laporan.index', compact('laporans'));
     }
 

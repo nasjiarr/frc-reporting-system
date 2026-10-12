@@ -296,13 +296,13 @@ class UtilitasController extends Controller
     public function index()
     {
         $kategoriConfig = [
-            'AirBersih' => ['nama' => 'Air Bersih', 'icon' => 'droplet', 'warna' => 'blue', 'unit' => 'm³'],
-            'AirHujan'  => ['nama' => 'Air Hujan', 'icon' => 'cloud-rain', 'warna' => 'cyan', 'unit' => 'm³'],
-            'MDP'       => ['nama' => 'Listrik MDP (Panel Utama)', 'icon' => 'bolt', 'warna' => 'amber', 'unit' => 'kWh'],
-            'SDP'       => ['nama' => 'Listrik SDP (Panel Distribusi)', 'icon' => 'zap', 'warna' => 'yellow', 'unit' => 'kWh'],
-            'Lift'      => ['nama' => 'Listrik Lift', 'icon' => 'arrow-up-down', 'warna' => 'orange', 'unit' => 'kWh'],
-            'AC'        => ['nama' => 'Listrik AC (3 Lantai)', 'icon' => 'wind', 'warna' => 'indigo', 'unit' => 'kWh'],
-            'Lampu'     => ['nama' => 'Listrik Lampu (3 Lantai)', 'icon' => 'lightbulb', 'warna' => 'emerald', 'unit' => 'kWh'],
+            'AirBersih' => ['nama' => 'Air Bersih', 'desc' => 'Meteran air PDAM / sumur dalam', 'icon' => 'droplet', 'warna' => 'blue', 'unit' => 'm³'],
+            'AirHujan'  => ['nama' => 'Air Hujan', 'desc' => 'Pemanfaatan rain harvesting gedung', 'icon' => 'cloud-rain', 'warna' => 'cyan', 'unit' => 'm³'],
+            'MDP'       => ['nama' => 'Listrik MDP (Panel Utama)', 'desc' => 'Main Distribution Panel utama', 'icon' => 'bolt', 'warna' => 'amber', 'unit' => 'kWh'],
+            'SDP'       => ['nama' => 'Listrik SDP (Panel Distribusi)', 'desc' => 'Sub Distribution Panel 1 & 2', 'icon' => 'zap', 'warna' => 'yellow', 'unit' => 'kWh'],
+            'Lift'      => ['nama' => 'Listrik Lift', 'desc' => 'Elevator penumpang gedung FRC', 'icon' => 'arrow-up-down', 'warna' => 'orange', 'unit' => 'kWh'],
+            'AC'        => ['nama' => 'Listrik AC (3 Lantai)', 'desc' => 'Pendingin ruangan Lt 1, 2, & 3', 'icon' => 'wind', 'warna' => 'indigo', 'unit' => 'kWh'],
+            'Lampu'     => ['nama' => 'Listrik Lampu (3 Lantai)', 'desc' => 'Penerangan & beban Lt 1, 2, & 3', 'icon' => 'lightbulb', 'warna' => 'emerald', 'unit' => 'kWh'],
         ];
 
         $allUtilitas = Utilitas::with(['airBersih', 'airHujan', 'listrikMdp', 'listrikSdp', 'listrikLift', 'listrikAc', 'listrikLampu'])
@@ -344,6 +344,7 @@ class UtilitasController extends Controller
 
             $jenisUtilitas[] = [
                 'nama'           => $cfg['nama'],
+                'desc'           => $cfg['desc'],
                 'slug'           => $slug,
                 'icon'           => $cfg['icon'],
                 'warna'          => $cfg['warna'],
@@ -356,11 +357,20 @@ class UtilitasController extends Controller
             ];
         }
 
+        $totalPencatatan = Utilitas::count();
+        $recentRecords = Utilitas::with(['petugas', 'airBersih', 'airHujan', 'listrikMdp', 'listrikSdp', 'listrikLift', 'listrikAc', 'listrikLampu'])
+            ->orderBy('periode', 'desc')
+            ->orderBy('created_at', 'desc')
+            ->take(6)
+            ->get();
+
         return view('admin.utilitas.index', compact(
             'jenisUtilitas',
             'totalListrikBulanIni',
             'totalAirBulanIni',
-            'periodeTerbaru'
+            'periodeTerbaru',
+            'totalPencatatan',
+            'recentRecords'
         ));
     }
 

@@ -15,13 +15,46 @@ class KepalaFRCController extends Controller
 {
     public function dashboard()
     {
+        $totalMasuk = Laporan::count();
+        $sedangDikerjakan = Laporan::where('status', 'Diproses')->count();
+        $totalSelesai = Laporan::where('status', 'Selesai')->count();
+        $baruCount = Laporan::where('status', 'Baru')->count();
+        $ditugaskanCount = Laporan::where('status', 'Ditugaskan')->count();
+        $ditolakCount = Laporan::where('status', 'Ditolak')->count();
+
+        $completionRate = $totalMasuk > 0 ? round(($totalSelesai / $totalMasuk) * 100, 1) : 0;
+        $totalTeknisi = User::where('role', 'Teknisi')->count();
+        $currentMonth = date('Y-m');
+        $utilitasBulanIni = Utilitas::where('periode', $currentMonth)->count();
+
         $kpi = [
-            'total_masuk' => Laporan::count(),
-            'sedang_dikerjakan' => Laporan::where('status', 'Diproses')->count(),
-            'total_selesai' => Laporan::where('status', 'Selesai')->count(),
+            'total_masuk'       => $totalMasuk,
+            'sedang_dikerjakan' => $sedangDikerjakan,
+            'total_selesai'     => $totalSelesai,
+            'baru'              => $baruCount,
+            'ditugaskan'        => $ditugaskanCount,
+            'ditolak'           => $ditolakCount,
+            'completion_rate'   => $completionRate,
+            'total_teknisi'     => $totalTeknisi,
+            'utilitas_bulan_ini' => $utilitasBulanIni,
         ];
 
-        return view('kepala.dashboard', compact('kpi'));
+        $laporanTerbaru = Laporan::with(['pelapor', 'penugasan.teknisi'])
+            ->latest()
+            ->take(5)
+            ->get();
+
+        $kinerjaTeknisi = User::where('role', 'Teknisi')
+            ->withCount(['tugas_teknisi as selesai_count' => function ($query) {
+                $query->whereHas('laporan', function ($q) {
+                    $q->where('status', 'Selesai');
+                });
+            }])
+            ->orderBy('selesai_count', 'desc')
+            ->take(5)
+            ->get();
+
+        return view('kepala.dashboard', compact('kpi', 'laporanTerbaru', 'kinerjaTeknisi'));
     }
 
     public function rekapUtilitas(Request $request)
@@ -33,7 +66,27 @@ class KepalaFRCController extends Controller
             ->where('periode', $periode)
             ->get();
 
-        return view('kepala.utilitas-rekap', compact('details', 'periode'));
+        $totalListrik = 0;
+        $totalAir = 0;
+        foreach ($details as $d) {
+            if (in_array($d->jenis_utilitas, ['AirBersih', 'AirHujan'])) {
+                $totalAir += $d->total_konsumsi;
+            } else {
+                $totalListrik += $d->total_konsumsi;
+            }
+        }
+
+        $kategoriTercatat = $details->pluck('jenis_utilitas')->unique()->count();
+        $totalKategori = count(Utilitas::JENIS_UTILITAS);
+
+        return view('kepala.utilitas-rekap', compact(
+            'details',
+            'periode',
+            'totalListrik',
+            'totalAir',
+            'kategoriTercatat',
+            'totalKategori'
+        ));
     }
 
     public function kinerjaTeknisi()
@@ -64,11 +117,12 @@ class KepalaFRCController extends Controller
 
     public function rekapLaporan(Request $request)
     {
-        $query = \App\Models\Laporan::with(['pelapor', 'penugasan.teknisi']);
+        $query = Laporan::with(['pelapor', 'penugasan.teknisi']);
 
         // 1. Filter Status
         if ($request->filled('status') && $request->status !== 'Semua') {
-            $query->where('status', $request->status);
+            $status = $request->status === 'Menunggu' ? 'Baru' : $request->status;
+            $query->where('status', $status);
         }
 
         // 2. Filter Periode (Format input month HTML5 adalah 'YYYY-MM')
@@ -76,9 +130,31 @@ class KepalaFRCController extends Controller
             $query->where('created_at', 'like', $request->periode . '%');
         }
 
+        // 3. Pencarian Kata Kunci
+        if ($request->filled('search')) {
+            $search = trim($request->search);
+            $query->where(function ($q) use ($search) {
+                $q->where('judul', 'like', "%{$search}%")
+                  ->orWhere('lokasi', 'like', "%{$search}%")
+                  ->orWhere('deskripsi', 'like', "%{$search}%")
+                  ->orWhereHas('pelapor', function ($sub) use ($search) {
+                      $sub->where('nama_lengkap', 'like', "%{$search}%")
+                          ->orWhere('name', 'like', "%{$search}%");
+                  });
+            });
+        }
+
+        $stats = [
+            'total'    => Laporan::count(),
+            'baru'     => Laporan::where('status', 'Baru')->count(),
+            'diproses' => Laporan::where('status', 'Diproses')->count(),
+            'selesai'  => Laporan::where('status', 'Selesai')->count(),
+            'ditolak'  => Laporan::where('status', 'Ditolak')->count(),
+        ];
+
         $laporans = $query->latest()->paginate(15)->withQueryString();
 
-        return view('kepala.laporan.index', compact('laporans'));
+        return view('kepala.laporan.index', compact('laporans', 'stats'));
     }
 
     public function showLaporan($id)
@@ -141,13 +217,41 @@ class KepalaFRCController extends Controller
 
     public function laporanSaya(Request $request)
     {
-        $query = \App\Models\Laporan::where('pelapor_id', auth()->id())->latest();
+        $userId = auth()->id();
+        $query = Laporan::with(['penugasan.teknisi'])
+            ->where('pelapor_id', $userId);
 
-        if ($request->filled('status')) {
-            $query->where('status', $request->status);
+        // 1. Filter Status
+        if ($request->filled('status') && $request->status !== 'Semua') {
+            $status = $request->status === 'Menunggu' ? 'Baru' : $request->status;
+            $query->where('status', $status);
         }
 
-        $laporans = $query->paginate(10)->withQueryString();
-        return view('kepala.laporan.saya', compact('laporans'));
+        // 2. Filter Periode
+        if ($request->filled('periode')) {
+            $query->where('created_at', 'like', $request->periode . '%');
+        }
+
+        // 3. Search Kata Kunci
+        if ($request->filled('search')) {
+            $search = trim($request->search);
+            $query->where(function ($q) use ($search) {
+                $q->where('judul', 'like', "%{$search}%")
+                  ->orWhere('lokasi', 'like', "%{$search}%")
+                  ->orWhere('deskripsi', 'like', "%{$search}%");
+            });
+        }
+
+        $stats = [
+            'total'    => Laporan::where('pelapor_id', $userId)->count(),
+            'baru'     => Laporan::where('pelapor_id', $userId)->where('status', 'Baru')->count(),
+            'diproses' => Laporan::where('pelapor_id', $userId)->where('status', 'Diproses')->count(),
+            'selesai'  => Laporan::where('pelapor_id', $userId)->where('status', 'Selesai')->count(),
+            'ditolak'  => Laporan::where('pelapor_id', $userId)->where('status', 'Ditolak')->count(),
+        ];
+
+        $laporans = $query->latest()->paginate(10)->withQueryString();
+
+        return view('kepala.laporan.saya', compact('laporans', 'stats'));
     }
 }

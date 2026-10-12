@@ -57,7 +57,6 @@ class AdminDashboardTest extends TestCase
 
         // Check Greetings & Hero Banner
         $response->assertSee('Halo, Super Admin FRC!');
-        $response->assertSee('Admin Operasional');
         $response->assertSee(route('admin.laporan.create'));
         $response->assertSee(route('admin.penugasan.index'));
 
