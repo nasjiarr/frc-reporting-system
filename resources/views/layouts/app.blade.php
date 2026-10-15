@@ -427,9 +427,9 @@
              class="fixed inset-0 z-40 bg-gray-950/70 backdrop-blur-sm lg:hidden" style="display: none;"></div>
 
         <!-- Main Content -->
-        <div class="flex-1 min-w-0 flex flex-col overflow-hidden">
-            <!-- Top Navbar -->
-            <header class="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700 transition-colors duration-200">
+        <div class="flex-1 min-w-0 flex flex-col">
+            <!-- Top Navbar (Sticky) -->
+            <header class="sticky top-0 z-30 bg-white/95 dark:bg-gray-800/95 backdrop-blur-md shadow-xs border-b border-gray-200 dark:border-gray-700 transition-colors duration-200">
                 <div class="flex items-center justify-between px-4 py-3">
                     <!-- Mobile menu button -->
                     <button @click="sidebarOpen = !sidebarOpen" class="lg:hidden p-2 rounded-md text-gray-400 dark:text-gray-500 hover:text-gray-500 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:bg-gray-100 dark:focus:bg-gray-700 focus:text-gray-500 dark:focus:text-gray-400 transition-colors">
@@ -442,7 +442,7 @@
                     <!-- Notification Bell and Profile -->
                     <div class="flex items-center ml-auto space-x-2 sm:space-x-3 relative">
                         <div x-data="{ notifOpen: false }">
-                            <button @click="notifOpen = !notifOpen; if(notifOpen) markAsRead()" class="relative p-2 text-gray-500 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-gray-700 rounded-full focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition-all duration-200">
+                            <button @click="notifOpen = !notifOpen" class="relative p-2 text-gray-500 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-gray-700 rounded-full focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition-all duration-200" aria-label="Notifikasi">
                                 <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" />
                                 </svg>
@@ -455,29 +455,60 @@
                             </button>
 
                             <div x-show="notifOpen" @click.away="notifOpen = false" style="display: none;"
-                                x-transition:enter="transition ease-out duration-200"
+                                x-transition:enter="transition cubic-bezier(0.16, 1, 0.3, 1) duration-200"
                                 x-transition:enter-start="opacity-0 scale-95 translate-y-2"
                                 x-transition:enter-end="opacity-100 scale-100 translate-y-0"
                                 x-transition:leave="transition ease-in duration-150"
                                 x-transition:leave-start="opacity-100 scale-100 translate-y-0"
                                 x-transition:leave-end="opacity-0 scale-95 translate-y-2"
-                                class="absolute right-0 top-full mt-3 w-[92vw] sm:w-96 max-w-[420px] bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl shadow-2xl z-50 overflow-hidden transform origin-top-right">
+                                class="absolute right-0 top-full mt-3 w-[92vw] sm:w-[410px] max-w-[420px] bg-white dark:bg-gray-800 border border-gray-200/90 dark:border-gray-700/80 rounded-2xl shadow-2xl z-50 overflow-hidden transform origin-top-right ring-1 ring-black/5 dark:ring-white/10">
 
-                                {{-- Header --}}
-                                <div class="px-5 py-3.5 border-b border-gray-100 dark:border-gray-700 bg-gradient-to-r from-indigo-50 to-blue-50 dark:from-gray-800 dark:to-gray-800 flex justify-between items-center">
+                                {{-- Header Utama --}}
+                                <div class="px-4 py-3 bg-gradient-to-r from-gray-50 via-white to-indigo-50/40 dark:from-gray-800 dark:via-gray-800 dark:to-indigo-950/20 border-b border-gray-100 dark:border-gray-700/80 flex items-center justify-between">
                                     <div class="flex items-center gap-2.5">
-                                        <div class="w-8 h-8 bg-indigo-100 dark:bg-indigo-900/50 rounded-lg flex items-center justify-center">
-                                            <svg class="w-4 h-4 text-indigo-600 dark:text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+                                        <div class="w-8 h-8 rounded-xl bg-indigo-600 text-white flex items-center justify-center shadow-xs">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
                                             </svg>
                                         </div>
-                                        <h3 class="text-sm font-bold text-gray-900 dark:text-gray-100">Notifikasi</h3>
+                                        <div>
+                                            <h3 class="text-sm font-bold text-gray-900 dark:text-gray-100 leading-none">Notifikasi</h3>
+                                            <p class="text-[11px] text-gray-500 dark:text-gray-400 mt-0.5">Aktivitas & pembaruan sistem</p>
+                                        </div>
                                     </div>
-                                    <span id="notif-header-count" class="px-2.5 py-1 text-[10px] font-bold bg-indigo-100 dark:bg-indigo-900/50 text-indigo-700 dark:text-indigo-300 rounded-full tracking-wide uppercase">0 Baru</span>
+
+                                    {{-- Action Tandai Semua Dibaca --}}
+                                    <button type="button" onclick="markAllNotificationsAsRead()"
+                                        id="btn-mark-all-read"
+                                        title="Tandai semua telah dibaca"
+                                        class="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-semibold text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 hover:bg-indigo-50 dark:hover:bg-indigo-950/40 rounded-lg transition-colors border border-transparent hover:border-indigo-100 dark:hover:border-indigo-900/40 cursor-pointer">
+                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                        </svg>
+                                        <span>Tandai dibaca</span>
+                                    </button>
+                                </div>
+
+                                {{-- Sub-header Tab Bar (Pill Segmented Control) --}}
+                                <div class="px-4 py-2 bg-gray-50/70 dark:bg-gray-800/60 border-b border-gray-100 dark:border-gray-700/60 flex items-center justify-between">
+                                    <div class="inline-flex p-1 bg-gray-200/60 dark:bg-gray-900/60 rounded-xl text-xs">
+                                        <button type="button" onclick="switchNotifTab('all')" id="tab-notif-all"
+                                            class="px-3 py-1 font-semibold rounded-lg transition-all duration-150 bg-white dark:bg-gray-800 text-indigo-600 dark:text-indigo-400 shadow-xs flex items-center gap-1.5 cursor-pointer">
+                                            <span>Semua</span>
+                                            <span id="tab-count-all" class="text-[10px] font-bold px-1.5 py-0.2 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300">0</span>
+                                        </button>
+                                        <button type="button" onclick="switchNotifTab('unread')" id="tab-notif-unread"
+                                            class="px-3 py-1 font-medium rounded-lg transition-all duration-150 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 flex items-center gap-1.5 cursor-pointer">
+                                            <span>Belum Dibaca</span>
+                                            <span id="tab-count-unread" class="text-[10px] font-bold px-1.5 py-0.2 rounded-full bg-rose-100 dark:bg-rose-900/50 text-rose-600 dark:text-rose-400">0</span>
+                                        </button>
+                                    </div>
+
+                                    <span id="notif-header-count" class="text-[11px] font-medium text-gray-400 dark:text-gray-500">0 Baru</span>
                                 </div>
 
                                 {{-- Notification list --}}
-                                <div class="max-h-[420px] overflow-y-auto" id="notif-list-container" style="scrollbar-width: thin; scrollbar-color: #cbd5e1 transparent;">
+                                <div class="max-h-[380px] overflow-y-auto divide-y divide-gray-100 dark:divide-gray-700/50" id="notif-list-container" style="scrollbar-width: thin; scrollbar-color: #cbd5e1 transparent;">
                                     <div class="px-5 py-10 text-center flex flex-col items-center justify-center">
                                         <div class="w-14 h-14 bg-gray-50 dark:bg-gray-700/50 rounded-2xl flex items-center justify-center mb-4">
                                             <svg class="w-7 h-7 text-gray-300 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -487,6 +518,15 @@
                                         <p class="text-sm font-semibold text-gray-700 dark:text-gray-200">Tidak ada notifikasi baru</p>
                                         <p class="text-xs text-gray-400 dark:text-gray-500 mt-1 max-w-[200px] leading-relaxed">Semua pemberitahuan Anda sudah terbaca.</p>
                                     </div>
+                                </div>
+
+                                {{-- Footer --}}
+                                <div class="px-4 py-2 bg-gray-50/80 dark:bg-gray-800/90 border-t border-gray-100 dark:border-gray-700 flex items-center justify-between text-[11px] text-gray-500 dark:text-gray-400">
+                                    <div class="flex items-center gap-1.5">
+                                        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                                        <span>Live Update FRC</span>
+                                    </div>
+                                    <span>20 Aktivitas Terakhir</span>
                                 </div>
 
                             </div>
@@ -549,7 +589,7 @@
             </header>
 
             <!-- Page Content -->
-            <main class="flex-1 overflow-y-auto py-2">
+            <main class="flex-1 py-2">
                 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     @isset($header)
                     <header class="bg-gray-50 dark:bg-gray-900 pt-6 pb-4 mb-8 transition-colors duration-200">
@@ -590,15 +630,31 @@
         </div>
     </div>
 
+    <!-- Floating Real-time Notification Toast Stack (Gaya 4: Hybrid) -->
+    <div id="notif-toast-container" class="fixed bottom-5 right-5 z-[9999] flex flex-col gap-2.5 max-w-sm w-full pointer-events-none px-4 sm:px-0" aria-live="polite"></div>
+
     <script>
         /**
-         * Menentukan ikon & warna berdasarkan judul notifikasi
+         * State Notifikasi Sistem FRC
+         */
+        const notifState = {
+            items: [],
+            unreadCount: 0,
+            activeTab: 'all',
+            knownIds: new Set(),
+            isInitialized: false
+        };
+
+        /**
+         * Menentukan kategori, warna, dan ikon berdasarkan judul notifikasi
          */
         function getNotifStyle(judul) {
             const j = (judul || '').toLowerCase();
 
             if (j.includes('ditolak') || j.includes('tolak')) {
                 return {
+                    badge: 'Ditolak',
+                    badgeBg: 'bg-rose-50 dark:bg-rose-950/40 text-rose-700 dark:text-rose-300 border-rose-200/60 dark:border-rose-800/40',
                     bg: 'bg-rose-100 dark:bg-rose-900/40',
                     text: 'text-rose-600 dark:text-rose-400',
                     dot: 'bg-rose-500',
@@ -607,6 +663,8 @@
             }
             if (j.includes('selesai') || j.includes('perbaikan')) {
                 return {
+                    badge: 'Selesai',
+                    badgeBg: 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 border-emerald-200/60 dark:border-emerald-800/40',
                     bg: 'bg-emerald-100 dark:bg-emerald-900/40',
                     text: 'text-emerald-600 dark:text-emerald-400',
                     dot: 'bg-emerald-500',
@@ -615,6 +673,8 @@
             }
             if (j.includes('tugas') || j.includes('ditugaskan') || j.includes('diproses')) {
                 return {
+                    badge: 'Penugasan',
+                    badgeBg: 'bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-300 border-blue-200/60 dark:border-blue-800/40',
                     bg: 'bg-blue-100 dark:bg-blue-900/40',
                     text: 'text-blue-600 dark:text-blue-400',
                     dot: 'bg-blue-500',
@@ -623,6 +683,8 @@
             }
             if (j.includes('kerusakan baru') || j.includes('laporan baru')) {
                 return {
+                    badge: 'Laporan Baru',
+                    badgeBg: 'bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-300 border-amber-200/60 dark:border-amber-800/40',
                     bg: 'bg-amber-100 dark:bg-amber-900/40',
                     text: 'text-amber-600 dark:text-amber-400',
                     dot: 'bg-amber-500',
@@ -631,6 +693,8 @@
             }
             if (j.includes('update status') || j.includes('status laporan')) {
                 return {
+                    badge: 'Pembaruan',
+                    badgeBg: 'bg-violet-50 dark:bg-violet-950/40 text-violet-700 dark:text-violet-300 border-violet-200/60 dark:border-violet-800/40',
                     bg: 'bg-violet-100 dark:bg-violet-900/40',
                     text: 'text-violet-600 dark:text-violet-400',
                     dot: 'bg-violet-500',
@@ -639,6 +703,8 @@
             }
             // Default
             return {
+                badge: 'Notifikasi',
+                badgeBg: 'bg-indigo-50 dark:bg-indigo-950/40 text-indigo-700 dark:text-indigo-300 border-indigo-200/60 dark:border-indigo-800/40',
                 bg: 'bg-indigo-100 dark:bg-indigo-900/40',
                 text: 'text-indigo-600 dark:text-indigo-400',
                 dot: 'bg-indigo-500',
@@ -677,10 +743,237 @@
         }
 
         /**
-         * Mengecek notifikasi baru dari server
+         * Berpindah tab antara 'all' (semua) dan 'unread' (belum dibaca)
+         */
+        function switchNotifTab(tab) {
+            notifState.activeTab = tab;
+            const tabAll = document.getElementById('tab-notif-all');
+            const tabUnread = document.getElementById('tab-notif-unread');
+
+            if (tab === 'all') {
+                if (tabAll) {
+                    tabAll.className = 'px-3 py-1 font-semibold rounded-lg transition-all duration-150 bg-white dark:bg-gray-800 text-indigo-600 dark:text-indigo-400 shadow-xs flex items-center gap-1.5 cursor-pointer';
+                }
+                if (tabUnread) {
+                    tabUnread.className = 'px-3 py-1 font-medium rounded-lg transition-all duration-150 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 flex items-center gap-1.5 cursor-pointer';
+                }
+            } else {
+                if (tabUnread) {
+                    tabUnread.className = 'px-3 py-1 font-semibold rounded-lg transition-all duration-150 bg-white dark:bg-gray-800 text-indigo-600 dark:text-indigo-400 shadow-xs flex items-center gap-1.5 cursor-pointer';
+                }
+                if (tabAll) {
+                    tabAll.className = 'px-3 py-1 font-medium rounded-lg transition-all duration-150 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 flex items-center gap-1.5 cursor-pointer';
+                }
+            }
+
+            renderNotificationList();
+        }
+
+        /**
+         * Render daftar notifikasi ke dalam container popover
+         */
+        function renderNotificationList() {
+            const listContainer = document.getElementById('notif-list-container');
+            if (!listContainer) return;
+
+            const filteredItems = notifState.activeTab === 'unread'
+                ? notifState.items.filter(item => !item.is_read)
+                : notifState.items;
+
+            if (!filteredItems || filteredItems.length === 0) {
+                if (notifState.activeTab === 'unread') {
+                    listContainer.innerHTML = `
+                    <div class="px-5 py-10 text-center flex flex-col items-center justify-center">
+                        <div class="w-12 h-12 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 rounded-2xl flex items-center justify-center mb-3 shadow-xs">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                        </div>
+                        <p class="text-sm font-bold text-gray-800 dark:text-gray-200">Semua telah dibaca</p>
+                        <p class="text-xs text-gray-400 dark:text-gray-500 mt-1 max-w-[220px] leading-relaxed">Tidak ada pemberitahuan baru yang belum dibaca saat ini.</p>
+                    </div>`;
+                } else {
+                    listContainer.innerHTML = `
+                    <div class="px-5 py-10 text-center flex flex-col items-center justify-center">
+                        <div class="w-12 h-12 bg-gray-50 dark:bg-gray-700/50 rounded-2xl flex items-center justify-center mb-3 shadow-xs">
+                            <svg class="w-6 h-6 text-gray-300 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path>
+                            </svg>
+                        </div>
+                        <p class="text-sm font-semibold text-gray-700 dark:text-gray-200">Belum ada notifikasi</p>
+                        <p class="text-xs text-gray-400 dark:text-gray-500 mt-1 max-w-[200px] leading-relaxed">Pemberitahuan aktivitas Anda akan muncul di sini.</p>
+                    </div>`;
+                }
+                return;
+            }
+
+            let html = '';
+            filteredItems.forEach((notif) => {
+                const judul = escapeHtml(notif.judul || 'Pemberitahuan');
+                const pesan = escapeHtml(notif.pesan || 'Ada pembaruan pada aktivitas Anda.');
+                const waktu = timeAgo(notif.created_at);
+                const style = getNotifStyle(notif.judul);
+                const isUnread = !notif.is_read;
+
+                const hasLink = notif.link && typeof notif.link === 'string' && notif.link.trim() !== '';
+                let linkHref = '';
+                if (hasLink) {
+                    try {
+                        const parsed = new URL(notif.link, window.location.origin);
+                        linkHref = parsed.pathname + parsed.search + parsed.hash;
+                    } catch (e) {
+                        linkHref = notif.link;
+                    }
+                }
+
+                const tag = hasLink ? 'a' : 'div';
+                const linkAttr = hasLink ? `href="${encodeURI(linkHref)}" onclick="markAllNotificationsAsRead()"` : '';
+                const unreadClasses = isUnread
+                    ? 'bg-indigo-50/40 dark:bg-indigo-950/20 border-l-2 border-indigo-500'
+                    : 'bg-white dark:bg-gray-800 border-l-2 border-transparent';
+
+                html += `
+                <${tag} ${linkAttr} class="block px-4 py-3.5 group hover:bg-gray-50 dark:hover:bg-gray-700/60 transition-colors duration-150 ${unreadClasses}">
+                    <div class="flex items-start gap-3">
+                        <div class="flex-shrink-0 mt-0.5">
+                            <div class="w-8 h-8 ${style.bg} rounded-xl flex items-center justify-center shadow-xs">
+                                <svg class="w-4 h-4 ${style.text}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    ${style.icon}
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <div class="flex items-center justify-between gap-2 mb-0.5">
+                                <span class="inline-flex items-center px-1.5 py-0.5 rounded-md text-[10px] font-semibold border ${style.badgeBg}">
+                                    ${style.badge}
+                                </span>
+                                <div class="flex items-center gap-1.5">
+                                    <span class="text-[10px] font-medium text-gray-400 dark:text-gray-500">${waktu}</span>
+                                    ${isUnread ? '<span class="w-2 h-2 rounded-full bg-indigo-500 ring-2 ring-indigo-200 dark:ring-indigo-900 notif-unread-dot animate-pulse"></span>' : ''}
+                                </div>
+                            </div>
+                            <h4 class="text-xs font-bold text-gray-900 dark:text-gray-100 leading-snug group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">${judul}</h4>
+                            <p class="text-xs text-gray-600 dark:text-gray-400 mt-1 line-clamp-2 leading-relaxed">${pesan}</p>
+                            ${hasLink ? `
+                            <div class="mt-2 flex items-center justify-end">
+                                <span class="inline-flex items-center gap-1 text-[11px] font-semibold text-indigo-600 dark:text-indigo-400 opacity-80 group-hover:opacity-100 transition-opacity">
+                                    <span>Buka detail</span>
+                                    <svg class="w-3 h-3 group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                                    </svg>
+                                </span>
+                            </div>` : ''}
+                        </div>
+                    </div>
+                </${tag}>`;
+            });
+
+            listContainer.innerHTML = html;
+        }
+
+        /**
+         * Menampilkan Floating Toast Alert di sudut kanan bawah
+         */
+        function showFloatingToast(notif) {
+            const container = document.getElementById('notif-toast-container');
+            if (!container) return;
+
+            const style = getNotifStyle(notif.judul);
+            const judul = escapeHtml(notif.judul || 'Pemberitahuan Baru');
+            const pesan = escapeHtml(notif.pesan || 'Ada aktivitas baru pada sistem FRC.');
+            const hasLink = notif.link && typeof notif.link === 'string' && notif.link.trim() !== '';
+            let linkHref = '#';
+            if (hasLink) {
+                try {
+                    const parsed = new URL(notif.link, window.location.origin);
+                    linkHref = parsed.pathname + parsed.search + parsed.hash;
+                } catch (e) {
+                    linkHref = notif.link;
+                }
+            }
+
+            const toastId = 'toast-' + Date.now() + '-' + Math.random().toString(36).substr(2, 5);
+            const toastEl = document.createElement('div');
+            toastEl.id = toastId;
+            toastEl.className = 'group pointer-events-auto relative w-full rounded-2xl bg-white/95 dark:bg-gray-800/95 backdrop-blur-md p-4 shadow-2xl ring-1 ring-black/5 dark:ring-white/10 border border-gray-100 dark:border-gray-700 transition-all duration-300 transform translate-y-4 opacity-0 overflow-hidden';
+
+            toastEl.innerHTML = `
+                <div class="flex items-start gap-3">
+                    <div class="flex-shrink-0 mt-0.5">
+                        <div class="w-9 h-9 ${style.bg} rounded-xl flex items-center justify-center shadow-xs">
+                            <svg class="w-4.5 h-4.5 ${style.text}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                ${style.icon}
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <div class="flex items-center justify-between gap-1.5 mb-1">
+                            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold border ${style.badgeBg}">
+                                ${style.badge}
+                            </span>
+                            <div class="flex items-center gap-2">
+                                <span class="text-[10px] font-medium text-gray-400 dark:text-gray-500">Baru saja</span>
+                                <button type="button" onclick="dismissToast('${toastId}')" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors p-0.5 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer" aria-label="Tutup notifikasi">
+                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                        <h4 class="text-xs font-bold text-gray-900 dark:text-gray-100 leading-snug line-clamp-1">${judul}</h4>
+                        <p class="text-xs text-gray-600 dark:text-gray-400 mt-1 line-clamp-2 leading-relaxed">${pesan}</p>
+                        ${hasLink ? `
+                        <div class="mt-2.5 flex items-center justify-end">
+                            <a href="${encodeURI(linkHref)}" onclick="dismissToast('${toastId}'); markAllNotificationsAsRead();" class="inline-flex items-center gap-1 text-[11px] font-semibold text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 transition-colors">
+                                <span>Lihat Detail</span>
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                                </svg>
+                            </a>
+                        </div>` : ''}
+                    </div>
+                </div>
+                <div class="absolute bottom-0 left-0 right-0 h-1 bg-gray-100 dark:bg-gray-700/60">
+                    <div id="${toastId}-bar" class="h-full bg-indigo-500 transition-all ease-linear" style="width: 100%; transition-duration: 5000ms;"></div>
+                </div>
+            `;
+
+            container.appendChild(toastEl);
+
+            requestAnimationFrame(() => {
+                toastEl.classList.remove('translate-y-4', 'opacity-0');
+                toastEl.classList.add('translate-y-0', 'opacity-100');
+                setTimeout(() => {
+                    const bar = document.getElementById(`${toastId}-bar`);
+                    if (bar) bar.style.width = '0%';
+                }, 50);
+            });
+
+            const timer = setTimeout(() => {
+                dismissToast(toastId);
+            }, 5200);
+            toastEl.dataset.timer = timer;
+        }
+
+        /**
+         * Menutup Floating Toast Alert
+         */
+        function dismissToast(toastId) {
+            const toastEl = document.getElementById(toastId);
+            if (!toastEl) return;
+            if (toastEl.dataset.timer) clearTimeout(toastEl.dataset.timer);
+            toastEl.classList.add('opacity-0', 'translate-x-4');
+            setTimeout(() => {
+                if (toastEl.parentElement) {
+                    toastEl.parentElement.removeChild(toastEl);
+                }
+            }, 300);
+        }
+
+        /**
+         * Mengecek notifikasi dari server via API
          */
         function checkNotifications(force = false) {
-            // Hindari polling jika tab sedang di latar belakang / tidak aktif
             if (!force && document.hidden) {
                 return;
             }
@@ -690,107 +983,52 @@
                 .then(data => {
                     const badge = document.getElementById('notif-badge');
                     const ping = document.getElementById('notif-ping');
-                    const listContainer = document.getElementById('notif-list-container');
                     const headerCount = document.getElementById('notif-header-count');
+                    const tabCountAll = document.getElementById('tab-count-all');
+                    const tabCountUnread = document.getElementById('tab-count-unread');
 
-                    // 1. Update Badge & Header (Berdasarkan jumlah yang BELUM DIBACA)
-                    if (data.count > 0) {
-                        const displayCount = data.count > 9 ? '9+' : data.count;
-                        badge.innerText = displayCount;
-                        badge.classList.remove('hidden');
-                        ping.classList.remove('hidden');
+                    const newItems = data.items || [];
+                    const unreadCount = data.count || 0;
 
-                        if (headerCount) {
-                            headerCount.innerText = `${data.count} Baru`;
+                    // 1. Update Badge & Ping Lonceng
+                    if (unreadCount > 0) {
+                        const displayCount = unreadCount > 9 ? '9+' : unreadCount;
+                        if (badge) {
+                            badge.innerText = displayCount;
+                            badge.classList.remove('hidden');
                         }
+                        if (ping) ping.classList.remove('hidden');
                     } else {
-                        badge.classList.add('hidden');
-                        badge.innerText = '0';
-                        ping.classList.add('hidden');
+                        if (badge) {
+                            badge.classList.add('hidden');
+                            badge.innerText = '0';
+                        }
+                        if (ping) ping.classList.add('hidden');
+                    }
 
-                        if (headerCount) {
-                            headerCount.innerText = '0 Baru';
+                    // 2. Update Header Subtitle & Tab Counters
+                    if (headerCount) headerCount.innerText = `${unreadCount} Baru`;
+                    if (tabCountAll) tabCountAll.innerText = newItems.length;
+                    if (tabCountUnread) tabCountUnread.innerText = unreadCount;
+
+                    // 3. Trigger Floating Toast jika ada notifikasi baru saat user aktif di halaman
+                    if (notifState.isInitialized) {
+                        const freshNotifs = newItems.filter(item => !notifState.knownIds.has(item.id) && !item.is_read);
+                        if (freshNotifs.length > 0) {
+                            freshNotifs.slice(0, 2).forEach(notif => {
+                                showFloatingToast(notif);
+                            });
                         }
                     }
 
-                    // 2. Render List Notifikasi (Menampilkan yang belum DAN sudah dibaca)
-                    if (data.items && data.items.length > 0) {
-                        let html = '';
-                        data.items.forEach((notif, index) => {
-                            const judul = escapeHtml(notif.judul || 'Pemberitahuan');
-                            const pesan = escapeHtml(notif.pesan || 'Ada pembaruan pada aktivitas Anda.');
-                            const waktu = timeAgo(notif.created_at);
-                            const style = getNotifStyle(notif.judul);
-                            const isLast = index === data.items.length - 1;
-                            
-                            // Hanya tampilkan titik penanda jika belum dibaca
-                            const dotDisplay = notif.is_read ? 'style="display: none;"' : '';
-                            const hasLink = notif.link && typeof notif.link === 'string' && notif.link.trim() !== '';
-                            let linkHref = '';
-                            if (hasLink) {
-                                try {
-                                    // Selalu konversi link ke relative path agar selalu berada di domain/origin browser saat ini
-                                    const parsed = new URL(notif.link, window.location.origin);
-                                    linkHref = parsed.pathname + parsed.search + parsed.hash;
-                                } catch (e) {
-                                    linkHref = notif.link;
-                                }
-                            }
-                            const tag = hasLink ? 'a' : 'div';
-                            const linkAttr = hasLink ? `href="${encodeURI(linkHref)}"` : '';
-                            const linkClasses = hasLink
-                                ? 'group block cursor-pointer hover:bg-indigo-50/60 dark:hover:bg-gray-700/60 transition-colors duration-150'
-                                : 'block cursor-default hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors duration-150';
+                    // 4. Update Memory State
+                    notifState.items = newItems;
+                    notifState.unreadCount = unreadCount;
+                    newItems.forEach(item => notifState.knownIds.add(item.id));
+                    notifState.isInitialized = true;
 
-                            html += `
-                            <${tag} ${linkAttr} class="px-4 py-3.5 ${linkClasses} ${!isLast ? 'border-b border-gray-100 dark:border-gray-700/50' : ''}">
-                                <div class="flex gap-3">
-                                    <div class="flex-shrink-0 mt-0.5">
-                                        <div class="w-9 h-9 ${style.bg} rounded-xl flex items-center justify-center">
-                                            <svg class="w-4 h-4 ${style.text}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                ${style.icon}
-                                            </svg>
-                                        </div>
-                                    </div>
-                                    <div class="flex-1 min-w-0">
-                                        <div class="flex items-start justify-between gap-2">
-                                            <p class="text-[13px] font-semibold text-gray-900 dark:text-gray-100 ${hasLink ? 'group-hover:text-indigo-600 dark:group-hover:text-indigo-400' : ''} leading-tight transition-colors">${judul}</p>
-                                            <span class="flex-shrink-0 w-2 h-2 mt-1.5 rounded-full ${style.dot} notif-unread-dot" ${dotDisplay}></span>
-                                        </div>
-                                        <p class="text-xs text-gray-600 dark:text-gray-400 mt-1 leading-relaxed line-clamp-2">${pesan}</p>
-                                        <div class="mt-1.5 flex items-center justify-between">
-                                            <p class="text-[10px] font-medium text-gray-400 dark:text-gray-500 flex items-center gap-1">
-                                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                                </svg>
-                                                ${waktu}
-                                            </p>
-                                            ${hasLink ? `
-                                            <span class="inline-flex items-center gap-0.5 text-[10px] font-medium text-indigo-600 dark:text-indigo-400 opacity-0 group-hover:opacity-100 transition-opacity">
-                                                <span>Buka</span>
-                                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                                                </svg>
-                                            </span>` : ''}
-                                        </div>
-                                    </div>
-                                </div>
-                            </${tag}>`;
-                        });
-                        listContainer.innerHTML = html;
-                    } else {
-                        // Tampilkan state kosong jika benar-benar tidak ada riwayat notifikasi
-                        listContainer.innerHTML = `
-                        <div class="px-5 py-10 text-center flex flex-col items-center justify-center">
-                            <div class="w-14 h-14 bg-gray-50 dark:bg-gray-700/50 rounded-2xl flex items-center justify-center mb-4">
-                                <svg class="w-7 h-7 text-gray-300 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path>
-                                </svg>
-                            </div>
-                            <p class="text-sm font-semibold text-gray-700 dark:text-gray-200">Belum ada notifikasi</p>
-                            <p class="text-xs text-gray-400 dark:text-gray-500 mt-1 max-w-[200px] leading-relaxed">Pemberitahuan aktivitas Anda akan muncul di sini.</p>
-                        </div>`;
-                    }
+                    // 5. Render Daftar Notifikasi
+                    renderNotificationList();
                 })
                 .catch(err => console.error('Gagal mengambil data notifikasi:', err));
         }
@@ -798,44 +1036,49 @@
         /**
          * Menandai semua notifikasi sebagai telah dibaca
          */
-        function markAsRead() {
+        function markAllNotificationsAsRead() {
             const badge = document.getElementById('notif-badge');
             const ping = document.getElementById('notif-ping');
+            const headerCount = document.getElementById('notif-header-count');
+            const tabCountUnread = document.getElementById('tab-count-unread');
 
-            if (!badge.classList.contains('hidden')) {
-                // Sembunyikan badge & ping secara instan
+            // Optimistic UI update
+            if (badge) {
                 badge.classList.add('hidden');
                 badge.innerText = '0';
-                ping.classList.add('hidden');
-
-                // Sembunyikan dot indikator pada setiap notifikasi
-                document.querySelectorAll('.notif-unread-dot').forEach(dot => {
-                    dot.style.display = 'none';
-                });
-
-                // Update header count
-                const headerCount = document.getElementById('notif-header-count');
-                if (headerCount) {
-                    headerCount.innerText = '0 Baru';
-                }
-
-                // Kirim ke server
-                fetch('/api/notifications/mark-read', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                        }
-                    })
-                    .then(response => response.json())
-                    .then(data => console.log('Notifikasi berhasil ditandai sudah dibaca.'))
-                    .catch(err => console.error('Gagal memproses mark-as-read:', err));
             }
+            if (ping) ping.classList.add('hidden');
+            if (headerCount) headerCount.innerText = '0 Baru';
+            if (tabCountUnread) tabCountUnread.innerText = '0';
+
+            // Tandai dibaca di lokal memori
+            notifState.unreadCount = 0;
+            notifState.items.forEach(item => { item.is_read = true; });
+
+            // Re-render daftar notifikasi secara instan
+            renderNotificationList();
+
+            // Kirim request ke server
+            fetch('/api/notifications/mark-read', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                }
+            })
+            .then(res => res.json())
+            .then(data => {
+                console.log('Semua notifikasi berhasil ditandai telah dibaca.');
+            })
+            .catch(err => console.error('Gagal memproses mark-as-read:', err));
         }
 
-        // Jalankan pengecekan setiap 30 detik (hanya saat tab aktif)
+        // Alias fungsi markAsRead untuk kompatibilitas
+        const markAsRead = markAllNotificationsAsRead;
+
+        // Jalankan pengecekan periodik setiap 30 detik (hanya saat tab aktif)
         setInterval(checkNotifications, 30000);
-        // Jalankan langsung saat halaman baru dimuat
+        // Jalankan langsung saat halaman pertama kali dimuat
         checkNotifications(true);
         // Segera periksa notifikasi saat user kembali membuka/fokus ke tab ini
         document.addEventListener('visibilitychange', () => {

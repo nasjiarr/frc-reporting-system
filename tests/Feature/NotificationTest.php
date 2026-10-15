@@ -120,4 +120,19 @@ class NotificationTest extends TestCase
             'user_id' => $inactiveAdmin->id,
         ]);
     }
+
+    public function test_hybrid_notification_ui_components_are_rendered_in_layout(): void
+    {
+        $pelapor = User::factory()->create(['role' => 'Pelapor']);
+
+        $response = $this->actingAs($pelapor)->get(route('pelapor.dashboard'));
+
+        $response->assertOk()
+            ->assertSee('id="notif-toast-container"', false)
+            ->assertSee('id="tab-notif-all"', false)
+            ->assertSee('id="tab-notif-unread"', false)
+            ->assertSee('id="btn-mark-all-read"', false)
+            ->assertSee('markAllNotificationsAsRead', false)
+            ->assertSee('showFloatingToast', false);
+    }
 }
